@@ -12,10 +12,13 @@
     "react-scripts": "3.4.0"
   },
   "scripts": {
-    "front": "react-scripts start",
-    "back": "node api/index.js",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "front-run": "react-scripts start",
+    "front-lint": "eslint src/",
+    "front-build": "react-scripts build",
+    "front-test": "react-scripts test",
+    "back-run": "node api/index.js",
+    "back-lint": "eslint api/",
+    "start": "concurrently \"npm:front-run\" \"npm:back-run\"",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -32,5 +35,14 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "proxy": "http://localhost:8080",
+  "devDependencies": {
+    "concurrently": "^5.1.0",
+    "eslint": "^6.8.0",
+    "jest": "^24.9.0"
+  },
+  "engines": {
+    "node": "13.x"
   }
 }
