@@ -1,8 +1,18 @@
-const express = require('express')
+import express from 'express'
+import initializeDevelopment from './config/initializers/development.js'
+import initializeProduction from './config/initializers/production.js'
+import configureRouter from './config/routes.js'
+const inProduction = process.env.NODE_ENV === 'production'
 
 const app = express()
-const port = 8080
+const port = inProduction ? process.env.PORT : 8080
 
-app.get('/api', (req, res) => res.send('Hello World!'))
+if (inProduction) {
+  initializeProduction(app)
+} else {
+  initializeDevelopment(app)
+}
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+configureRouter(app)
+
+app.listen(port, () => console.log(`Server is listening on port ${port}!`))
