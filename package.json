@@ -79,7 +79,8 @@
     "back-run": "npm run back-build && node build/api/index.js",
     "back-lint": "eslint api/",
     "build": "npm run front-build && npm run back-build",
-    "start": "concurrently \"npm:front-run\" \"npm:back-run\""
+    "start": "concurrently \"npm:front-run\" \"npm:back-run\"",
+    "deploy": "git push heroku master"
   },
   "eslintConfig": {
     "extends": "react-app"
