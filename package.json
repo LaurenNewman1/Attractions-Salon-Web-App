@@ -74,8 +74,10 @@
     "front-lint": "eslint client/",
     "front-build": "node scripts/build.js",
     "test": "node scripts/test.js",
-    "back-run": "babel ./api --out-dir build/api && node build/api/index.js",
+    "back-build": "babel ./api --out-dir build/api",
+    "back-run": "npm run back-build && node build/api/index.js",
     "back-lint": "eslint api/",
+    "build": "npm run front-build && npm run back-build",
     "start": "concurrently \"npm:front-run\" \"npm:back-run\""
   },
   "eslintConfig": {

@@ -12,7 +12,7 @@ process.on('unhandledRejection', err => {
 });
 
 // Ensure environment variables are read.
-require('../config/env');
+require('../client/config/env');
 
 
 const path = require('path');
@@ -208,4 +208,5 @@ function copyPublicFolder() {
     dereference: true,
     filter: file => file !== paths.appHtml,
   });
+  fs.closeSync(fs.openSync(paths.appBuild + "/.keep", 'w'));
 }
