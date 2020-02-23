@@ -1,0 +1,8 @@
+.grow {
+    flex-grow: 1;
+}
+
+.logo {
+    font-family: cursive;
+    font-weight: bold;
+}
