@@ -1,6 +1,6 @@
 import morgan from 'morgan';
 
-const production = (app) => {
+const production = async (app) => {
   app.use(morgan('dev'));
 };
 
