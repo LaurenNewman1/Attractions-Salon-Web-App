@@ -1,12 +1,12 @@
 import React from 'react';
-import Page from '../Components/Page';
+import Page from '../components/Page';
 
-const Login = (props) => {
+const Login = () => {
   return (
     <Page>
       <div>Login</div>
     </Page>
   );
-}
+};
 
 export default Login;

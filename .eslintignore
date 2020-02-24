@@ -1,1 +1,4 @@
 client/config/*
+*.test.js
+client/src/serviceWorker.js
+client/src/setupTests.js

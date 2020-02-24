@@ -1,6 +1,6 @@
 
 const router = (app) => {
-  app.get('/api', (req, res) => res.send('Hello World!'))
-}
+  app.get('/api', (req, res) => res.send('Hello World!'));
+};
 
-export default router
+export default router;

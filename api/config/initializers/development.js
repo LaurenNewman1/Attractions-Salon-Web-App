@@ -1,7 +1,7 @@
-import morgan from 'morgan'
+import morgan from 'morgan';
 
 const development = (app) => {
-  app.use(morgan('dev'))
-}
+  app.use(morgan('dev'));
+};
 
-export default development
+export default development;
