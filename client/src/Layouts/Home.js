@@ -1,12 +1,13 @@
 import React from 'react';
-import NavBar from '../Components/NavBar';
+import Page from '../Components/Page';
+import '../CSS/App.css';
 
-const Home = () => {
+const Home = (props) => {
+
   return (
-    <>
-      <NavBar/>
+    <Page>
       <div>Home</div>
-    </>
+    </Page>
   );
 }
 

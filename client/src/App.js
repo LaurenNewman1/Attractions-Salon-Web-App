@@ -12,7 +12,7 @@ import Login from './Layouts/Login';
 import {createMuiTheme, ThemeProvider} from '@material-ui/core';
 import './CSS/App.css';
 
-function App() {
+const App = () => {
 
   const theme = createMuiTheme({
     palette: {
@@ -22,9 +22,14 @@ function App() {
         dark: "#bf5f82"
       },
       secondary: {
-        main: "#9e9e9e",
-        light: "#cfcfcf",
-        dark: "#707070"
+        main: "#40cec5",
+        light: "#7cfff8",
+        dark: "#009c95"
+      },
+      background: {
+        main: "#F5F5F6",
+        light: "#fafafa",
+        dark: "#E1E2E1"
       }
     }
   });
@@ -33,7 +38,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <Router>
         <Switch>
-          <Route exact path="/" component={Home} />
+          <Route exact path="/" component={Home}/>
           <Route path="/book" component={Book} />
           <Route path="/services" component={Services} />
           <Route path="/contact" component={Contact} />

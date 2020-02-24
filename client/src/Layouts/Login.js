@@ -1,13 +1,11 @@
 import React from 'react';
-import NavBar from '../Components/NavBar';
+import Page from '../Components/Page';
 
-const Login = () => {
+const Login = (props) => {
   return (
-    <>
-      <NavBar/>
-      {/* {Start page code here (delete the following line)} */}
+    <Page>
       <div>Login</div>
-    </>
+    </Page>
   );
 }
 
