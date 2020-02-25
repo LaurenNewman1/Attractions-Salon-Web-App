@@ -16,10 +16,10 @@ const Page = ({ children }) => {
   const history = useHistory();
 
   return (
-    <Container class="background" style={{ backgroundColor: theme.palette.background.main }}>
+    <Container className="background" style={{ backgroundColor: theme.palette.background.main }}>
       <AppBar position="static">
         <Toolbar>
-          <Button onClick={() => history.push('/')}><Typography class="logo">Attractions Salon</Typography></Button>
+          <Button onClick={() => history.push('/')}><Typography className="logo">Attractions Salon</Typography></Button>
           <div className="grow" />
           <Button onClick={() => history.push('/book')}>Book</Button>
           <Button onClick={() => history.push('/services')}>Services</Button>

@@ -1,3 +1,4 @@
+import dotenv from 'dotenv';
 import express from 'express';
 import proxy from 'express-http-proxy';
 import path from 'path';
@@ -5,24 +6,37 @@ import mongoose from 'mongoose';
 import { createTerminus } from '@godaddy/terminus';
 import initializeDevelopment from './config/initializers/development';
 import initializeProduction from './config/initializers/production';
+import initializeTest from './config/initializers/testing';
 import configureRouter from './config/routes';
 
-const inProduction = process.env.NODE_ENV === 'production';
+dotenv.config();
 
-const app = express();
-const port = inProduction ? process.env.PORT : 8080;
+const environment = process.env.NODE_ENV ? process.env.NODE_ENV : 'development';
+const inProduction = environment === 'production';
+const port = environment === inProduction ? process.env.PORT : 8080;
 
 const onSignal = () => {
   mongoose.disconnect();
 };
 
-const startServer = async () => {
+const configureApp = async () => {
+  const app = express();
+
+
   // Environment Initialize
   // This would include things such as generating the mongoose connection and logging
-  if (inProduction) {
-    initializeProduction(app);
-  } else {
-    initializeDevelopment(app);
+  switch (environment) {
+    case 'production':
+      await initializeProduction(app);
+      break;
+    case 'development':
+      await initializeDevelopment(app);
+      break;
+    case 'test':
+      await initializeTest();
+      break;
+    default:
+      console.error('Unknown node environment!');
   }
 
   // Define Router
@@ -36,12 +50,19 @@ const startServer = async () => {
     app.get('/*', proxy('http://localhost:3000'));
   }
 
-  createTerminus(app, {
-    signal: 'SIGINT',
-    onSignal,
-  });
+  return app;
+};
 
-  app.listen(port, () => console.log(`Server is listening on port ${port}!`));
+const startServer = async () => {
+  try {
+    const app = await configureApp();
+
+    app.listen(port, () => console.log(`Server is listening on port ${port}!`));
+  } catch(err) {
+    console.error(err);
+  }
 };
 
 startServer();
+
+export default configureApp;
