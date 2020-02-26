@@ -22,7 +22,6 @@ describe('User Model', () => {
     name: 'test',
     email: 'test@test.com',
     password: 'testpassword',
-    salt: 'dawiopawdawj',
     role: 0,
   }
 
@@ -51,15 +50,6 @@ describe('User Model', () => {
   it ('should be not valid with an invalid password', async (done) => {
     try {
       await User.validate({ ...validUser, password: undefined })
-      done("Failed to throw validation error")
-    } catch(err) {
-      done()
-    }
-  });
-
-  it ('should be not valid with an invalid salt', async (done) => {
-    try {
-      await User.validate({ ...validUser, salt: undefined })
       done("Failed to throw validation error")
     } catch(err) {
       done()

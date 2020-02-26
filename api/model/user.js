@@ -16,10 +16,6 @@ const User = new Schema({
     type: String,
     required: true,
   },
-  salt: {
-    type: String,
-    required: true,
-  },
   role: {
     type: Number,
     required: true,
