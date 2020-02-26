@@ -27,7 +27,7 @@ const Page = ({ children }) => {
           <Button onClick={() => history.push('/login')}>Login</Button>
         </Toolbar>
       </AppBar>
-      <div className="body">
+      <div>
         { children }
       </div>
     </Container>
