@@ -6,6 +6,7 @@ const router = (app) => {
   //User Routes
   app.get('/users/:someId', users.read);
   app.delete('/users/:someId', users.remove);
+  app.put('/users/:someId', users.update);
 };
 
 export default router;

@@ -8,3 +8,7 @@ export const read = (req, res) => {
 export const remove = (req, res) => {
 //Find User from Database and remove
 };
+
+export const update = (req, res) => {
+//Find User from Database and update fields
+};
