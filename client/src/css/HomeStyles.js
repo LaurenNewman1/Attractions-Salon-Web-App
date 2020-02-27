@@ -21,18 +21,23 @@ const useStyles = makeStyles(() => ({
   },
   modelImg: {
     maxWidth: '100%',
+    maxHeight: '100%',
     objectFit: 'contain',
-    height: '100%',
+    position: 'relative',
+    bottom: 0,
   },
   leftContainer: {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    paddingBottom: '80px',
+    paddingBottom: '20px',
     height: '100%',
   },
   rightContainer: {
     height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
   },
 }));
 

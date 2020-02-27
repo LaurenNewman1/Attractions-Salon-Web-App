@@ -3,6 +3,7 @@ import {
 } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
+  toolbar: theme.mixins.toolbar,
   grow: {
     flexGrow: 1,
   },
@@ -13,13 +14,8 @@ const useStyles = makeStyles((theme) => ({
   background: {
     height: '100%',
     width: '100%',
-    position: 'absolute',
-    overflow: 'hidden',
     padding: 0,
     backgroundColor: theme.palette.background.main,
-  },
-  body: {
-    height: '100%',
   },
 }));
 

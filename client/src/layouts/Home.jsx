@@ -16,7 +16,7 @@ const Home = () => {
       <Grid container className={classes.page}>
         <Grid item xs={12} className={classes.blackBox}>
           <Grid container className={classes.page}>
-            <Grid item xs={6} className={classes.leftContainer}>
+            <Grid item xs={12} sm={6} className={classes.leftContainer}>
               <Grid container spacing={1}>
                 <Grid item xs={12}>
                   <Typography className={classes.welcomeText} variant="h4">
@@ -35,7 +35,7 @@ const Home = () => {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={6} align="center" className={classes.rightContainer}>
+            <Grid item xs={12} sm={6} align="center" className={classes.rightContainer}>
               <img src={coverModel} alt="" className={classes.modelImg} />
             </Grid>
           </Grid>

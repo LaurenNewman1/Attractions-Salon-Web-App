@@ -10,6 +10,7 @@ import Book from './layouts/Book';
 import Services from './layouts/Services';
 import Contact from './layouts/Contact';
 import Login from './layouts/Login';
+import NavBar from './components/NavBar';
 
 const App = () => {
   const theme = createMuiTheme({
@@ -33,17 +34,23 @@ const App = () => {
   });
 
   return (
-    <ThemeProvider theme={theme}>
-      <Router>
-        <Switch>
-          <Route exact path="/" component={Home} />
-          <Route path="/book" component={Book} />
-          <Route path="/services" component={Services} />
-          <Route path="/contact" component={Contact} />
-          <Route path="/login" component={Login} />
-        </Switch>
-      </Router>
-    </ThemeProvider>
+    <div style={{
+      position: 'absolute', top: 0, bottom: 0, left: 0, right: 0,
+    }}
+    >
+      <ThemeProvider theme={theme}>
+        <Router>
+          <NavBar />
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route path="/book" component={Book} />
+            <Route path="/services" component={Services} />
+            <Route path="/contact" component={Contact} />
+            <Route path="/login" component={Login} />
+          </Switch>
+        </Router>
+      </ThemeProvider>
+    </div>
   );
 };
 
