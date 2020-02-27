@@ -3,10 +3,14 @@ import {
 } from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({
+  page: {
+    height: '100%',
+  },
   blackBox: {
     backgroundColor: 'black',
     padding: '40px',
     paddingBottom: '0px',
+    height: '100%',
   },
   welcomeText: {
     color: 'white',
@@ -16,13 +20,19 @@ const useStyles = makeStyles(() => ({
     marginTop: '30px',
   },
   modelImg: {
-    maxWidth: '50%',
+    maxWidth: '100%',
+    objectFit: 'contain',
+    height: '100%',
   },
   leftContainer: {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    marginBottom: '40px',
+    paddingBottom: '80px',
+    height: '100%',
+  },
+  rightContainer: {
+    height: '100%',
   },
 }));
 

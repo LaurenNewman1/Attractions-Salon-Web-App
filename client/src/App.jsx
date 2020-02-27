@@ -10,7 +10,6 @@ import Book from './layouts/Book';
 import Services from './layouts/Services';
 import Contact from './layouts/Contact';
 import Login from './layouts/Login';
-import './css/App.css';
 
 const App = () => {
   const theme = createMuiTheme({
