@@ -3,6 +3,7 @@ import express from 'express';
 import proxy from 'express-http-proxy';
 import path from 'path';
 import mongoose from 'mongoose';
+import bodyParser from 'body-parser';
 import { createTerminus } from '@godaddy/terminus';
 import initializeDevelopment from './config/initializers/development';
 import initializeProduction from './config/initializers/production';
@@ -21,6 +22,9 @@ const onSignal = () => {
 
 const configureApp = async () => {
   const app = express();
+
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: true }));
 
 
   // Environment Initialize
