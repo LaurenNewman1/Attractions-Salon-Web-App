@@ -13,4 +13,4 @@ const Service = new Schema({
     }
 });
 
-export default mongoose.model('Service', Serivce);
+export default mongoose.model('Service', Service);
