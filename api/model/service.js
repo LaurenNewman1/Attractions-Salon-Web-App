@@ -7,7 +7,7 @@ const Service = new Schema({
     },
     price: {
         type: mongoose.Number
-    }
+    },
     addinfo: {
         type: String
     }
