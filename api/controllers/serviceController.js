@@ -18,7 +18,7 @@ export const read = (req, res) => {
 };
 export const readall = (req, res) => {
 //Find All Services from Database and return
-    Service.findById({}, (err, data) => {
+    Service.find({}, (err, data) => {
         if(err){
             console.log(err);
         }
