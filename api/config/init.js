@@ -2,7 +2,6 @@ import express from 'express';
 import proxy from 'express-http-proxy';
 import path from 'path';
 import bodyParser from 'body-parser';
-import { createTerminus } from '@godaddy/terminus';
 import dotenv from 'dotenv';
 import initializeDevelopment from './initializers/development';
 import initializeProduction from './initializers/production';
@@ -20,7 +19,6 @@ export default async () => {
 
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
-
 
   // Environment Initialize
   // This would include things such as generating the mongoose connection and logging

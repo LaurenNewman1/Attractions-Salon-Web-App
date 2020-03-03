@@ -1,18 +1,22 @@
-import * as users from '../controllers/userController.js';
-import * as services from '../controllers/serviceController.js';
+import * as users from '../controllers/userController';
+import * as services from '../controllers/serviceController';
+import * as sessions from '../controllers/sessionController';
 
 const router = (app) => {
-  app.get('/api', (req, res) => res.send('Hello World!'));
+
+  // Session Routes
+  app.post('/login', sessions.create);
+  app.delete('/logout', sessions.destroy);
 
   // User Routes
-  app.get('/users/:someId', users.read);
+  app.get('/users', users.read);
   app.delete('/users/:someId', users.remove);
   app.put('/users/:someId', users.update);
   app.post('/users', users.create);
 
-  //Service Routes
-  app.get('/services',services.readall)
-  app.get('/services/:someId',services.read)
+  // Service Routes
+  app.get('/services',services.readall);
+  app.get('/services/:someId',services.read);
 };
 
 export default router;

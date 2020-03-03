@@ -1,26 +1,23 @@
-import mongoose from 'mongoose';
-import User from '../model/user.js';
 import argon2 from 'argon2';
+import User from '../model/user';
 
-export const read = (req, res) => {
-//Find User from Database and return
-    User.findById(req.params.someId, (err, data) => {
-        if(err){
-            console.log(err);
-        }
-        else if(data == null){
-            data = {error: 'User not found!'};
-            res.send(data);
-        }
-        else{
-            res.send(data);
-        }
-    });
+export const read = async (req, res) => {
+  // Find User from Database and return
+  if (req.session.userID) {
+    const user = await User.findById(req.session.userID).exec();
+    if (user) {
+      res.status(200).type('json').send(user);
+    } else {
+      res.status(404).type('json').send({ error: 'User not found.' });
+    }
+  } else {
+    res.sendStatus(403);
+  }
 };
 
-export const remove = (req, res) => {
+export const remove = async (req, res) => {
 //Find User from Database and remove
-    User.findByIdAndRemove(req.params.someId, (err, data) => {
+  /*  User.findByIdAndRemove(req.params.someId, (err, data) => {
         if (err) {
             console.log(err);
         }
@@ -33,11 +30,12 @@ export const remove = (req, res) => {
             res.send(data);
         }
 
-    });
+    });*/
 };
 
-export const update = (req, res) => {
-    User.findById(req.params.someId, (err, data) => {
+
+export const update = async (req, res) => {
+   /* User.findById(req.params.someId, (err, data) => {
         if(err){
             res.status(404).send(err);
         }
@@ -53,7 +51,7 @@ export const update = (req, res) => {
             }
         }
         data.role = req.body.role;
-    });
+    });*/
 };
 
 export const create = async (req, res) => {

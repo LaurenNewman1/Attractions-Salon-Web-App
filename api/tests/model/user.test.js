@@ -1,4 +1,4 @@
-import configureApp from '../../config/config';
+import configureApp from '../../config/init';
 import User from '../../model/user';
 
 describe('User Model', () => {
@@ -14,6 +14,7 @@ describe('User Model', () => {
   });
 
   afterAll(async (done) => {
+    await User.deleteMany({});
     await disconnectDB();
     done()
   });

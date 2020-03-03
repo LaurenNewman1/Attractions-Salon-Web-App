@@ -1,4 +1,4 @@
-import configureApp from './config/config';
+import configureApp from './config/init';
 
 const onSignal = () => {
   mongoose.disconnect();

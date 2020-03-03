@@ -1,6 +1,6 @@
 import User from '../../model/user';
 import request from 'supertest';
-import configureApp from '../../config/config';
+import configureApp from '../../config/init';
 import argon2 from 'argon2';
 
 describe('User Controller', () => {
@@ -17,6 +17,7 @@ describe('User Controller', () => {
     });
 
     afterAll(async (done) => {
+      await User.deleteMany({});
       await disconnectDB();
       done()
     });
