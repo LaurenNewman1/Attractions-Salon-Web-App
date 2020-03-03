@@ -4,10 +4,11 @@ import * as services from '../controllers/serviceController.js';
 const router = (app) => {
   app.get('/api', (req, res) => res.send('Hello World!'));
 
-  //User Routes
+  // User Routes
   app.get('/users/:someId', users.read);
   app.delete('/users/:someId', users.remove);
   app.put('/users/:someId', users.update);
+  app.post('/users', users.create);
 
   //Service Routes
   app.get('/services',services.readall)

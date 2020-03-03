@@ -1,11 +1,11 @@
-import initTest from '../../config/initializers/testing.js'
-import User from '../../model/user'
+import configureApp from '../../config/config';
+import User from '../../model/user';
 
 describe('User Model', () => {
-  let connection;
+  let disconnectDB;
 
   beforeAll(async () => {
-    connection = await initTest();
+    disconnectDB = (await configureApp())[1];
   });
 
   beforeEach(async (done) => {
@@ -14,7 +14,7 @@ describe('User Model', () => {
   });
 
   afterAll(async (done) => {
-    await connection.disconnect();
+    await disconnectDB();
     done()
   });
 
