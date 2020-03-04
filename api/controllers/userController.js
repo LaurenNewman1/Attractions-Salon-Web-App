@@ -17,20 +17,20 @@ export const read = async (req, res) => {
 
 export const remove = async (req, res) => {
 //Find User from Database and remove
-  /*  User.findByIdAndRemove(req.params.someId, (err, data) => {
-        if (err) {
-            console.log(err);
-        }
-        else if(!data) {
-            data = {error: 'User not found!'};
-            res.send(data);
-        }
-        else{
-            data = {error: 'User deleted'};
-            res.send(data);
-        }
+  try {
+    var data = await User.deleteOne({_id: req.params.someId});
+    if (data.n != 1) {
+      data = {error: 'User not found!'};
+      res.status(404).send(data);
+    } else {
+      data = {error: 'User deleted'};
+      res.status(200).send(data);
+    }
+  } catch (err){
+    res.status(400).type('json').send(err);
+  }
 
-    });*/
+
 };
 
 

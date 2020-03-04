@@ -1,33 +1,33 @@
 import mongoose from 'mongoose';
 import Service from '../model/service.js';
 
-export const read = (req, res) => {
+export const read = async (req, res) => {
 //Find A servicefrom Database and return
-    Service.findById(req.params.someId, (err, data) => {
-        if(err){
-            console.log(err);
-        }
-        else if(data == null){
+    try {
+        var data = await Service.findOne({_id: req.params.someId});
+        if (!data) {
             data = {error: 'Service not found!'};
-            res.send(data);
+            res.status(404).send(data);
+        } else {
+            res.status(200).send(data);
         }
-        else{
-            res.send(data);
-        }
-    });
+    }
+    catch (err) {
+        res.status(400).type('json').send(err);
+    }
 };
-export const readall = (req, res) => {
+export const readall = async (req, res) => {
 //Find All Services from Database and return
-    Service.find({}, (err, data) => {
-        if(err){
-            console.log(err);
-        }
-        else if(data == null){
+    try {
+        var data = await Service.find({});
+        if (data.length == 0) {
             data = {error: 'No services found!'};
-            res.send(data);
+            res.status(404).send(data);
+        } else {
+            res.status(200).send(data);
         }
-        else{
-            res.send(data);
-        }
-    });
+    }
+    catch (err) {
+        res.status(400).type('json').send(err);
+    }
 };
