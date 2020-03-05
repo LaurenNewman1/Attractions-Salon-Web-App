@@ -35,23 +35,40 @@ export const remove = async (req, res) => {
 
 
 export const update = async (req, res) => {
-   /* User.findById(req.params.someId, (err, data) => {
-        if(err){
-            res.status(404).send(err);
-        }
-        data.name = req.body.name;
-        data.email = req.body.email;
-        data.phone_number = req.body.phone_number;
-        if(!req.body.password) {
-            //check if inserted password is equivalent to the current password for security purposes
-            const hash = await argon2.hash(req.params.inserted_password);
-            const valid = await argon2.verify(hash, data.password);
-            if(valid) {
-                data.password = await argon2.hash(req.body.passowrd);
+    try{
+        const user = await User.findById(req.params.someId, async (err, data) => {
+            if(err) {
+                res.status(404).type('json').send(err);
+            } else {
+                data.name = req.body.name;
+                data.email = req.body.email;
+                data.phone_number = req.body.phone_number;
+                data.role = req.body.role;
+
+            if(req.body.inserted_password.length > 0) {
+                    //check if inserted password is equivalent to the current password for security purposes
+
+                    if(await argon2.verify(data.password, req.body.inserted_password)) {
+                        data.password = await argon2.hash(req.body.password);
+                    } else {
+                        res.status(404).type('json').send(err);
+                    }
+                }
+
+                data.save((err) => {
+                    if(err) {
+                        res.status(404).type('json').send(err);
+                    }
+                    res.status(200).type('json').send(data);
+                });
             }
-        }
-        data.role = req.body.role;
-    });*/
+        });
+    } catch(err) {
+        res.status(400).type('json').send(err);
+    }
+
+    //res.sendStatus(403);
+
 };
 
 export const create = async (req, res) => {
