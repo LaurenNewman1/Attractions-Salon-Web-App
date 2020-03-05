@@ -1,6 +1,21 @@
 import mongoose from 'mongoose';
 import Service from '../model/service.js';
 
+export const create = async (req, res) => {
+  try {
+      if(req.body.name) {
+         const service = await Service.create(req.body);
+         res.status(200).send(service);
+      }
+      else
+      {
+          res.status(403).type('json').send({error: 'Name is required'})
+      }
+  } catch (err) {
+      res.status(400).type('json').send(err);
+  }
+};
+
 export const read = async (req, res) => {
 //Find A servicefrom Database and return
     try {
