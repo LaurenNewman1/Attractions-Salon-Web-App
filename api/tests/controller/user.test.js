@@ -36,18 +36,18 @@ describe('User Controller', () => {
     });
 
     it ('should return 200 (OK) if given a valid user to create', async () => {
-      await request(app).post('/users').send(getParams(validUser)).set('Accept', 'application/json').expect(200);
+      await request(app).post('/api/users').send(getParams(validUser)).set('Accept', 'application/json').expect(200);
     });
 
     it ('should generator a hashed password given the plaintext user password', async () => {
-      await request(app).post('/users').send(getParams(validUser)).set('Accept', 'application/json').expect(200).then(res => {
+      await request(app).post('/api/users').send(getParams(validUser)).set('Accept', 'application/json').expect(200).then(res => {
         argon2.verify(res.body.password, validUser.password).then((result) => expect(result).toEqual(true));
       });
     });
 
     it ('should return 403 (Forbidden) if given an incalid user to create', async () => {
       const { email, ...invalidUser } = validUser
-      await request(app).post('/users').send(getParams(invalidUser)).set('Accept', 'application/json').expect(403);
+      await request(app).post('/api/users').send(getParams(invalidUser)).set('Accept', 'application/json').expect(403);
     });
   });
 
@@ -71,7 +71,7 @@ describe('User Controller', () => {
     });
 
     it ('should return 200 (OK) if given a valid user to create', async () => {
-      await request(app).put(`/users/${user._id}`).send(getParams({ name: 'test' })).set('Accept', 'application/json').expect(200);
+      await request(app).put(`/api/users/${user._id}`).send(getParams({ name: 'test' })).set('Accept', 'application/json').expect(200);
     });
 
     it ('should return 403 (Forbidden) to attempt to update the password without the old one', async () => {
@@ -81,7 +81,7 @@ describe('User Controller', () => {
         password: 'test1password',
         role: 1
       };
-      await request(app).put(`/users/${user._id}`).send(getParams(updateParams)).set('Accept', 'application/json').expect(403);
+      await request(app).put(`/api/users/${user._id}`).send(getParams(updateParams)).set('Accept', 'application/json').expect(403);
     });
 
 
@@ -93,7 +93,7 @@ describe('User Controller', () => {
         insertedPassword: 'wrong',
         role: 1
       };
-      await request(app).put(`/users/${user._id}`).send(getParams(updateParams)).set('Accept', 'application/json').expect(403);
+      await request(app).put(`/api/users/${user._id}`).send(getParams(updateParams)).set('Accept', 'application/json').expect(403);
     });
 
     it ('should correctly update all of the attributes', async () => {
@@ -106,7 +106,7 @@ describe('User Controller', () => {
         role: 1
       };
       const { insertedPassword, ...compareParams } = updateParams;
-      await request(app).put(`/users/${user._id}`).send(getParams(updateParams)).set('Accept', 'application/json').expect(200);
+      await request(app).put(`/api/users/${user._id}`).send(getParams(updateParams)).set('Accept', 'application/json').expect(200);
       user = await User.findById(user._id).exec();
       const updatedUser = {
         name: user.name,
@@ -132,16 +132,16 @@ describe('User Controller', () => {
     });
 
     it ('should return 200 (OK) if given a valid user to delete', async () => {
-      const res = await request(app).post('/users').send(getParams(validUser)).set('Accept', 'application/json');
-      await request(app).delete('/users/' + res.body._id).send(getParams(validUser)).set('Accept', 'application/json').expect(200);
+      const res = await request(app).post('/api/users').send(getParams(validUser)).set('Accept', 'application/json');
+      await request(app).delete('/api/users/' + res.body._id).send(getParams(validUser)).set('Accept', 'application/json').expect(200);
     });
 
     it ('should return 404 (Not Found) if given an invalid user to delete', async () => {
-      await request(app).delete('/users/5e5b0129be7a7430e036ee9a').send(getParams(validUser)).set('Accept', 'application/json').expect(404);
+      await request(app).delete('/api/users/5e5b0129be7a7430e036ee9a').send(getParams(validUser)).set('Accept', 'application/json').expect(404);
     });
 
     it ('should return 400 (Bad Request) if given an invalid path', async () => {
-      await request(app).delete('/users/random').send(getParams(validUser)).set('Accept', 'application/json').expect(400);
+      await request(app).delete('/api/users/random').send(getParams(validUser)).set('Accept', 'application/json').expect(400);
     });
   });
 });

@@ -43,11 +43,11 @@ describe('Service Controller', () => {
     });
 
     it ('should return 200 (OK) if given a valid service to create', async () => {
-      await request(app).post('/services').send(getParams(validService)).set('Accept', 'application/json').expect(200);
+      await request(app).post('/api/services').send(getParams(validService)).set('Accept', 'application/json').expect(200);
     });
 
     it ('should return 403 (Forbidden) if given an invalid serivce to create', async () => {
-      await request(app).post('/services').send(getParams(invalidService)).set('Accept', 'application/json').expect(403);
+      await request(app).post('/api/services').send(getParams(invalidService)).set('Accept', 'application/json').expect(403);
     });
   });
 
@@ -64,17 +64,17 @@ describe('Service Controller', () => {
     });
 
     it ('should return 200 (OK) if given a valid user to read', async () => {
-      const res = await request(app).post('/services').send(getParams(validService)).set('Accept', 'application/json');
-      await request(app).get('/services/' + res.body._id).send(getParams(validService)).set('Accept', 'application/json').expect(200);
+      const res = await request(app).post('/api/services').send(getParams(validService)).set('Accept', 'application/json');
+      await request(app).get('/api/services/' + res.body._id).send(getParams(validService)).set('Accept', 'application/json').expect(200);
     });
 
     it ('should return 200 (OK) if given a valid type', async () => {
-      const res = await request(app).post('/services').send(getParams(validService)).set('Accept', 'application/json');
-      await request(app).get('/services/types/hair').send(getParams(validService)).set('Accept', 'application/json').expect(200);
+      const res = await request(app).post('/api/services').send(getParams(validService)).set('Accept', 'application/json');
+      await request(app).get('/api/services/types/hair').send(getParams(validService)).set('Accept', 'application/json').expect(200);
     });
 
     it ('should return 404 (Not Found) if given an invalid service to read', async () => {
-      await request(app).get('/services/5e5b0129be7a7430e036ee9a').send(getParams(validService)).set('Accept', 'application/json').expect(404);
+      await request(app).get('/api/services/5e5b0129be7a7430e036ee9a').send(getParams(validService)).set('Accept', 'application/json').expect(404);
     });
   });
 
@@ -91,8 +91,8 @@ describe('Service Controller', () => {
     });
 
     it ('should return 200 (OK) if there are services to read', async () => {
-      await request(app).post('/services').send(getParams(validService)).set('Accept', 'application/json');
-      await request(app).get('/services').send(getParams(validService)).set('Accept', 'application/json').expect(200);
+      await request(app).post('/api/services').send(getParams(validService)).set('Accept', 'application/json');
+      await request(app).get('/api/services').send(getParams(validService)).set('Accept', 'application/json').expect(200);
     });
   });
 });

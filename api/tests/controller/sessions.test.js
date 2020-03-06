@@ -45,26 +45,26 @@ describe('Session Controller', () => {
 
   describe('POST /login', () => {
     it ('should return 200 (OK) if given a valid user to login as', async () => {
-      await agent.post('/users').send(getParams(validUser)).set('Accept', 'application/json').expect(200);
-      await agent.post('/login').send(getParams(validLogin)).set('Accept', 'application/json').expect(200);
+      await agent.post('/api/users').send(getParams(validUser)).set('Accept', 'application/json').expect(200);
+      await agent.post('/api/login').send(getParams(validLogin)).set('Accept', 'application/json').expect(200);
     });
 
     it ('should define a cookie with the user id if successful', async () => {
-      await agent.post('/users').send(getParams(validUser)).set('Accept', 'application/json').expect(200);
-      await agent.post('/login').send(getParams(validLogin)).set('Accept', 'application/json').expect(200);
-      await agent.get('/users').set('Accept', 'application/json').expect(200);
+      await agent.post('/api/users').send(getParams(validUser)).set('Accept', 'application/json').expect(200);
+      await agent.post('/api/login').send(getParams(validLogin)).set('Accept', 'application/json').expect(200);
+      await agent.get('/api/users').set('Accept', 'application/json').expect(200);
     });
   });
 
   describe('DELETE /logout', () => {
     it ('should return 200 (OK) if logged in', async () => {
-      await agent.post('/users').send(getParams(validUser)).set('Accept', 'application/json').expect(200);
-      await agent.post('/login').send(getParams(validLogin)).set('Accept', 'application/json').expect(200);
-      await agent.delete('/logout').send().set('Accept', 'application/json').expect(200);
+      await agent.post('/api/users').send(getParams(validUser)).set('Accept', 'application/json').expect(200);
+      await agent.post('/api/login').send(getParams(validLogin)).set('Accept', 'application/json').expect(200);
+      await agent.delete('/api/logout').send().set('Accept', 'application/json').expect(200);
     });
 
     it ('should return 403 (Forbidden) if not logged in', async () => {
-      await agent.delete('/logout').send().set('Accept', 'application/json').expect(403);
+      await agent.delete('/api/logout').send().set('Accept', 'application/json').expect(403);
     });
   });
 });
