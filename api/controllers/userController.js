@@ -16,59 +16,57 @@ export const read = async (req, res) => {
 };
 
 export const remove = async (req, res) => {
-//Find User from Database and remove
+  // Find User from Database and remove
   try {
-    var data = await User.deleteOne({_id: req.params.someId});
-    if (data.n != 1) {
-      data = {error: 'User not found!'};
+    let data = await User.deleteOne({ _id: req.params.someId });
+    if (data.n !== 1) {
+      data = { error: 'User not found!' };
       res.status(404).send(data);
     } else {
-      data = {error: 'User deleted'};
+      data = { error: 'User deleted' };
       res.status(200).send(data);
     }
-  } catch (err){
+  } catch (err) {
     res.status(400).type('json').send(err);
   }
-
-
 };
 
 
 export const update = async (req, res) => {
-    try{
-        const user = await User.findById(req.params.someId, async (err, data) => {
-            if(err) {
-                res.status(404).type('json').send(err);
-            } else {
-                data.name = req.body.name;
-                data.email = req.body.email;
-                data.phone_number = req.body.phone_number;
-                data.role = req.body.role;
+  try {
+    const { insertedPassword, ...params } = req.body;
+    const { someId } = req.params;
 
-            if(req.body.inserted_password.length > 0) {
-                    //check if inserted password is equivalent to the current password for security purposes
-
-                    if(await argon2.verify(data.password, req.body.inserted_password)) {
-                        data.password = await argon2.hash(req.body.password);
-                    } else {
-                        res.status(404).type('json').send(err);
-                    }
-                }
-
-                data.save((err) => {
-                    if(err) {
-                        res.status(404).type('json').send(err);
-                    }
-                    res.status(200).type('json').send(data);
-                });
-            }
-        });
-    } catch(err) {
-        res.status(400).type('json').send(err);
+    if (params.password && !insertedPassword) {
+      res.status(403).type('json').send({ error: 'Attempted to change password, but got old password incorrect.' });
+      return;
     }
 
-    //res.sendStatus(403);
+    if (insertedPassword) {
+      const userFind = await User.findById(someId).exec();
 
+      if (!userFind) {
+        res.status(404).type('json').send({ error: 'User not found' });
+        return;
+      }
+
+      if (!(await argon2.verify(userFind.password, insertedPassword))) {
+        res.status(403).type('json').send({ error: 'Attempted to change password, but got old password incorrect.' });
+        return;
+      }
+    }
+
+    const user = await User.findByIdAndUpdate(someId, params).exec();
+
+    if (user) {
+      res.status(200).type('json').send(user);
+    } else {
+      res.status(404).type('json').send({ error: 'User not found' });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).type('json').send(err);
+  }
 };
 
 export const create = async (req, res) => {

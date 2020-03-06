@@ -3,7 +3,6 @@ import * as services from '../controllers/serviceController';
 import * as sessions from '../controllers/sessionController';
 
 const router = (app) => {
-
   // Session Routes
   app.post('/login', sessions.create);
   app.delete('/logout', sessions.destroy);
@@ -15,9 +14,9 @@ const router = (app) => {
   app.post('/users', users.create);
 
   // Service Routes
-  app.post('/services', services.create)
-  app.get('/services',services.readall);
-  app.get('/services/:someId',services.read);
+  app.post('/services', services.create);
+  app.get('/services', services.readall);
+  app.get('/services/:someId', services.read);
 };
 
 export default router;

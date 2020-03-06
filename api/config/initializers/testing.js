@@ -11,6 +11,7 @@ const test = async (app) => {
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      useFindAndModify: false,
     });
   app.use(session({
     store: new MongoStore({ mongooseConnection: connection.connection }),

@@ -51,6 +51,74 @@ describe('User Controller', () => {
     });
   });
 
+  describe('PUT /update/:someId', () => {
+    let user;
+
+    beforeEach(async (done) => {
+      await User.deleteMany({});
+      try {
+        user = await User.create({...validUser, password: await argon2.hash(validUser.password)});
+        done()
+      } catch (err) {
+        console.error(err);
+      }
+    });
+
+    afterAll(async (done) => {
+      await User.deleteMany({});
+      await disconnectDB();
+      done()
+    });
+
+    it ('should return 200 (OK) if given a valid user to create', async () => {
+      await request(app).put(`/users/${user._id}`).send(getParams({ name: 'test' })).set('Accept', 'application/json').expect(200);
+    });
+
+    it ('should return 403 (Forbidden) to attempt to update the password without the old one', async () => {
+      const updateParams = {
+        name: 'test1',
+        email: 'test1@test.com',
+        password: 'test1password',
+        role: 1
+      };
+      await request(app).put(`/users/${user._id}`).send(getParams(updateParams)).set('Accept', 'application/json').expect(403);
+    });
+
+
+    it ('should return 403 (Forbidden) to attempt to update the password with an incorrect old one', async () => {
+      const updateParams = {
+        name: 'test1',
+        email: 'test1@test.com',
+        password: 'test1password',
+        insertedPassword: 'wrong',
+        role: 1
+      };
+      await request(app).put(`/users/${user._id}`).send(getParams(updateParams)).set('Accept', 'application/json').expect(403);
+    });
+
+    it ('should correctly update all of the attributes', async () => {
+
+      const updateParams = {
+        name: 'test1',
+        email: 'test1@test.com',
+        password: 'test1password',
+        insertedPassword: 'testpassword',
+        role: 1
+      };
+      const { insertedPassword, ...compareParams } = updateParams;
+      await request(app).put(`/users/${user._id}`).send(getParams(updateParams)).set('Accept', 'application/json').expect(200);
+      user = await User.findById(user._id).exec();
+      const updatedUser = {
+        name: user.name,
+        email: user.email,
+        password: user.password,
+        role: user.role,
+      }
+
+      expect(updatedUser).toEqual(compareParams);
+    });
+  });
+
   describe('DELETE /users/:someId', () => {
     beforeEach(async (done) => {
       await User.deleteMany({});
