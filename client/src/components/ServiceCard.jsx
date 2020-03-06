@@ -29,11 +29,13 @@ const ServiceCard = ({ service }) => {
       </CardMedia>
       <CardContent>
         <div className={classes.flexContainer}>
-          <Typography variant="subtitle1">{service.name}</Typography>
+          <Typography variant="subtitle1" noWrap>{service.name}</Typography>
           <Typography variant="subtitle2" className={classes.time}>
             <AccessTime />
             {' '}
             {service.time}
+            {' '}
+            min
           </Typography>
         </div>
         <Typography variant="body2" color="textSecondary" component="p">

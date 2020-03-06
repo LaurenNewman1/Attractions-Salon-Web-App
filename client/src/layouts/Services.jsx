@@ -1,95 +1,39 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-  Typography, Card, CardMedia, CardContent, Grid, CardActions, Button, Paper,
+  Typography, Grid, CircularProgress,
 } from '@material-ui/core';
-import {
-  AccessTime,
-} from '@material-ui/icons';
-import {
-  useHistory,
-} from 'react-router-dom';
 import Page from '../components/Page';
 import useStyles from '../css/ServiceStyles';
-import hair from '../images/hair.jpeg';
+import ServiceCard from '../components/ServiceCard';
+import fetchServicesByType from '../stores/ServicesStores';
 
 const Services = () => {
   const classes = useStyles();
-  const history = useHistory();
+
+  const [nails, setNails] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+    setNails(fetchServicesByType());
+    setLoading(false);
+    console.log(nails);
+  }, nails);
 
   return (
     <Page>
-      <Typography variant="h4">Nails</Typography>
-      <Grid container spacing={3} className={classes.container}>
-        <Grid item xs={3}>
-          <Card>
-            <CardMedia component="image" image={hair} className={classes.media}>
-              <div className={classes.price}>
-                <Paper className={classes.pricePaper}>
-                  <Typography variant="body2">$30</Typography>
-                </Paper>
-              </div>
-            </CardMedia>
-            <CardContent>
-              <div className={classes.flexContainer}>
-                <Typography variant="subtitle1">Trim</Typography>
-                <Typography variant="subtitle2" className={classes.time}>
-                  <AccessTime />
-                  {' '}
-                  30 min
-                </Typography>
-              </div>
-              <Typography variant="body2" color="textSecondary" component="p">
-                This is a description of what this service is.
-              </Typography>
-            </CardContent>
-            <CardActions className={classes.cardActions}>
-              <Button
-                variant="contained"
-                color="primary"
-                size="small"
-                onClick={() => history.push('/book')}
-              >
-                Book Now
-              </Button>
-            </CardActions>
-          </Card>
-        </Grid>
-
-        <Grid item xs={3}>
-          <Card>
-            <CardMedia component="image" image={hair} className={classes.media}>
-              <div className={classes.price}>
-                <Paper className={classes.pricePaper}>
-                  <Typography variant="body2">$30</Typography>
-                </Paper>
-              </div>
-            </CardMedia>
-            <CardContent>
-              <div className={classes.flexContainer}>
-                <Typography variant="subtitle1">Trim</Typography>
-                <Typography variant="subtitle2" className={classes.time}>
-                  <AccessTime />
-                  {' '}
-                  30 min
-                </Typography>
-              </div>
-              <Typography variant="body2" color="textSecondary" component="p">
-                This is a description of what this service is.
-              </Typography>
-            </CardContent>
-            <CardActions className={classes.cardActions}>
-              <Button
-                variant="contained"
-                color="primary"
-                size="small"
-                onClick={() => history.push('/book')}
-              >
-                Book Now
-              </Button>
-            </CardActions>
-          </Card>
-        </Grid>
-      </Grid>
+      {loading ? <CircularProgress />
+        : (
+          <>
+            <Typography variant="h4">Nails</Typography>
+            <Grid container spacing={3} className={classes.container}>
+              <Grid item xs={12} sm={6} md={3}>
+                {!nails[0] ? null
+                  : <ServiceCard service={nails[0]} />}
+              </Grid>
+            </Grid>
+          </>
+        )}
     </Page>
   );
 };
