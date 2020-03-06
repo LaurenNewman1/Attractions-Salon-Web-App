@@ -44,9 +44,9 @@ describe('Session Controller', () => {
   }
 
   describe('POST /login', () => {
-    it ('should return 200 (OK) if given a valid user to login as', async (done) => {
+    it ('should return 200 (OK) if given a valid user to login as', async () => {
       await agent.post('/users').send(getParams(validUser)).set('Accept', 'application/json').expect(200);
-      await agent.post('/login').send(getParams(validLogin)).set('Accept', 'application/json').expect(200).then(() => done());
+      await agent.post('/login').send(getParams(validLogin)).set('Accept', 'application/json').expect(200);
     });
 
     it ('should define a cookie with the user id if successful', async () => {

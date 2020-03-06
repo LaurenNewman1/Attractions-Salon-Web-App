@@ -1,48 +1,35 @@
-import mongoose from 'mongoose';
-import Service from '../model/service.js';
+import Service from '../model/service';
 
 export const create = async (req, res) => {
   try {
-      if(req.body.name) {
-         const service = await Service.create(req.body);
-         res.status(200).send(service);
-      }
-      else
-      {
-          res.status(403).type('json').send({error: 'Name is required'})
-      }
+    const service = await Service.create(req.body);
+    res.status(200).send(service);
   } catch (err) {
-      res.status(400).type('json').send(err);
+    res.status(403).type('json').send(err);
   }
 };
 
 export const read = async (req, res) => {
-//Find A servicefrom Database and return
-    try {
-        var data = await Service.findOne({_id: req.params.someId});
-        if (!data) {
-            data = {error: 'Service not found!'};
-            res.status(404).send(data);
-        } else {
-            res.status(200).send(data);
-        }
+  // Find A service from Database and return
+  try {
+    const data = await Service.findOne({ _id: req.params.someId }).exec();
+    if (!data) {
+      res.status(404).type('json').send({ error: 'Service not found!' });
+    } else {
+      res.status(200).send(data);
     }
-    catch (err) {
-        res.status(400).type('json').send(err);
-    }
+  } catch (err) {
+    console.log(err);
+    res.status(400).type('json').send(err);
+  }
 };
+
 export const readall = async (req, res) => {
-//Find All Services from Database and return
-    try {
-        var data = await Service.find({});
-        if (data.length == 0) {
-            data = {error: 'No services found!'};
-            res.status(404).send(data);
-        } else {
-            res.status(200).send(data);
-        }
-    }
-    catch (err) {
-        res.status(400).type('json').send(err);
-    }
+  // Find All Services from Database and return
+  try {
+    const data = await Service.find({});
+    res.status(200).send(data);
+  } catch (err) {
+    res.status(400).type('json').send(err);
+  }
 };
