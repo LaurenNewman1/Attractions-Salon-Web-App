@@ -4,7 +4,7 @@ import Service from '../../model/service';
 describe('Service Model', () => {
     let disconnectDB;
 
-    beforeAll(async () => {
+    beforeEach(async () => {
         disconnectDB = (await configureApp())[1];
     });
 

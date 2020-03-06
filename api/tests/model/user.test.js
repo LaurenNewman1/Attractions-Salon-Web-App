@@ -4,7 +4,7 @@ import User from '../../model/user';
 describe('User Model', () => {
   let disconnectDB;
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     disconnectDB = (await configureApp())[1];
   });
 

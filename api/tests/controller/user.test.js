@@ -6,14 +6,8 @@ import argon2 from 'argon2';
 describe('User Controller', () => {
   let disconnectDB, app;
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     [app, disconnectDB] = await configureApp();
-  });
-
-  afterAll(async (done) => {
-    await User.deleteMany({});
-    await disconnectDB();
-    done()
   });
 
   const getParams = (user) => {
@@ -35,6 +29,12 @@ describe('User Controller', () => {
       done()
     });
 
+    afterAll(async (done) => {
+      await User.deleteMany({});
+      await disconnectDB();
+      done()
+    });
+
     it ('should return 200 (OK) if given a valid user to create', async () => {
       await request(app).post('/users').send(getParams(validUser)).set('Accept', 'application/json').expect(200);
     });
@@ -52,6 +52,16 @@ describe('User Controller', () => {
   });
 
   describe('DELETE /users/:someId', () => {
+    beforeEach(async (done) => {
+      await User.deleteMany({});
+      done()
+    });
+
+    afterAll(async (done) => {
+      await User.deleteMany({});
+      await disconnectDB();
+      done()
+    });
 
     it ('should return 200 (OK) if given a valid user to delete', async () => {
       const res = await request(app).post('/users').send(getParams(validUser)).set('Accept', 'application/json');

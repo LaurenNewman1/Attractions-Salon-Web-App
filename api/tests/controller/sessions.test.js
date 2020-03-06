@@ -7,7 +7,7 @@ describe('Session Controller', () => {
   let disconnectDB, app;
   let agent;
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     [app, disconnectDB] = await configureApp();
     app.use(cookieParser());
     agent = request.agent(app);

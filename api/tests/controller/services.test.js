@@ -5,14 +5,8 @@ import configureApp from '../../config/init';
 describe('Service Controller', () => {
     let disconnectDB, app;
 
-    beforeAll(async () => {
+    beforeEach(async () => {
         [app, disconnectDB] = await configureApp();
-    });
-
-    afterAll(async (done) => {
-        await Service.deleteMany({});
-        await disconnectDB();
-        done()
     });
 
     const getParams = (user) => {
@@ -38,6 +32,12 @@ describe('Service Controller', () => {
             done()
         });
 
+        afterAll(async (done) => {
+            await Service.deleteMany({});
+            await disconnectDB();
+            done()
+        });
+
         it ('should return 200 (OK) if given a valid service to create', async () => {
             await request(app).post('/services').send(getParams(validService)).set('Accept', 'application/json').expect(200);
         });
@@ -50,6 +50,12 @@ describe('Service Controller', () => {
     describe('READ /services/:someId', () => {
         beforeEach(async (done) => {
             await Service.deleteMany({});
+            done()
+        });
+
+        afterAll(async (done) => {
+            await Service.deleteMany({});
+            await disconnectDB();
             done()
         });
 
@@ -70,6 +76,12 @@ describe('Service Controller', () => {
     describe('READ /services', () => {
         beforeEach(async (done) => {
             await Service.deleteMany({});
+            done()
+        });
+
+        afterAll(async (done) => {
+            await Service.deleteMany({});
+            await disconnectDB();
             done()
         });
 
