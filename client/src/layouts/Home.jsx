@@ -13,7 +13,7 @@ const Home = () => {
 
   return (
     <Page>
-      <Grid container className={classes.page}>
+      <Grid className={classes.page}>
         <Grid item xs={12} className={classes.blackBox}>
           <Grid container className={classes.page}>
             <Grid item xs={12} sm={6} className={classes.leftContainer}>

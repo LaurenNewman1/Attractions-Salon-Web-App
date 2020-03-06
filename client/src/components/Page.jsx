@@ -9,7 +9,7 @@ const Page = ({ children }) => {
   const classes = useStyles();
 
   return (
-    <Container className={classes.background}>
+    <Container maxWidth={false} className={classes.background}>
       { children }
     </Container>
   );
