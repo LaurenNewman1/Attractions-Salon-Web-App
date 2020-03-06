@@ -5,9 +5,9 @@ import connectMongo from 'connect-mongo';
 
 const MongoStore = connectMongo(session);
 
-const development = async (app) => {
+const test = async (app) => {
   app.use(morgan('dev'));
-  const connection = await mongoose.connect(process.env.DB_URL,
+  const connection = await mongoose.connect(process.env.MONGO_URL,
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,
@@ -22,4 +22,4 @@ const development = async (app) => {
   return connection;
 };
 
-export default development;
+export default test;
