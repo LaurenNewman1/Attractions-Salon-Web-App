@@ -16,6 +16,7 @@ const router = (app) => {
   // Service Routes
   app.post('/services', services.create);
   app.get('/services', services.readall);
+  app.get('/services/types/:type', services.readType);
   app.get('/services/:someId', services.read);
 };
 

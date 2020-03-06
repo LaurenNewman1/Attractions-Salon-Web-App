@@ -68,12 +68,13 @@ describe('Service Controller', () => {
       await request(app).get('/services/' + res.body._id).send(getParams(validService)).set('Accept', 'application/json').expect(200);
     });
 
-    it ('should return 404 (Not Found) if given an invalid service to read', async () => {
-      await request(app).get('/services/5e5b0129be7a7430e036ee9a').send(getParams(validService)).set('Accept', 'application/json').expect(404);
+    it ('should return 200 (OK) if given a valid type', async () => {
+      const res = await request(app).post('/services').send(getParams(validService)).set('Accept', 'application/json');
+      await request(app).get('/services/types/hair').send(getParams(validService)).set('Accept', 'application/json').expect(200);
     });
 
-    it ('should return 400 (Bad Request) if given an invalid path', async () => {
-      await request(app).get('/services/random').send(getParams(validService)).set('Accept', 'application/json').expect(400);
+    it ('should return 404 (Not Found) if given an invalid service to read', async () => {
+      await request(app).get('/services/5e5b0129be7a7430e036ee9a').send(getParams(validService)).set('Accept', 'application/json').expect(404);
     });
   });
 

@@ -16,10 +16,26 @@ export const read = async (req, res) => {
     if (!data) {
       res.status(404).type('json').send({ error: 'Service not found!' });
     } else {
-      res.status(200).send(data);
+      res.status(200).type('json').send(data);
     }
   } catch (err) {
     console.log(err);
+    res.status(400).type('json').send(err);
+  }
+};
+
+export const readType = async (req, res) => {
+  console.log("Called")
+  console.log(req.params);
+  // Find all services by type and subtype
+  try {
+    const data = await Service.find(req.params).exec();
+    if (!data) {
+      res.status(404).type('json').send({ error: 'Services not found!' });
+    } else {
+      res.status(200).type('json').send(data);
+    }
+  } catch (err) {
     res.status(400).type('json').send(err);
   }
 };
