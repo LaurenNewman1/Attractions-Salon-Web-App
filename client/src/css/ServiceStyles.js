@@ -14,6 +14,7 @@ const useStyles = makeStyles((theme) => ({
   time: {
     display: 'flex',
     alignItems: 'center',
+    whiteSpace: 'nowrap',
   },
   cardActions: {
     display: 'flex',
@@ -38,6 +39,9 @@ const useStyles = makeStyles((theme) => ({
     bottom: '50%',
     left: '50%',
     right: '50%',
+  },
+  header: {
+    marginTop: 40,
   },
 }));
 
