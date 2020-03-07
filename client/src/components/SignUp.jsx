@@ -3,7 +3,9 @@ import {
   Button, TextField,
 } from '@material-ui/core';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import { Email, Person, Phone, Lock } from '@material-ui/icons';
+import {
+  Email, Person, Phone, Lock,
+} from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
 
 const changePage = (history) => {
@@ -15,7 +17,7 @@ const SignUp = (props) => {
   const history = useHistory();
   return (
     <>
-      <h1 style={{ textAlign: 'center' }}>SignUp</h1>
+      <h1 style={{ textAlign: 'center' }}>Sign Up</h1>
       <div>
         <TextField
           fullWidth
@@ -65,10 +67,11 @@ const SignUp = (props) => {
             ),
           }}
         />
-        <Button variant="contained" color="primary" onClick={() => changePage(history)}>
-          Create Account
-        </Button>
-        {' '}
+        <div style={{ textAlign: 'center' }}>
+          <Button variant="contained" color="primary" onClick={() => changePage(history)}>
+            Create Account
+          </Button>
+        </div>
       </div>
     </>
   );

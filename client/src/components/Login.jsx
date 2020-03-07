@@ -6,6 +6,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import { Email, Lock } from '@material-ui/icons';
 import { Link, useHistory } from 'react-router-dom';
 
+
 const changePage = (history) => {
   history.push('/Profile');
 };
@@ -40,21 +41,25 @@ const Login = (props) => {
             ),
           }}
         />
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ justifyContent: 'center' }}
-          onClick={() => changePage(history)}
-        >
-          Login
-        </Button>
-        <br />
-        New to Attractions?
-        {' '}
-        <Link to="/SignUp">Create Account</Link>
+        <div style={{ textAlign: 'center' }}>
+          <Button
+            variant="contained"
+            color="primary"
+            style={{ justifyContent: 'center' }}
+            onClick={() => changePage(history)}
+          >
+            Login
+          </Button>
+          <br />
+          <br />
+          New to Attractions?
+          {' '}
+          <Link to="/SignUp">Create Account</Link>
+        </div>
       </div>
     </>
   );
 };
+
 
 export default Login;
