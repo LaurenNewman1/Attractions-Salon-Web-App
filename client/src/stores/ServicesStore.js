@@ -1,4 +1,4 @@
-const fetchServicesByType = (type) => {
+const fetchServicesByType = async (type) => {
   const testData = [{
     name: 'Single process color',
     description: 'Single process color',
@@ -60,6 +60,7 @@ const fetchServicesByType = (type) => {
     ],
   },
   ];
+  let ret;
   switch (type) {
     case 'nails':
       return testData;
@@ -68,7 +69,10 @@ const fetchServicesByType = (type) => {
     case 'cuts':
       return testData;
     case 'dyes':
-      return testData;
+      ret = await fetch('/api/services/types/hair')
+        .then((response) => response.json())
+        .then((data) => data);
+      return ret;
     case 'treatments':
       return testData;
     case 'washes':

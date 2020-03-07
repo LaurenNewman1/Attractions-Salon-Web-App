@@ -25,7 +25,7 @@ export const read = async (req, res) => {
 };
 
 export const readType = async (req, res) => {
-  console.log("Called")
+  console.log('Called');
   console.log(req.params);
   // Find all services by type and subtype
   try {
