@@ -2,7 +2,8 @@ import React from 'react';
 import {
   Button, TextField,
 } from '@material-ui/core';
-import { Call } from '@material-ui/icons';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import { Email, Lock } from '@material-ui/icons';
 import { Link, useHistory } from 'react-router-dom';
 
 const changePage = (history) => {
@@ -15,10 +16,36 @@ const Login = (props) => {
     <>
       <h1 style={{ textAlign: 'center' }}>Login</h1>
       <div>
-        <TextField fullWidth type helperText="Email Address" />
-        <TextField fullWidth type helperText="Password" />
-        <Call />
-        <Button variant="contained" color="primary" onClick={() => changePage(history)}>
+        <TextField
+          fullWidth
+          type
+          helperText="Email Address"
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <Email />
+              </InputAdornment>
+            ),
+          }}
+        />
+        <TextField
+          fullWidth
+          type
+          helperText="Password"
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <Lock />
+              </InputAdornment>
+            ),
+          }}
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          style={{ justifyContent: 'center' }}
+          onClick={() => changePage(history)}
+        >
           Login
         </Button>
         <br />
