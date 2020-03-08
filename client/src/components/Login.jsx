@@ -11,8 +11,20 @@ const changePage = (history) => {
   history.push('/Profile');
 };
 
+
 const Login = (props) => {
   const history = useHistory();
+
+  const updateEmail = (/** @type {React.ChangeEvent<HTMLInputElement>} */ event) => {
+    const inputValue = event.target.value;
+    props.updateEmail(inputValue);
+};
+
+const updatePassword = (/** @type {React.ChangeEvent<HTMLInputElement>} */ event) => {
+  const inputValue = event.target.value;
+  props.updatePassword(inputValue);
+};
+
   return (
     <>
       <h1 style={{ textAlign: 'center' }}>Login</h1>
@@ -28,6 +40,7 @@ const Login = (props) => {
               </InputAdornment>
             ),
           }}
+          onChange={updateEmail}
         />
         <TextField
           fullWidth
@@ -40,6 +53,7 @@ const Login = (props) => {
               </InputAdornment>
             ),
           }}
+          onChange={updatePassword}
         />
         <div style={{ textAlign: 'center' }}>
           <Button

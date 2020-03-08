@@ -6,19 +6,36 @@ import Page from '../components/Page';
 import SignUp from '../components/SignUp';
 import tempLoginPic from '../loginImage.jpg';
 import tempSignUpPic from '../signUpImage.jpg';
+import { LoginStores } from '../stores/LoginStores';
+import { useState } from 'react';
 
 const style = {
   Paper: { padding: 50, marginTop: 10, marginBottom: 10 },
 };
 
-const Login = () => {
+const Login = (props) => {
+  
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const location = useLocation();
   const login = location.pathname === '/login';
   const myLocation = useLocation();
 
+  const updateEmail = (value) => {
+    setEmail(value);
+  }
+
+  const updatePassword = (value) => {
+    setPassword(value);
+  }
+
   const renderContents = () => {
     if (login) {
-      return <LoginComponent />;
+      return <LoginComponent
+      updateEmail={updateEmail}
+      updatePassword={updatePassword}
+      />;
     }
     return <SignUp />;
   };

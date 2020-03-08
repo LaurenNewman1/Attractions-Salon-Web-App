@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 
 const requestLogin = (email, password) => {
+  console.log(email);
+  console.log(password);
   // Login Logic Here
   // Return a true or false whether or not they logged in successfully
 }
