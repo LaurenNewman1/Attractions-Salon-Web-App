@@ -1,0 +1,74 @@
+[
+    {
+        "name": "Keratin",
+        "description": "Semi-permanent hair smoothening and straightening.",
+        "price": 200.0,
+        "time": 60.0,
+        "banner": "keratin.jpg",
+        "type": "hair",
+        "subtype": "treatment",
+        "addons": [
+            {
+                "name": "Hair Cut",
+                "price": 15.0
+            },
+            {
+                "name": "Flat Iron",
+                "price": 15.0
+            }
+        ]
+    },
+    {
+        "name": "Keratin",
+        "description": "Semi-permanent hair smoothening and straightening.",
+        "price": 200.0,
+        "time": 60.0,
+        "banner": "keratin.jpg",
+        "type": "hair",
+        "subtype": "treatment",
+        "addons": [
+            {
+                "name": "Hair Cut",
+                "price": 15.0
+            },
+            {
+                "name": "Flat Iron",
+                "price": 15.0
+            }
+        ]
+    },
+    {
+        "name": "Women's Haircut",
+        "description": "Trimming and shaping hair.",
+        "price": 30.0,
+        "time": 60.0,
+        "banner": "womenHaircut.jpg",
+        "type": "hair",
+        "subtype": "cut",
+        "addons": [
+            {
+                "name": "Blow Dry",
+                "price": 8.0
+            },
+            {
+                "name": "Flat Iron",
+                "price": 15.0
+            }
+        ]
+    },
+    {
+        "name": "Men's Haircut",
+        "description": "Trimming and shaping hair with blow dry.",
+        "price": 18.0,
+        "time": 60.0,
+        "banner": "menHaircut.jpg",
+        "type": "hair",
+        "subtype": "cut",
+        "addons": [
+            {
+                "name": "Flat Iron",
+                "price": 15.0
+            }
+        ]
+    }
+]

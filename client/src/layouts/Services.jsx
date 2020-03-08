@@ -40,7 +40,7 @@ const Services = () => {
             <Grid container spacing={3} className={classes.container}>
               {!nails.length ? null
                 : nails.map((service) => (
-                  <Grid item xs={12} sm={6} md={3} key={service.id}>
+                  <Grid item xs={12} sm={6} md={3} key={service._id}>
                     <ServiceCard service={service} />
                   </Grid>
                 ))}

@@ -69,7 +69,7 @@ const fetchServicesByType = async (type) => {
     case 'cuts':
       return testData;
     case 'dyes':
-      ret = await fetch('/api/services/types/hair')
+      ret = await fetch('/api/services/types/hair/dye')
         .then((response) => response.json())
         .then((data) => data);
       return ret;

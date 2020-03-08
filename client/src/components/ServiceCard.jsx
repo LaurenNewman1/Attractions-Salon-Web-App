@@ -38,7 +38,12 @@ const ServiceCard = ({ service }) => {
             min
           </Typography>
         </div>
-        <Typography variant="body2" color="textSecondary" component="p">
+        <Typography
+          variant="body2"
+          color="textSecondary"
+          component="p"
+          className={classes.truncateOverflow}
+        >
           {service.description}
         </Typography>
       </CardContent>
