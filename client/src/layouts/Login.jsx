@@ -40,9 +40,9 @@ const Login = () => {
 
   return (
     <Page>
-      <Grid container>
+      <Grid container style={{ alignItems: "center" }}>
         <Grid item xs={12} md={6}>
-          <Paper style={style.Paper}>
+          <Paper style={style.Paper} elevation={3}>
             <div>
               <div style={{ height: '50vh', background: `url(${renderPicture()}) no-repeat center center`, backgroundSize: 'cover' }} />
               Picture Either Logo or Profile
@@ -50,7 +50,7 @@ const Login = () => {
           </Paper>
         </Grid>
         <Grid item xs={12} md={6}>
-          <Paper style={style.Paper}>
+          <Paper style={style.Paper} elevation={3}>
             { renderContents() }
           </Paper>
         </Grid>

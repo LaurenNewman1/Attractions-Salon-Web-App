@@ -31,8 +31,8 @@ const Profile = (props) => {
     <>
       <div style={{ display: 'flex', justifyContent: 'center', paddingLeft: 50}}>
         <AccountCircle 
-        style={{ fontSize: 120, color: green[500] }}
-        // This needs to be 
+        style={{ fontSize: 120 }}
+        // This needs to be fixed // doesn't work
         color="background.dark"
         />
       </div>

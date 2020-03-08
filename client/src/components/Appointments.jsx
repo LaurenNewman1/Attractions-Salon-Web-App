@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import Grid from '@material-ui/core/Grid';
-import profilePic from '../profileImage.jpg';
+import hairPic from '../curlyHair.jpg';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -27,7 +27,7 @@ const Appointments = (props) => {
   return (
     <>
       <div>
-        <Avatar alt="Profile Pic" src={profilePic} className={classes.large} />
+        <Avatar alt="Hair Pic" src={hairPic} className={classes.large} />
         John Doe
       </div>
       <Grid item xs={2}>
