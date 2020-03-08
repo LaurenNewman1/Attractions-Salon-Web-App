@@ -1,7 +1,7 @@
 import { Grid, Paper } from '@material-ui/core';
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import LoginComponent from '../components/Login';
+import LoginComponent from '../components/LoginComponent';
 import Page from '../components/Page';
 import SignUp from '../components/SignUp';
 import tempLoginPic from '../loginImage.jpg';
@@ -14,30 +14,31 @@ const style = {
 };
 
 const Login = (props) => {
-  
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const location = useLocation();
   const login = location.pathname === '/login';
   const myLocation = useLocation();
 
-  const updateEmail = (value) => {
-    setEmail(value);
+  // This calls login variable in the LoginStores.jsx
+  const loginClick = (email, password) => {
+    props.login(email, password);
   }
 
-  const updatePassword = (value) => {
-    setPassword(value);
+  // This calls the register variable in LoginStores.jsx
+  const createAccountClick = (name, email, number, password) => {
+    props.register(name, email, number, password);
   }
 
+  
   const renderContents = () => {
     if (login) {
       return <LoginComponent
-      updateEmail={updateEmail}
-      updatePassword={updatePassword}
+      loginClick={loginClick}
       />;
     }
-    return <SignUp />;
+    return <SignUp
+      createAccountClick={createAccountClick}
+      />;
   };
 
   const renderPicture = () => {

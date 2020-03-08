@@ -3,11 +3,17 @@ import { useState, useEffect } from 'react';
 const requestLogin = (email, password) => {
   console.log(email);
   console.log(password);
+  // fetch from '/api/login'
   // Login Logic Here
   // Return a true or false whether or not they logged in successfully
 }
 
 const requestRegister = (name, email, number, password) => {
+  console.log(name);
+  console.log(email);
+  console.log(number);
+  console.log(password);
+  // fetch from '/api/signUp'
   // Registration Logic Here
   // Return a true or false whether or not the registration was successful
   // Currently a successful registration does not automatically log them in, do you feel this should be changed?
@@ -25,7 +31,12 @@ export const useLogin = () => {
   }
 
   // Call to register
-  const register = requestRegister;
+  //const register = requestRegister;
+
+  //This is just to test the register thing
+  const register = (name, email, number, password) => {
+    requestRegister(name, email, number, password)
+  }
 
   useEffect(() => {
     if (loggedIn)

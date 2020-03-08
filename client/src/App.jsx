@@ -51,9 +51,9 @@ const App = () => {
             <Route path="/book" component={Book} />
             <Route path="/services" component={Services} />
             <Route path="/contact" component={Contact} />
-            <Route path="/login" component={Login} />
-          <Route path="/SignUp" component={Login} />
-          <Route path="/Profile" component={Profile} />
+            <Route path="/login" render={(props) => <Login {...props} userData={userData} loggedIn={loggedIn} login={login} register={register} />} />
+            <Route path="/SignUp" render={(props) => <Login {...props} userData={userData} loggedIn={loggedIn} login={login} register={register} />} />
+            <Route path="/Profile" component={Profile} />
           </Switch>
         </Router>
       </ThemeProvider>

@@ -4,17 +4,51 @@ import {
 } from '@material-ui/core';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import {
-  Email, Person, Phone, Lock,
+    Email, Person, Phone, Lock,
 } from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
+import { useState } from 'react';
 
+
+const history = useHistory();
 const changePage = (history) => {
-  history.push('/Profile');
+    history.push('/Profile');
 };
-// <Link to="/SignUp">Create Account</Link>
 
 const SignUp = (props) => {
-  const history = useHistory();
+
+const [email, setEmail] = useState('');
+const [password, setPassword] = useState('');
+const [name, setName] = useState('');
+const [number, setNumber] = useState('');
+
+
+  const updateEmail = (/** @type {React.ChangeEvent<HTMLInputElement>} */ event) => {
+    const inputValue = event.target.value;
+    setEmail(inputValue);
+  };
+  
+  const updatePassword = (/** @type {React.ChangeEvent<HTMLInputElement>} */ event) => {
+      const inputValue = event.target.value;
+      setPassword(inputValue);
+    };
+    
+    const updateName = (/** @type {React.ChangeEvent<HTMLInputElement>} */ event) => {
+        const inputValue = event.target.value;
+        setName(inputValue);
+    };
+    
+    const updateNumber = (/** @type {React.ChangeEvent<HTMLInputElement>} */ event) => {
+        const inputValue = event.target.value;
+        setNumber(inputValue);
+    };
+    
+
+  const updateRegister = (name, email, number, password) => {
+    props.createAccountClick(name, email, number, password);
+  };
+  
+
   return (
     <>
       <h1 style={{ textAlign: 'center' }}>Sign Up</h1>
@@ -30,6 +64,7 @@ const SignUp = (props) => {
               </InputAdornment>
             ),
           }}
+          onChange={updateName}
         />
         <TextField
           fullWidth
@@ -42,6 +77,7 @@ const SignUp = (props) => {
               </InputAdornment>
             ),
           }}
+          onChange={updateEmail}
         />
         <TextField
           fullWidth
@@ -54,6 +90,7 @@ const SignUp = (props) => {
               </InputAdornment>
             ),
           }}
+          onChange={updateNumber}
         />
         <TextField
           fullWidth
@@ -66,9 +103,10 @@ const SignUp = (props) => {
               </InputAdornment>
             ),
           }}
+          onChange={updatePassword}
         />
         <div style={{ textAlign: 'center' }}>
-          <Button variant="contained" color="primary" onClick={() => changePage(history)}>
+          <Button variant="contained" color="primary" onClick={() => updateRegister(name, email, number, password)}>
             Create Account
           </Button>
         </div>

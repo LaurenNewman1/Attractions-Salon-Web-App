@@ -5,25 +5,35 @@ import {
 import InputAdornment from '@material-ui/core/InputAdornment';
 import { Email, Lock } from '@material-ui/icons';
 import { Link, useHistory } from 'react-router-dom';
+import { useState } from 'react';
 
 
+
+
+// This is for later
+const history = useHistory();
 const changePage = (history) => {
   history.push('/Profile');
 };
-
+// onClick={() => updateHistory(history)};
 
 const Login = (props) => {
-  const history = useHistory();
-
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  
   const updateEmail = (/** @type {React.ChangeEvent<HTMLInputElement>} */ event) => {
     const inputValue = event.target.value;
-    props.updateEmail(inputValue);
-};
-
-const updatePassword = (/** @type {React.ChangeEvent<HTMLInputElement>} */ event) => {
-  const inputValue = event.target.value;
-  props.updatePassword(inputValue);
-};
+    setEmail(inputValue);
+  };
+  
+  const updatePassword = (/** @type {React.ChangeEvent<HTMLInputElement>} */ event) => {
+    const inputValue = event.target.value;
+    setPassword(inputValue);
+  };
+  
+  const updateLogin = (email, password) => {
+    props.loginClick(email, password);
+  };
 
   return (
     <>
@@ -60,7 +70,7 @@ const updatePassword = (/** @type {React.ChangeEvent<HTMLInputElement>} */ event
             variant="contained"
             color="primary"
             style={{ justifyContent: 'center' }}
-            onClick={() => changePage(history)}
+            onClick={() => updateLogin(email, password)}
           >
             Login
           </Button>
