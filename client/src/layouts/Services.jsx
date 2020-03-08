@@ -20,22 +20,25 @@ const Services = () => {
   const [extensions, setExtensions] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(async () => {
-    setLoading(true);
-    setNails(await fetchServicesByType('nails'));
-    setWax(await fetchServicesByType('wax'));
-    setCuts(await fetchServicesByType('cuts'));
-    setDyes(await fetchServicesByType('dyes'));
-    setTreatments(await fetchServicesByType('treatments'));
-    setWashes(await fetchServicesByType('washes'));
-    setStylings(await fetchServicesByType('stylings'));
-    setExtensions(await fetchServicesByType('extensions'));
-    setLoading(false);
+  useEffect(() => {
+    async function fetchData() {
+      setLoading(true);
+      setNails(await fetchServicesByType('nails'));
+      setWax(await fetchServicesByType('wax'));
+      setCuts(await fetchServicesByType('cuts'));
+      setDyes(await fetchServicesByType('dyes'));
+      setTreatments(await fetchServicesByType('treatments'));
+      setWashes(await fetchServicesByType('washes'));
+      setStylings(await fetchServicesByType('stylings'));
+      setExtensions(await fetchServicesByType('extensions'));
+      setLoading(false);
+    };
+    fetchData();
   }, []);
 
   return (
     <Page>
-      {loading ? <CircularProgress />
+      {loading ? <CircularProgress className={classes.loading} />
         : (
           <div className={classes.root}>
             <Typography variant="h4">Nails</Typography>
@@ -110,7 +113,7 @@ const Services = () => {
                   </Grid>
                 ))}
             </Grid>
-          </>
+          </div>
         )}
     </Page>
   );
