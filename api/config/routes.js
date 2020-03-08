@@ -17,6 +17,7 @@ const router = (app) => {
   app.post('/api/services', services.create);
   app.get('/api/services', services.readall);
   app.get('/api/services/types/:type', services.readType);
+  app.get('/api/services/types/:type/:subtype', services.readType);
   app.get('/api/services/:someId', services.read);
 };
 
