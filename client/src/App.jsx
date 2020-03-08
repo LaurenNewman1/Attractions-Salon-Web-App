@@ -12,6 +12,7 @@ import Contact from './layouts/Contact';
 import Login from './layouts/Login';
 import Profile from './layouts/Profile';
 import NavBar from './components/NavBar';
+import SignUp from './layouts/SignUp';
 
 const App = () => {
   const theme = createMuiTheme({
@@ -48,8 +49,8 @@ const App = () => {
             <Route path="/services" component={Services} />
             <Route path="/contact" component={Contact} />
             <Route path="/login" component={Login} />
-          <Route path="/SignUp" component={Login} />
-          <Route path="/Profile" component={Profile} />
+          <Route path="/signUp" component={SignUp} />
+          <Route path="/profile" component={Profile} />
           </Switch>
         </Router>
       </ThemeProvider>

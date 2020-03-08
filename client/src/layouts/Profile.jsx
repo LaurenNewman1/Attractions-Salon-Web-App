@@ -1,8 +1,7 @@
 import React from 'react';
-import { Grid, Paper } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import ProfileComponent from '../components/Profile';
-import Appointments from '../components/Appointments';
 import Page from '../components/Page';
 
 
@@ -11,13 +10,7 @@ const style = {
   Paper2: { padding: 10, marginTop: 5, marginBottom: 5 },
 };
 
-
-// <Grid item xs={12} md={6}>
-//   <Paper style={style.Paper}>Picture Either Logo or Profile</Paper>
-// </Grid>
-const Profile = (props) => {
-  // This is just bc of eslint return statement thing
-  const temp = null;
+const Profile = () => {
   return (
     <Page>
       <div>
@@ -48,12 +41,6 @@ const Profile = (props) => {
         </Grid>
       </Grid>
           </div>
-      <div>
-        <h1 style={{ textAlign: 'center' }}>Appointment History</h1>
-        <Paper style={style.Paper2}>
-          <Appointments />
-        </Paper>
-      </div>
     </Page>
   );
 };

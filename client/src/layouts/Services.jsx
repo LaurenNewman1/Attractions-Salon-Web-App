@@ -29,13 +29,13 @@ const Services = () => {
     setWashes(fetchServicesByType('washes'));
     setStylings(fetchServicesByType('stylings'));
     setLoading(false);
-  }, nails);
+  }, []);
 
   return (
     <Page>
       {loading ? <CircularProgress />
         : (
-          <>
+          <div className={classes.root}>
             <Typography variant="h4">Nails</Typography>
             <Grid container spacing={3} className={classes.container}>
               {!nails ? null
@@ -99,7 +99,7 @@ const Services = () => {
                   </Grid>
                 ))}
             </Grid>
-          </>
+          </div>
         )}
     </Page>
   );

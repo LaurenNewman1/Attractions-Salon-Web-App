@@ -1,12 +1,16 @@
-import { Grid, TextField, InputAdornment, Button, } from '@material-ui/core';
 import React from 'react';
-import Page from '../components/Page';
+import {
+  Button, TextField, Grid, InputAdornment,
+} from '@material-ui/core';
+import {
+  Email, Person, Phone, Lock,
+} from '@material-ui/icons';
+import { useHistory } from 'react-router-dom';
 import useStyles from '../css/LoginStyles';
-import loginImg from '../images/loginImg.jpg';
-import { Email, Lock } from '@material-ui/icons';
-import { Link, useHistory } from 'react-router-dom';
+import Page from '../components/Page';
+import signUpImg from '../images/signUpImg.jpg';
 
-const Login = () => {
+const SignUp = () => {
   const classes = useStyles();
   const history = useHistory();
 
@@ -14,11 +18,24 @@ const Login = () => {
     <Page>
       <Grid container className={classes.page}>
         <Grid item xs={12} sm={6} className={classes.imgContainer}>
-          <img src={loginImg} alt="" className={classes.modelImg} />
+          <img src={signUpImg} alt="" className={classes.modelImg} />
         </Grid>
         <Grid item xs={12} sm={6} className={classes.form}>
-          <h1 className={classes.login}>Login</h1>
+          <h1 className={classes.login}>SignUp</h1>
           <div>
+            <TextField
+              fullWidth
+              type
+              className={classes.field}
+              helperText="Full Name"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Person />
+                  </InputAdornment>
+                ),
+              }}
+            />
             <TextField
               fullWidth
               type
@@ -28,6 +45,19 @@ const Login = () => {
                 startAdornment: (
                   <InputAdornment position="start">
                     <Email />
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <TextField
+              fullWidth
+              type
+              className={classes.field}
+              helperText="Phone Number"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Phone />
                   </InputAdornment>
                 ),
               }}
@@ -51,13 +81,8 @@ const Login = () => {
                 color="primary"
                 onClick={() => history.push('/profile')}
               >
-                Login
+                Create Account
               </Button>
-              <br />
-              <br />
-              New to Attractions?
-              {' '}
-              <Link to="/signUp">Create Account</Link>
             </div>
           </div>
         </Grid>
@@ -66,4 +91,5 @@ const Login = () => {
   );
 };
 
-export default Login;
+
+export default SignUp;

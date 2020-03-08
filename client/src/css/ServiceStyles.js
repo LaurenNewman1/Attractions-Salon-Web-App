@@ -1,6 +1,9 @@
 import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    padding: 30,
+  },
   container: {
     width: '100%',
   },
@@ -18,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
   },
   cardActions: {
     display: 'flex',
-    justifyContent: 'center',
+    alignItems: 'center',
   },
   price: {
     width: '100%',
