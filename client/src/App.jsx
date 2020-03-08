@@ -13,7 +13,11 @@ import Login from './layouts/Login';
 import Profile from './layouts/Profile';
 import NavBar from './components/NavBar';
 
+import { useLogin } from './stores/LoginStores';
+
 const App = () => {
+  const [userData, loggedIn, login, register] = useLogin();
+
   const theme = createMuiTheme({
     palette: {
       primary: {

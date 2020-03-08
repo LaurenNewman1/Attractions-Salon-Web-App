@@ -14,6 +14,7 @@ const style = {
 const Login = () => {
   const location = useLocation();
   const login = location.pathname === '/login';
+  const myLocation = useLocation();
 
   const renderContents = () => {
     if (login) {
@@ -23,7 +24,6 @@ const Login = () => {
   };
 
   const renderPicture = () => {
-    const myLocation = useLocation();
     const loginScreen = myLocation.pathname === '/login';
     const signUpScreen = myLocation.pathname === '/SignUp';
 
