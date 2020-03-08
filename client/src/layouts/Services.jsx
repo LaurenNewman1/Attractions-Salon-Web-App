@@ -17,6 +17,7 @@ const Services = () => {
   const [treatments, setTreatments] = useState([]);
   const [washes, setWashes] = useState([]);
   const [stylings, setStylings] = useState([]);
+  const [extensions, setExtensions] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(async () => {
@@ -28,6 +29,7 @@ const Services = () => {
     setTreatments(await fetchServicesByType('treatments'));
     setWashes(await fetchServicesByType('washes'));
     setStylings(await fetchServicesByType('stylings'));
+    setExtensions(await fetchServicesByType('extensions'));
     setLoading(false);
   }, []);
 
@@ -94,6 +96,15 @@ const Services = () => {
             <Grid container spacing={3} className={classes.container}>
               {!stylings.length ? null
                 : stylings.map((service) => (
+                  <Grid item xs={12} sm={6} md={3}>
+                    <ServiceCard service={service} />
+                  </Grid>
+                ))}
+            </Grid>
+            <Typography variant="h4" className={classes.header}>Hair Extensions</Typography>
+            <Grid container spacing={3} className={classes.container}>
+              {!extensions.length ? null
+                : extensions.map((service) => (
                   <Grid item xs={12} sm={6} md={3}>
                     <ServiceCard service={service} />
                   </Grid>

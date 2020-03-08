@@ -36,6 +36,11 @@ const fetchServicesByType = async (type) => {
         .then((response) => response.json())
         .then((data) => data);
       return ret;
+    case 'extensions':
+      ret = await fetch('/api/services/types/hair/extension')
+        .then((response) => response.json())
+        .then((data) => data);
+      return ret;
     default:
       return [];
   }

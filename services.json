@@ -1,5 +1,146 @@
 [
     {
+        "name": "Single Process Color",
+        "description": "A new color or toner is applied all over to create a new base color.",
+        "price": 55.0,
+        "time": 60.0,
+        "banner": "singleProcessColor.jpeg",
+        "type": "hair",
+        "subtype": "dye",
+        "addons": [
+            {
+                "name": "Hair Cut",
+                "price": 15.0
+            },
+            {
+                "name": "Flat Iron",
+                "price": 15.0
+            }
+        ]
+    },
+    {
+        "name": "Double Process Color",
+        "description": "First the hair is bleached, and then pigment is addded.",
+        "price": 85.0,
+        "time": 60.0,
+        "banner": "doubleProcessColor.jpg",
+        "type": "hair",
+        "subtype": "dye",
+        "addons": [
+            {
+                "name": "Hair Cut",
+                "price": 15.0
+            },
+            {
+                "name": "Flat Iron",
+                "price": 15.0
+            }
+        ]
+    },
+    {
+        "name": "Full Highlights",
+        "description": "Highlights covering every section of the head.",
+        "price": 55.0,
+        "time": 60.0,
+        "banner": "fullHighlights.jpeg",
+        "type": "hair",
+        "subtype": "dye",
+        "addons": [
+            {
+                "name": "Hair Cut",
+                "price": 15.0
+            },
+            {
+                "name": "Flat Iron",
+                "price": 15.0
+            }
+        ]
+    },
+    {
+        "name": "Partial Hightlights",
+        "description": "Highlights focused on the top or a certain section of hair.",
+        "price": 65.0,
+        "time": 60.0,
+        "banner": "partialHighlights.jpg",
+        "type": "hair",
+        "subtype": "dye",
+        "addons": [
+            {
+                "name": "hair cut",
+                "price": 15.0
+            },
+            {
+                "name": "Flat Iron",
+                "price": 15.0
+            }
+        ]
+    },
+    {
+        "name": "Relaxer",
+        "description": "Reduces curl and frizz for easy management.",
+        "price": 65.0,
+        "time": 60.0,
+        "banner": "relaxer.jpg",
+        "type": "hair",
+        "subtype": "treatment",
+        "addons": [
+            {
+                "name": "Hair Cut",
+                "price": 10.0
+            },
+            {
+                "name": "Color Rinse",
+                "price": 25.0
+            },
+            {
+                "name": "Flat Iron",
+                "price": 15.0
+            }
+        ]
+    },
+    {
+        "name": "Partial Relaxer",
+        "description": "Relaxer for short hair.",
+        "price": 35.0,
+        "time": 60.0,
+        "banner": "partialRelaxer.jpg",
+        "type": "hair",
+        "subtype": "treatment",
+        "addons": [
+            {
+                "name": "Hair Cut",
+                "price": 15.0
+            },
+            {
+                "name": "Color Rinse",
+                "price": 25.0
+            },
+            {
+                "name": "Flat Iron",
+                "price": 15.0
+            }
+        ]
+    },
+    {
+        "name": "Texturizer",
+        "description": "Loosens curls for smoother, more manageable hair.",
+        "price": 65.0,
+        "time": 60.0,
+        "banner": "texturizer.jpg",
+        "type": "hair",
+        "subtype": "treatment",
+        "addons": [
+            {
+                "name": "Hair Cut",
+                "price": 10.0
+            },
+            {
+                "name": "Flat Iron",
+                "price": 15.0
+            }
+        ]
+    },
+    {
         "name": "Keratin",
         "description": "Semi-permanent hair smoothening and straightening.",
         "price": 200.0,
@@ -85,5 +226,191 @@
                 "price": 15.0
             }
         ]
+    },
+    {
+        "name": "Shampoo Set",
+        "description": "Washing hair and applying setting lotion and rollers for silky curls",
+        "price": 30.0,
+        "time": 60.0,
+        "banner": "shampooSet.jpg",
+        "type": "hair",
+        "subtype": "wash",
+        "addons": [
+            {
+                "name": "Flat Iron",
+                "price": 15.0
+            }
+        ]
+    },
+    {
+        "name": "Natural Blowout",
+        "description": "Straightens hair with a hair dryer and hot comb.",
+        "price": 75.0,
+        "time": 60.0,
+        "banner": "naturalBlowout.jpg",
+        "type": "hair",
+        "subtype": "wash",
+        "addons": [
+            {
+                "name": "Hair Cut",
+                "price": 10.0
+            },
+            {
+                "name": "Flat Iron",
+                "price": 15.0
+            }
+        ]
+    },
+    {
+        "name": "Deep Conditioner",
+        "description": "Adds moisture and conditions cuticle for a smoother, shinier appearance.",
+        "price": 15.0,
+        "time": 60.0,
+        "banner": "deepConditioner.jpg",
+        "type": "hair",
+        "subtype": "wash",
+        "addons": [
+            {
+                "name": "Flat Iron",
+                "price": 15.0
+            }
+        ]
+    },
+    {
+        "name": "Spiral Set",
+        "description": "Set with hair rollers for tight, smooth curls.",
+        "price": 50.0,
+        "time": 60.0,
+        "banner": "spiralSet.jpg",
+        "type": "hair",
+        "subtype": "styling",
+        "addons": [
+            {
+                "name": "Flat Iron",
+                "price": 15.0
+            }
+        ]
+    },
+    {
+        "name": "Ponytail",
+        "description": "Hair is pulled back away from the face secured by a hair tie.",
+        "time": 60.0,
+        "banner": "ponytail.jpg",
+        "type": "hair",
+        "subtype": "styling",
+        "addons": [
+            {
+                "name": "Flat Iron",
+                "price": 15.0
+            }
+        ]
+    },
+    {
+        "name": "Locks",
+        "description": "Hair is pulled twisted into tight braids or ringlets on all sides.",
+        "time": 60.0,
+        "banner": "locks.jpg",
+        "type": "hair",
+        "subtype": "styling",
+        "addons": [
+            {
+                "name": "Flat Iron",
+                "price": 15.0
+            }
+        ]
+    },
+    {
+        "name": "Braids",
+        "description": "Hair is laced into threads made up of three interwoven pieces.",
+        "time": 60.0,
+        "banner": "braids.jpg",
+        "type": "hair",
+        "subtype": "styling",
+        "addons": [
+            {
+                "name": "Flat Iron",
+                "price": 15.0
+            }
+        ]
+    },
+    {
+        "name": "Sister Locks",
+        "description": "Thinner variation of locks.",
+        "time": 60.0,
+        "banner": "sisterLocks.jpg",
+        "type": "hair",
+        "subtype": "styling",
+        "addons": [
+            {
+                "name": "Flat Iron",
+                "price": 15.0
+            }
+        ]
+    },
+    {
+        "name": "Sew Ins",
+        "description": "Application involving braiding natural hair and sewing the weave into it.",
+        "time": 60.0,
+        "banner": "sewIns.jpg",
+        "type": "hair",
+        "subtype": "extension",
+        "addons": [
+            {
+                "name": "Flat Iron",
+                "price": 15.0
+            }
+        ]
+    },
+    {
+        "name": "Clip Ins",
+        "description": "Extension is clipped onto another piece of hair near the root.",
+        "time": 60.0,
+        "banner": "clipIns.jpg",
+        "type": "hair",
+        "subtype": "extension",
+        "addons": [
+            {
+                "name": "Flat Iron",
+                "price": 15.0
+            }
+        ]
+    },
+    {
+        "name": "Crochet",
+        "description": "Extension is clipped onto another piece of hair near the root.",
+        "time": 60.0,
+        "banner": "crochet.jpg",
+        "type": "hair",
+        "subtype": "extension",
+        "addons": [
+            {
+                "name": "Flat Iron",
+                "price": 15.0
+            }
+        ]
+    },
+    {
+        "name": "Lip Wax",
+        "description": "Removes upper lip hair for a smooth complexion.",
+        "price": 6.0,
+        "time": 60.0,
+        "banner": "lipWax.jpg",
+        "type": "wax"
+    },
+    {
+        "name": "Eyebrow Wax",
+        "description": "Removes eyebrow hair to shape and clean edges.",
+        "price": 12.0,
+        "time": 60.0,
+        "banner": "eyebrowWax.jpg",
+        "type": "wax"
+    },
+    {
+        "name": "Chin Wax",
+        "description": "Removes hair from chin for a smoother complexion.",
+        "price": 7.0,
+        "time": 60.0,
+        "banner": "chinWax.jpg",
+        "type": "wax"
     }
 ]
