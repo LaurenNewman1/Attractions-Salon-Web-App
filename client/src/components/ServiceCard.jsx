@@ -17,7 +17,7 @@ const ServiceCard = ({ service }) => {
 
   return (
     <Card>
-      <CardMedia component="image" image={service.image} className={classes.media}>
+      <CardMedia component="image" image={service.banner} className={classes.media}>
         <div className={classes.price}>
           <Paper className={classes.pricePaper}>
             <Typography variant="body2">
@@ -38,7 +38,12 @@ const ServiceCard = ({ service }) => {
             min
           </Typography>
         </div>
-        <Typography variant="body2" color="textSecondary" component="p">
+        <Typography
+          variant="body2"
+          color="textSecondary"
+          component="p"
+          className={classes.truncateOverflow}
+        >
           {service.description}
         </Typography>
       </CardContent>
@@ -59,10 +64,10 @@ const ServiceCard = ({ service }) => {
 ServiceCard.propTypes = {
   service: PropTypes.shape({
     name: PropTypes.string.isRequired,
-    time: PropTypes.number.isRequired,
     price: PropTypes.number,
+    time: PropTypes.number.isRequired,
     description: PropTypes.string.isRequired,
-    image: PropTypes.string.isRequired,
+    banner: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     subType: PropTypes.string,
     addons: PropTypes.array,

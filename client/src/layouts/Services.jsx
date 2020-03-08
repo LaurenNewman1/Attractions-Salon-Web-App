@@ -5,7 +5,7 @@ import {
 import Page from '../components/Page';
 import useStyles from '../css/ServiceStyles';
 import ServiceCard from '../components/ServiceCard';
-import fetchServicesByType from '../stores/ServicesStores';
+import fetchServicesByType from '../stores/ServicesStore';
 
 const Services = () => {
   const classes = useStyles();
@@ -17,19 +17,21 @@ const Services = () => {
   const [treatments, setTreatments] = useState([]);
   const [washes, setWashes] = useState([]);
   const [stylings, setStylings] = useState([]);
+  const [extensions, setExtensions] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
+  useEffect(async () => {
     setLoading(true);
-    setNails(fetchServicesByType('nails'));
-    setWax(fetchServicesByType('wax'));
-    setCuts(fetchServicesByType('cuts'));
-    setDyes(fetchServicesByType('dyes'));
-    setTreatments(fetchServicesByType('treatments'));
-    setWashes(fetchServicesByType('washes'));
-    setStylings(fetchServicesByType('stylings'));
+    setNails(await fetchServicesByType('nails'));
+    setWax(await fetchServicesByType('wax'));
+    setCuts(await fetchServicesByType('cuts'));
+    setDyes(await fetchServicesByType('dyes'));
+    setTreatments(await fetchServicesByType('treatments'));
+    setWashes(await fetchServicesByType('washes'));
+    setStylings(await fetchServicesByType('stylings'));
+    setExtensions(await fetchServicesByType('extensions'));
     setLoading(false);
-  }, nails);
+  }, []);
 
   return (
     <Page>
@@ -38,16 +40,16 @@ const Services = () => {
           <>
             <Typography variant="h4">Nails</Typography>
             <Grid container spacing={3} className={classes.container}>
-              {!nails ? null
+              {!nails.length ? null
                 : nails.map((service) => (
-                  <Grid item xs={12} sm={6} md={3}>
+                  <Grid item xs={12} sm={6} md={3} key={service._id}>
                     <ServiceCard service={service} />
                   </Grid>
                 ))}
             </Grid>
             <Typography variant="h4" className={classes.header}>Wax</Typography>
             <Grid container spacing={3} className={classes.container}>
-              {!wax ? null
+              {!wax.length ? null
                 : wax.map((service) => (
                   <Grid item xs={12} sm={6} md={3}>
                     <ServiceCard service={service} />
@@ -56,7 +58,7 @@ const Services = () => {
             </Grid>
             <Typography variant="h4" className={classes.header}>Hair Cuts</Typography>
             <Grid container spacing={3} className={classes.container}>
-              {!cuts ? null
+              {!cuts.length ? null
                 : cuts.map((service) => (
                   <Grid item xs={12} sm={6} md={3}>
                     <ServiceCard service={service} />
@@ -65,7 +67,7 @@ const Services = () => {
             </Grid>
             <Typography variant="h4" className={classes.header}>Hair Dyes</Typography>
             <Grid container spacing={3} className={classes.container}>
-              {!dyes ? null
+              {!dyes.length ? null
                 : dyes.map((service) => (
                   <Grid item xs={12} sm={6} md={3}>
                     <ServiceCard service={service} />
@@ -74,7 +76,7 @@ const Services = () => {
             </Grid>
             <Typography variant="h4" className={classes.header}>Hair Treatment</Typography>
             <Grid container spacing={3} className={classes.container}>
-              {!treatments ? null
+              {!treatments.length ? null
                 : treatments.map((service) => (
                   <Grid item xs={12} sm={6} md={3}>
                     <ServiceCard service={service} />
@@ -83,7 +85,7 @@ const Services = () => {
             </Grid>
             <Typography variant="h4" className={classes.header}>Hair Wash/Dry</Typography>
             <Grid container spacing={3} className={classes.container}>
-              {!washes ? null
+              {!washes.length ? null
                 : washes.map((service) => (
                   <Grid item xs={12} sm={6} md={3}>
                     <ServiceCard service={service} />
@@ -92,8 +94,17 @@ const Services = () => {
             </Grid>
             <Typography variant="h4" className={classes.header}>Hair Styling</Typography>
             <Grid container spacing={3} className={classes.container}>
-              {!stylings ? null
+              {!stylings.length ? null
                 : stylings.map((service) => (
+                  <Grid item xs={12} sm={6} md={3}>
+                    <ServiceCard service={service} />
+                  </Grid>
+                ))}
+            </Grid>
+            <Typography variant="h4" className={classes.header}>Hair Extensions</Typography>
+            <Grid container spacing={3} className={classes.container}>
+              {!extensions.length ? null
+                : extensions.map((service) => (
                   <Grid item xs={12} sm={6} md={3}>
                     <ServiceCard service={service} />
                   </Grid>

@@ -43,6 +43,10 @@ const useStyles = makeStyles((theme) => ({
   header: {
     marginTop: 40,
   },
+  truncateOverflow: {
+    overflow: 'hidden',
+    height: 60,
+  },
 }));
 
 export default useStyles;
