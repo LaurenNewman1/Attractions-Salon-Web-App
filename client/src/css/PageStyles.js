@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 'bold',
   },
   background: {
-    height: '100%',
+    minHeight: 'calc(100vh - 64px)',
     width: '100%',
     padding: 0,
     backgroundColor: theme.palette.background.main,
