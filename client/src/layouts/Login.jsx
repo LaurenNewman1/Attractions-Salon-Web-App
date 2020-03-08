@@ -8,7 +8,6 @@ import { Link, useHistory } from 'react-router-dom';
 
 const Login = () => {
   const classes = useStyles();
-  const history = useHistory();
 
   return (
     <Page>
