@@ -10,6 +10,7 @@ import Book from './layouts/Book';
 import Services from './layouts/Services';
 import Contact from './layouts/Contact';
 import Login from './layouts/Login';
+import Profile from './layouts/Profile';
 import './css/App.css';
 
 const App = () => {
@@ -42,6 +43,8 @@ const App = () => {
           <Route path="/services" component={Services} />
           <Route path="/contact" component={Contact} />
           <Route path="/login" component={Login} />
+          <Route path="/SignUp" component={Login} />
+          <Route path="/Profile" component={Profile} />
         </Switch>
       </Router>
     </ThemeProvider>
