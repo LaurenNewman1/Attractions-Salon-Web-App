@@ -19,25 +19,6 @@
         ]
     },
     {
-        "name": "Keratin",
-        "description": "Semi-permanent hair smoothening and straightening.",
-        "price": 200.0,
-        "time": 60.0,
-        "banner": "keratin.jpg",
-        "type": "hair",
-        "subtype": "treatment",
-        "addons": [
-            {
-                "name": "Hair Cut",
-                "price": 15.0
-            },
-            {
-                "name": "Flat Iron",
-                "price": 15.0
-            }
-        ]
-    },
-    {
         "name": "Women's Haircut",
         "description": "Trimming and shaping hair.",
         "price": 30.0,
@@ -65,6 +46,40 @@
         "type": "hair",
         "subtype": "cut",
         "addons": [
+            {
+                "name": "Flat Iron",
+                "price": 15.0
+            }
+        ]
+    },
+    {
+        "name": "Kid's Haircut",
+        "description": "Ages 10 and under. Trimming and shaping hair with blow dry.",
+        "price": 15.0,
+        "time": 60.0,
+        "banner": "kidsHaircut.jpg",
+        "type": "hair",
+        "subtype": "cut",
+        "addons": [
+            {
+                "name": "Flat Iron",
+                "price": 15.0
+            }
+        ]
+    },
+    {
+        "name": "Shampoo",
+        "description": "Hair and scalp cleansing with salon-recommended products.",
+        "price": 20.0,
+        "time": 60.0,
+        "banner": "shampoo.jpg",
+        "type": "hair",
+        "subtype": "wash",
+        "addons": [
+            {
+                "name": "Blow Dry",
+                "price": 10.0
+            },
             {
                 "name": "Flat Iron",
                 "price": 15.0

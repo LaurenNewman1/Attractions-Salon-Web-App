@@ -1,84 +1,41 @@
 const fetchServicesByType = async (type) => {
-  const testData = [{
-    name: 'Single process color',
-    description: 'Single process color',
-    price: 55.0,
-    time: 30.0,
-    banner: 'NEED_IMAGE',
-    type: 'hair',
-    subtype: 'dye',
-    addons: [
-      {
-        name: 'Cut',
-        price: 15.0,
-      },
-    ],
-  },
-  {
-    name: 'Single process color',
-    description: 'Single process color',
-    price: 55.0,
-    time: 30.0,
-    banner: 'NEED_IMAGE',
-    type: 'hair',
-    subtype: 'dye',
-    addons: [
-      {
-        name: 'Cut',
-        price: 15.0,
-      },
-    ],
-  },
-  {
-    name: 'Single process color',
-    description: 'Single process color',
-    price: 55.0,
-    time: 30.0,
-    banner: 'NEED_IMAGE',
-    type: 'hair',
-    subtype: 'dye',
-    addons: [
-      {
-        name: 'Cut',
-        price: 15.0,
-      },
-    ],
-  },
-  {
-    name: 'Single process color',
-    description: 'Single process color',
-    price: 55.0,
-    time: 30.0,
-    banner: 'NEED_IMAGE',
-    type: 'hair',
-    subtype: 'dye',
-    addons: [
-      {
-        name: 'Cut',
-        price: 15.0,
-      },
-    ],
-  },
-  ];
   let ret;
   switch (type) {
     case 'nails':
-      return testData;
+      ret = await fetch('/api/services/types/nail')
+        .then((response) => response.json())
+        .then((data) => data);
+      return ret;
     case 'wax':
-      return testData;
+      ret = await fetch('/api/services/types/wax')
+        .then((response) => response.json())
+        .then((data) => data);
+      return ret;
     case 'cuts':
-      return testData;
+      ret = await fetch('/api/services/types/hair/cut')
+        .then((response) => response.json())
+        .then((data) => data);
+      return ret;
     case 'dyes':
       ret = await fetch('/api/services/types/hair/dye')
         .then((response) => response.json())
         .then((data) => data);
       return ret;
     case 'treatments':
-      return testData;
+      ret = await fetch('/api/services/types/hair/treatment')
+        .then((response) => response.json())
+        .then((data) => data);
+      return ret;
     case 'washes':
-      return testData;
+      ret = await fetch('/api/services/types/hair/wash')
+        .then((response) => response.json())
+        .then((data) => data);
+      return ret;
     case 'stylings':
-      return testData;
+      ret = await fetch('/api/services/types/hair/styling')
+        .then((response) => response.json())
+        .then((data) => data);
+      return ret;
     default:
       return [];
   }
