@@ -19,8 +19,8 @@ const SignUp = ({ register }) => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
-  const attemptRegister = () => {
-    if (register(name, email, number, password)) {
+  const attemptRegister = async () => {
+    if (await register(name, email, number, password)) {
       history.push('/login')
     }
   }
@@ -32,7 +32,7 @@ const SignUp = ({ register }) => {
           <img src={signUpImg} alt="" className={classes.modelImg} />
         </Grid>
         <Grid item xs={12} sm={6} className={classes.form}>
-          <h1 className={classes.login}>SignUp</h1>
+          <h1 className={classes.login}>Sign Up</h1>
           <div>
             <TextField
               fullWidth
