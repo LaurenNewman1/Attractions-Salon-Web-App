@@ -1,13 +1,25 @@
 import { Grid, TextField, InputAdornment, Button, } from '@material-ui/core';
-import React from 'react';
+import React, { useState } from 'react';
 import Page from '../components/Page';
 import useStyles from '../css/LoginStyles';
 import loginImg from '../images/loginImg.jpg';
 import { Email, Lock } from '@material-ui/icons';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
-const Login = () => {
+
+const Login = ({ login }) => {
   const classes = useStyles();
+  const history = useHistory();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const attemptLogin = () => {
+    if (login(email, password)) {
+      console.log("??")
+      history.push('/profile')
+    }
+  }
 
   return (
     <Page>
@@ -20,9 +32,11 @@ const Login = () => {
           <div>
             <TextField
               fullWidth
-              type
+              type="email"
               className={classes.field}
               helperText="Email Address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -33,9 +47,11 @@ const Login = () => {
             />
             <TextField
               fullWidth
-              type
+              type="password"
               className={classes.field}
               helperText="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -48,7 +64,7 @@ const Login = () => {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={() => history.push('/profile')}
+                onClick={() => attemptLogin()}
               >
                 Login
               </Button>
@@ -64,5 +80,10 @@ const Login = () => {
     </Page>
   );
 };
+
+Login.propTypes = {
+  login: PropTypes.func.isRequired,
+};
+
 
 export default Login;

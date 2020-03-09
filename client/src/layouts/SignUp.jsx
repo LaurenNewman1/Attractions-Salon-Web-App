@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Button, TextField, Grid, InputAdornment,
 } from '@material-ui/core';
@@ -9,10 +9,21 @@ import { useHistory } from 'react-router-dom';
 import useStyles from '../css/LoginStyles';
 import Page from '../components/Page';
 import signUpImg from '../images/signUpImg.jpg';
+import PropTypes from 'prop-types';
 
-const SignUp = () => {
+const SignUp = ({ register }) => {
   const classes = useStyles();
   const history = useHistory();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
+
+  const attemptRegister = () => {
+    if (register(name, email, number, password)) {
+      history.push('/login')
+    }
+  }
 
   return (
     <Page>
@@ -28,6 +39,8 @@ const SignUp = () => {
               type
               className={classes.field}
               helperText="Full Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -38,9 +51,11 @@ const SignUp = () => {
             />
             <TextField
               fullWidth
-              type
+              type="email"
               className={classes.field}
               helperText="Email Address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -54,6 +69,8 @@ const SignUp = () => {
               type
               className={classes.field}
               helperText="Phone Number"
+              value={number}
+              onChange={(e) => setNumber(e.target.value)}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -64,9 +81,11 @@ const SignUp = () => {
             />
             <TextField
               fullWidth
-              type
+              type="password"
               className={classes.field}
               helperText="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -79,7 +98,7 @@ const SignUp = () => {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={() => history.push('/profile')}
+                onClick={() => attemptRegister()}
               >
                 Create Account
               </Button>
@@ -91,5 +110,8 @@ const SignUp = () => {
   );
 };
 
+SignUp.propTypes = {
+  register: PropTypes.func.isRequired,
+};
 
 export default SignUp;
