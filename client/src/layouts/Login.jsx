@@ -1,11 +1,13 @@
-import { Grid, TextField, InputAdornment, Button, } from '@material-ui/core';
+import {
+  Grid, TextField, InputAdornment, Button,
+} from '@material-ui/core';
 import React, { useState } from 'react';
-import Page from '../components/Page';
-import useStyles from '../css/LoginStyles';
-import loginImg from '../images/loginImg.jpg';
 import { Email, Lock } from '@material-ui/icons';
 import { useHistory, Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import Page from '../components/Page';
+import useStyles from '../css/LoginStyles';
+import loginImg from '../images/loginImg.jpg';
 
 
 const Login = ({ login }) => {
@@ -16,10 +18,10 @@ const Login = ({ login }) => {
 
   const attemptLogin = async () => {
     if (await login(email, password)) {
-      console.log("??")
-      history.push('/profile')
+      console.log('??');
+      history.push('/profile');
     }
-  }
+  };
 
   return (
     <Page>

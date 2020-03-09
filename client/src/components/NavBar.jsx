@@ -5,17 +5,17 @@ import {
   Button,
 } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import useStyles from '../css/PageStyles';
 import logo from '../images/logo.png';
-import PropTypes from 'prop-types';
 
 const NavBar = ({ loggedIn, logout }) => {
   const history = useHistory();
   const classes = useStyles();
 
-  const userLogin = loggedIn ?
-  <Button onClick={() => logout()}>Logout</Button> :
-  <Button onClick={() => history.push('/login')}>Login</Button>
+  const userLogin = loggedIn
+    ? <Button onClick={() => logout()}>Logout</Button>
+    : <Button onClick={() => history.push('/login')}>Login</Button>;
 
   return (
     <AppBar position="static">

@@ -19,7 +19,7 @@ import { useLogin } from './stores/LoginStores';
 const App = () => {
   const [userData, loggedIn, login, register, logout] = useLogin();
 
-  console.log(`Logged In: ${loggedIn}`)
+  console.log(`Logged In: ${loggedIn}`);
 
   const theme = createMuiTheme({
     palette: {
@@ -43,7 +43,7 @@ const App = () => {
 
   return (
     <div style={{
-      minHeight: '100vh'
+      minHeight: '100vh',
     }}
     >
       <ThemeProvider theme={theme}>
@@ -55,8 +55,8 @@ const App = () => {
             <Route path="/services" component={Services} />
             <Route path="/contact" component={Contact} />
             <Route path="/login" component={() => <Login login={login} />} />
-          <Route path="/signUp" component={() => <SignUp register={register} />} />
-          <Route path="/profile" component={() => <Profile userData={userData} />} />
+            <Route path="/signUp" component={() => <SignUp register={register} />} />
+            <Route path="/profile" component={() => <Profile userData={userData} />} />
           </Switch>
         </Router>
       </ThemeProvider>
