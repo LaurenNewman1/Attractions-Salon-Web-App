@@ -22,6 +22,7 @@ const useStyles = makeStyles((theme) => ({
   cardActions: {
     display: 'flex',
     alignItems: 'center',
+    justifyContent: 'center'
   },
   price: {
     width: '100%',
