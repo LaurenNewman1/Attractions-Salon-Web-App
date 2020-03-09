@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const requestLogin =  async (email, password) => {
+const requestLogin = async (email, password) => {
   console.log(email);
   console.log(password);
 
@@ -9,33 +9,34 @@ const requestLogin =  async (email, password) => {
     cache: 'no-cache',
     credentials: 'same-origin', // include, *same-origin, omit
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
     redirect: 'follow', // manual, *follow, error
     referrerPolicy: 'no-referrer', // no-referrer, *client
-    body: JSON.stringify({ email, password })
-  })
-  
-  return res.status === 200
-}
+    body: JSON.stringify({ email, password }),
+  });
+
+  return res.status === 200;
+};
 
 const requestRegister = async (name, email, number, password) => {
-
   const res = await fetch('/api/users',
-  {
-    method: 'POST',
-    cache: 'no-cache',
-    credentials: 'same-origin', // include, *same-origin, omit
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    redirect: 'follow', // manual, *follow, error
-    referrerPolicy: 'no-referrer', // no-referrer, *client
-    body: JSON.stringify({ name, email, phone_number: number, password })
-  })
+    {
+      method: 'POST',
+      cache: 'no-cache',
+      credentials: 'same-origin', // include, *same-origin, omit
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      redirect: 'follow', // manual, *follow, error
+      referrerPolicy: 'no-referrer', // no-referrer, *client
+      body: JSON.stringify({
+        name, email, phone_number: number, password,
+      }),
+    });
 
-  return res.status === 200
-}
+  return res.status === 200;
+};
 
 const requestLogout = async () => {
   const res = await fetch('/api/logout', {
@@ -43,50 +44,45 @@ const requestLogout = async () => {
     cache: 'no-cache',
     credentials: 'same-origin', // include, *same-origin, omit
     redirect: 'follow', // manual, *follow, error
-    referrerPolicy: 'no-referrer' // no-referrer, *client
-  })
+    referrerPolicy: 'no-referrer', // no-referrer, *client
+  });
 
   return res.status === 200;
-}
+};
 
 
-export const useLogin = () => {
+export default () => {
   const [loggedIn, isLoggedIn] = useState(false);
   const [userData, setUserData] = useState({});
 
   // Call to login
   const login = async (email, password) => {
     const response = await requestLogin(email, password);
-    if (response)
-      isLoggedIn(true)
-      
+    if (response) { isLoggedIn(true); }
+
     console.log(response);
-    return response
-  }
+    return response;
+  };
 
   // Call to register
-  //const register = requestRegister;
+  // const register = requestRegister;
 
-  //This is just to test the register thing
-  const register = async (name, email, number, password) => {
-    return await requestRegister(name, email, number, password)
-  }
+ 
+  // eslint-disable-next-line max-len
+  const register = async (name, email, number, password) => requestRegister(name, email, number, password);
 
   const logout = async () => {
-    if (await requestLogout())
-      isLoggedIn(false)
-  }
+    if (await requestLogout()) { isLoggedIn(false); }
+  };
 
   useEffect(() => {
-    if (loggedIn)
-      return
+    if (loggedIn) { return; }
 
     fetch('/api/users').then((res) => {
       if (res.status === 200) {
-        return res.json()
-      } else {
-        return null;
+        return res.json();
       }
+      return null;
     }).then((data) => {
       if (data !== null) {
         isLoggedIn(true);
@@ -95,8 +91,8 @@ export const useLogin = () => {
         isLoggedIn(false);
         setUserData({});
       }
-    })
+    });
   }, [loggedIn]);
 
   return [userData, loggedIn, login, register, logout];
-}
+};
