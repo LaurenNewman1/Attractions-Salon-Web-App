@@ -3,14 +3,15 @@ import { Grid } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import ProfileComponent from '../components/Profile';
 import Page from '../components/Page';
-
+import PropTypes from 'prop-types';
 
 const style = {
   Paper: { padding: 20, marginTop: 10, marginBottom: 10 },
   Paper2: { padding: 10, marginTop: 5, marginBottom: 5 },
 };
 
-const Profile = () => {
+const Profile = ({ userData }) => {
+  const { name, email, phone_number } = userData;
   return (
     <Page>
       <div>
@@ -21,7 +22,7 @@ const Profile = () => {
           <div style={style.Paper2} elevation={5}>
       <Grid container style={{ paddingLeft: 200, paddingRight: 200, paddingTop: 10, alignItems: "center" }}>
         <Grid item xs={12} md={6}>
-            <ProfileComponent />
+            <ProfileComponent name={name} />
         </Grid>
         <Grid item xs={12} md={6}>
             <div
@@ -29,10 +30,10 @@ const Profile = () => {
               style={{ paddingLeft: 60 }}
             >
               <Typography variant="h6" gutterBottom>
-                Email: JohnDoe@gmail.com
+                Email:{email}
               </Typography>
               <Typography variant="h6" gutterBottom>
-                Phone: (###) ### - ####
+                Phone: {phone_number}
               </Typography>
               <Typography variant="h6" gutterBottom>
                 Card: .... .... .... 1234
@@ -45,5 +46,12 @@ const Profile = () => {
   );
 };
 
+Profile.propTypes = {
+  login: PropTypes.shape({
+    email: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    phone_number: PropTypes.number.isRequired,
+  }),
+};
 
 export default Profile;
