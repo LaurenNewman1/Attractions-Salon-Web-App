@@ -14,8 +14,8 @@ const Login = ({ login }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const attemptLogin = () => {
-    if (login(email, password)) {
+  const attemptLogin = async () => {
+    if (await login(email, password)) {
       console.log("??")
       history.push('/profile')
     }
