@@ -32,7 +32,7 @@ const Services = () => {
       setStylings(await fetchServicesByType('stylings'));
       setExtensions(await fetchServicesByType('extensions'));
       setLoading(false);
-    };
+    }
     fetchData();
   }, []);
 

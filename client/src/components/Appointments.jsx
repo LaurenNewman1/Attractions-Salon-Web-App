@@ -1,7 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
-import Grid from '@material-ui/core/Grid';
 import hairPic from '../curlyHair.jpg';
 
 const useStyles = makeStyles((theme) => ({
@@ -22,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const Appointments = (props) => {
+const Appointments = () => {
   const classes = useStyles();
   return (
     <>
@@ -30,18 +29,6 @@ const Appointments = (props) => {
         <Avatar alt="Hair Pic" src={hairPic} className={classes.large} />
         John Doe
       </div>
-      <Grid item xs={2}>
-        Dhruv
-      </Grid>
-      <Grid item xs={2}>
-        Dhruv1
-      </Grid>
-      <Grid item xs={2}>
-        Dhruv2
-      </Grid>
-      <Grid item xs={2}>
-        Dhruv3
-      </Grid>
     </>
   );
 };

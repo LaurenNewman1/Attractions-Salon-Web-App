@@ -6,10 +6,10 @@ import {
   Email, Person, Phone, Lock,
 } from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import useStyles from '../css/LoginStyles';
 import Page from '../components/Page';
 import signUpImg from '../images/signUpImg.jpg';
-import PropTypes from 'prop-types';
 
 const SignUp = ({ register }) => {
   const classes = useStyles();
@@ -21,9 +21,9 @@ const SignUp = ({ register }) => {
 
   const attemptRegister = async () => {
     if (await register(name, email, number, password)) {
-      history.push('/login')
+      history.push('/login');
     }
-  }
+  };
 
   return (
     <Page>
