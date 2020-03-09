@@ -4,7 +4,7 @@ const requestLogin =  async (email, password) => {
   console.log(email);
   console.log(password);
 
-  await fetch('/api/login', {
+  const res = await fetch('/api/login', {
     method: 'POST',
     cache: 'no-cache',
     credentials: 'same-origin', // include, *same-origin, omit
@@ -15,27 +15,13 @@ const requestLogin =  async (email, password) => {
     referrerPolicy: 'no-referrer', // no-referrer, *client
     body: JSON.stringify({ email, password })
   })
-  .then((res) => {
-    if (res.status === 200) {
-      return true;
-    } else {
-      return false;
-    }
-  })
-  .then((data) => console.log(data));
-
-  // fetch from '/api/login'
-  // Login Logic Here
-  // Return a true or false whether or not they logged in successfully
+  
+  return res.status === 200
 }
 
 const requestRegister = async (name, email, number, password) => {
-  console.log(name);
-  console.log(email);
-  console.log(number);
-  console.log(password);
 
-  await fetch('/api/users',
+  const res = await fetch('/api/users',
   {
     method: 'POST',
     cache: 'no-cache',
@@ -47,27 +33,20 @@ const requestRegister = async (name, email, number, password) => {
     referrerPolicy: 'no-referrer', // no-referrer, *client
     body: JSON.stringify({ name, email, phone_number: number, password })
   })
-  .then((res) => {
-    if (res.status === 200) {
-      return true;
-    } else {
-      return false;
-    }
-  })
-  .then((data) => console.log(data));
+
+  return res.status === 200
 }
 
 const requestLogout = async () => {
-  await fetch('/api/logout', {
+  const res = await fetch('/api/logout', {
     method: 'DELETE',
     cache: 'no-cache',
     credentials: 'same-origin', // include, *same-origin, omit
     redirect: 'follow', // manual, *follow, error
     referrerPolicy: 'no-referrer' // no-referrer, *client
   })
-  .then((res) => {
-    return res.status === 200;
-  })
+
+  return res.status === 200;
 }
 
 
@@ -76,11 +55,12 @@ export const useLogin = () => {
   const [userData, setUserData] = useState({});
 
   // Call to login
-  const login = (email, password) => {
-    const response = requestLogin(email, password);
+  const login = async (email, password) => {
+    const response = await requestLogin(email, password);
     if (response)
       isLoggedIn(true)
       
+    console.log(response);
     return response
   }
 
@@ -88,12 +68,12 @@ export const useLogin = () => {
   //const register = requestRegister;
 
   //This is just to test the register thing
-  const register = (name, email, number, password) => {
-    return requestRegister(name, email, number, password)
+  const register = async (name, email, number, password) => {
+    return await requestRegister(name, email, number, password)
   }
 
-  const logout = () => {
-    if (requestLogout())
+  const logout = async () => {
+    if (await requestLogout())
       isLoggedIn(false)
   }
 
