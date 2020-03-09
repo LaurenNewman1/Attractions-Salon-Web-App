@@ -1,18 +1,39 @@
 import { useState, useEffect } from 'react';
 
-const requestLogin = (email, password) => {
+const requestLogin =  async (email, password) => {
   console.log(email);
   console.log(password);
+
+  await fetch('/api/login')
+  .then((res) => {
+    if (res.status === 200) {
+      return true;
+    } else {
+      return false;
+    }
+  })
+  .then((data) => console.log(data));
+
   // fetch from '/api/login'
   // Login Logic Here
   // Return a true or false whether or not they logged in successfully
 }
 
-const requestRegister = (name, email, number, password) => {
+const requestRegister = async (name, email, number, password) => {
   console.log(name);
   console.log(email);
   console.log(number);
   console.log(password);
+
+  await fetch('/api/signup')
+  .then((res) => {
+    if (res.status === 200) {
+      return true;
+    } else {
+      return false;
+    }
+  })
+  .then((data) => console.log(data));
   // fetch from '/api/signUp'
   // Registration Logic Here
   // Return a true or false whether or not the registration was successful

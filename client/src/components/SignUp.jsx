@@ -10,10 +10,10 @@ import { useHistory } from 'react-router-dom';
 import { useState } from 'react';
 
 
-const history = useHistory();
-const changePage = (history) => {
-    history.push('/Profile');
-};
+// const history = useHistory();
+// const changePage = (history) => {
+//     history.push('/Profile');
+// };
 
 const SignUp = (props) => {
 
@@ -21,7 +21,7 @@ const [email, setEmail] = useState('');
 const [password, setPassword] = useState('');
 const [name, setName] = useState('');
 const [number, setNumber] = useState('');
-
+const history = useHistory();
 
   const updateEmail = (/** @type {React.ChangeEvent<HTMLInputElement>} */ event) => {
     const inputValue = event.target.value;
@@ -46,6 +46,8 @@ const [number, setNumber] = useState('');
 
   const updateRegister = (name, email, number, password) => {
     props.createAccountClick(name, email, number, password);
+    //This should only chnage if the result from the database is true;
+    history.push('/Profile');
   };
   
 

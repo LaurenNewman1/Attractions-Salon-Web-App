@@ -11,15 +11,15 @@ import { useState } from 'react';
 
 
 // This is for later
-const history = useHistory();
-const changePage = (history) => {
-  history.push('/Profile');
-};
 // onClick={() => updateHistory(history)};
 
 const Login = (props) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  // const changePage = (history) => {
+  //   history.push('/Profile');
+  // };
   
   const updateEmail = (/** @type {React.ChangeEvent<HTMLInputElement>} */ event) => {
     const inputValue = event.target.value;
@@ -31,8 +31,10 @@ const Login = (props) => {
     setPassword(inputValue);
   };
   
-  const updateLogin = (email, password) => {
+  const updateLogin = async (email, password) => {
     props.loginClick(email, password);
+    //This needs to only change if the result of the function call is true 
+    
   };
 
   return (
