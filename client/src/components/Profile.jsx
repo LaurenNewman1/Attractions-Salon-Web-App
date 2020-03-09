@@ -25,8 +25,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 // <Avatar alt="Avatar 1 Pic" src={Avatar1Pic} className={classes.medium} />
-const Profile = (props) => {
-  const classes = useStyles();
+const Profile = ({ name }) => {
   return (
     <>
       <div style={{ display: 'flex', justifyContent: 'center', paddingLeft: 50}}>
@@ -38,7 +37,7 @@ const Profile = (props) => {
       </div>
       <div style={{ display: 'flex', justifyContent: 'center', paddingLeft: 50}}>
         <Typography variant="h6" gutterBottom>
-            John Doe
+            {name}
         </Typography>
       </div>
     </>
