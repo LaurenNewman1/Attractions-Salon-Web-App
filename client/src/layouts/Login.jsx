@@ -48,7 +48,7 @@ const Login = () => {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={() => history.push('/profile')}
+                // onClick={() => history.push('/profile')}
               >
                 Login
               </Button>

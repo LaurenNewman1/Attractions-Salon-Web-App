@@ -6,10 +6,10 @@ const useStyles = makeStyles((theme) => ({
   },
   paper: {
     margin: '0',
-    padding: theme.spacing(1.5),
+    // padding: theme.spacing(1.5),
     textAlign: 'center',
     color: theme.palette.text.secondary,
-    backgroundColor: '#6d6c6c',
+    backgroundColor: 'white',
     height: '90vh',
   },
   black: {
@@ -21,8 +21,11 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.primary.light,
   },
   button: {
-    position: 'absolute',
-    bottom: 0,
+    // position: 'absolute',
+    // bottom: '30vh',
+    // bottom: '5vh',
+    width: 550,
+    left: '25%'
   },
 }));
 
