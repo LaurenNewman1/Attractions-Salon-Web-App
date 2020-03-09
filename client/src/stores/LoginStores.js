@@ -4,7 +4,17 @@ const requestLogin =  async (email, password) => {
   console.log(email);
   console.log(password);
 
-  await fetch('/api/login')
+  await fetch('/api/login', {
+    method: 'POST',
+    cache: 'no-cache',
+    credentials: 'same-origin', // include, *same-origin, omit
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    redirect: 'follow', // manual, *follow, error
+    referrerPolicy: 'no-referrer', // no-referrer, *client
+    body: JSON.stringify({ email, password })
+  })
   .then((res) => {
     if (res.status === 200) {
       return true;
@@ -25,7 +35,18 @@ const requestRegister = async (name, email, number, password) => {
   console.log(number);
   console.log(password);
 
-  await fetch('/api/signup')
+  await fetch('/api/users',
+  {
+    method: 'POST',
+    cache: 'no-cache',
+    credentials: 'same-origin', // include, *same-origin, omit
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    redirect: 'follow', // manual, *follow, error
+    referrerPolicy: 'no-referrer', // no-referrer, *client
+    body: JSON.stringify({ name, email, phone_number: number, password })
+  })
   .then((res) => {
     if (res.status === 200) {
       return true;
@@ -34,10 +55,19 @@ const requestRegister = async (name, email, number, password) => {
     }
   })
   .then((data) => console.log(data));
-  // fetch from '/api/signUp'
-  // Registration Logic Here
-  // Return a true or false whether or not the registration was successful
-  // Currently a successful registration does not automatically log them in, do you feel this should be changed?
+}
+
+const requestLogout = async () => {
+  await fetch('/api/logout', {
+    method: 'DELETE',
+    cache: 'no-cache',
+    credentials: 'same-origin', // include, *same-origin, omit
+    redirect: 'follow', // manual, *follow, error
+    referrerPolicy: 'no-referrer' // no-referrer, *client
+  })
+  .then((res) => {
+    return res.status === 200;
+  })
 }
 
 
@@ -56,7 +86,12 @@ export const useLogin = () => {
 
   //This is just to test the register thing
   const register = (name, email, number, password) => {
-    requestRegister(name, email, number, password)
+    return requestRegister(name, email, number, password)
+  }
+
+  const logout = () => {
+    if (requestLogout())
+      isLoggedIn(false)
   }
 
   useEffect(() => {
@@ -75,9 +110,10 @@ export const useLogin = () => {
         setUserData(data);
       } else {
         isLoggedIn(false);
+        setUserData({});
       }
     })
   }, [loggedIn]);
 
-  return [userData, loggedIn, login, register];
+  return [userData, loggedIn, login, register, logout];
 }

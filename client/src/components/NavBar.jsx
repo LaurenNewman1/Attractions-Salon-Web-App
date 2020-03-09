@@ -7,10 +7,15 @@ import {
 import { useHistory } from 'react-router-dom';
 import useStyles from '../css/PageStyles';
 import logo from '../images/logo.png';
+import PropTypes from 'prop-types';
 
-const NavBar = () => {
+const NavBar = ({ loggedIn, logout }) => {
   const history = useHistory();
   const classes = useStyles();
+
+  const userLogin = loggedIn ?
+  <Button onClick={() => logout()}>Logout</Button> :
+  <Button onClick={() => history.push('/login')}>Login</Button>
 
   return (
     <AppBar position="static">
@@ -22,10 +27,16 @@ const NavBar = () => {
         <Button onClick={() => history.push('/book')}>Book</Button>
         <Button onClick={() => history.push('/services')}>Services</Button>
         <Button onClick={() => history.push('/contact')}>Contact</Button>
-        <Button onClick={() => history.push('/login')}>Login</Button>
+        {userLogin}
       </Toolbar>
     </AppBar>
   );
 };
+
+NavBar.propTypes = {
+  loggedIn: PropTypes.bool.isRequired,
+  logout: PropTypes.func.isRequired,
+};
+
 
 export default NavBar;

@@ -16,7 +16,9 @@ import NavBar from './components/NavBar';
 import { useLogin } from './stores/LoginStores';
 
 const App = () => {
-  const [userData, loggedIn, login, register] = useLogin();
+  const [userData, loggedIn, login, register, logout] = useLogin();
+
+  console.log(`Logged In: ${loggedIn}`)
 
   const theme = createMuiTheme({
     palette: {
@@ -45,7 +47,7 @@ const App = () => {
     >
       <ThemeProvider theme={theme}>
         <Router>
-          <NavBar />
+          <NavBar loggedIn={loggedIn} logout={() => logout()} />
           <Switch>
             <Route exact path="/" component={Home} />
             <Route path="/book" component={Book} />

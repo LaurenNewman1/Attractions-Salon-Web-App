@@ -73,7 +73,7 @@ export const create = async (req, res) => {
   try {
     const params = req.body;
     const hash = await argon2.hash(params.password);
-    const finalUser = { ...params, password: hash };
+    const finalUser = { ...params, password: hash, role: 0 };
     const user = await User.create(finalUser);
     res.status(200).type('json').send(user);
   } catch (err) {
