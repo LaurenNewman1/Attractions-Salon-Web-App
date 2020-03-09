@@ -41,7 +41,7 @@ const App = () => {
 
   return (
     <div style={{
-      width: '100vw', minHeight: '100vh'
+      minHeight: '100vh'
     }}
     >
       <ThemeProvider theme={theme}>
