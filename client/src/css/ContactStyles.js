@@ -4,6 +4,15 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
+  page: {
+    height: 'calc(100vh - 64px)',
+    display: 'flex',
+    alignItems: 'center',
+  },
+  header: {
+    textAlign: 'center',
+    width: '100%',
+  },
   paper: {
     margin: '0',
     // padding: theme.spacing(1.5),
@@ -20,12 +29,35 @@ const useStyles = makeStyles((theme) => ({
     position: 'relative',
     color: theme.palette.primary.light,
   },
-  button: {
-    // position: 'absolute',
-    // bottom: '30vh',
-    // bottom: '5vh',
-    width: 550,
-    left: '25%'
+  leftContainer: {
+    backgroundColor: theme.palette.background.dark,
+    height: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    padding: 10,
+    paddingTop: 20,
+  },
+  rightContainer: {
+    height: '100%',
+    padding: 20,
+  },
+  reviewContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  profileImg: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  icon: {
+    width: '80%',
+    height: 'auto',
+  },
+  buttons: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginTop: 5,
   },
 }));
 

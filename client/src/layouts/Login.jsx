@@ -4,7 +4,7 @@ import Page from '../components/Page';
 import useStyles from '../css/LoginStyles';
 import loginImg from '../images/loginImg.jpg';
 import { Email, Lock } from '@material-ui/icons';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const Login = () => {
   const classes = useStyles();

@@ -92,7 +92,7 @@
   },
   "scripts": {
     "front-run": "node scripts/start.js",
-    "front-lint": "eslint --ext .jsx client/src/",
+    "front-lint": "eslint --ext .jsx --ext .js client/src/",
     "front-build": "node scripts/build.js",
     "back-test": "jest --verbose --config api/jest.config.js tests/",
     "back-build": "cross-env NODE_ENV=development babel ./api --out-dir build/api",

@@ -41,7 +41,7 @@ const App = () => {
 
   return (
     <div style={{
-      width: '100vw', minHeight: '100vh'
+      width: '100vw', minHeight: '100vh',
     }}
     >
       <ThemeProvider theme={theme}>
@@ -53,8 +53,8 @@ const App = () => {
             <Route path="/services" component={Services} />
             <Route path="/contact" component={Contact} />
             <Route path="/login" component={Login} />
-          <Route path="/signUp" component={SignUp} />
-          <Route path="/profile" component={Profile} />
+            <Route path="/signUp" component={SignUp} />
+            <Route path="/profile" component={Profile} />
           </Switch>
         </Router>
       </ThemeProvider>
