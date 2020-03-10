@@ -7,14 +7,14 @@ const MongoStore = connectMongo(session);
 
 const production = async (app) => {
   app.use(morgan('dev'));
-  const connection = mongoose.connect(process.env.DB_URL,
+  const connection = await mongoose.connect(process.env.DB_URL,
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useFindAndModify: false,
     });
   app.use(session({
-    store: new MongoStore({ mongooseConnection: connection }),
+    store: new MongoStore({ mongooseConnection: connection.connection }),
     secret: process.env.STORE_KEY,
     resave: false,
     saveUninitialized: true,
@@ -22,5 +22,6 @@ const production = async (app) => {
   }));
   return connection;
 };
+
 
 export default production;
