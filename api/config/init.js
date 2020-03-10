@@ -42,7 +42,8 @@ export default async () => {
 
   // Serve Front End
   if (inProduction) {
-    app.get('/*', express.static(path.join(__dirname, '/../../client/')));
+    app.use(express.static(path.join(__dirname, '/../../client/')));
+    app.get('/*', (req, res) => res.sendFile(path.resolve(path.join(__dirname, '/../../client/'), 'index.html')));
   } else {
     app.get('/*', proxy('http://localhost:3000'));
   }
