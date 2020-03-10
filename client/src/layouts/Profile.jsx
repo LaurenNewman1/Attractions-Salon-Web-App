@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import React from 'react';
 import { Grid } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
@@ -11,7 +12,7 @@ const style = {
 };
 
 const Profile = ({ userData }) => {
-  const { name, email, phoneNumber } = userData;
+  const { name, email, phone_number } = userData;
   return (
     <Page>
       <div>
@@ -41,7 +42,7 @@ const Profile = ({ userData }) => {
               <Typography variant="h6" gutterBottom>
                 Phone:
                 {' '}
-                {phoneNumber}
+                {phone_number}
               </Typography>
               <Typography variant="h6" gutterBottom>
                 Card: .... .... .... 1234
@@ -58,7 +59,7 @@ Profile.propTypes = {
   userData: PropTypes.shape({
     email: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
-    phoneNumber: PropTypes.number.isRequired,
+    phone_number: PropTypes.number.isRequired,
   }).isRequired,
 };
 
