@@ -18,10 +18,34 @@ const SignUp = ({ register }) => {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
+  const [errorBody, setErrorBody] = useState({});
+  const [hasError, setHasError] = useState(false);
+
+  const validationTable = {
+    email: {
+      required: 'Email is required.',
+    },
+    name: {
+      required: 'Name is required.',
+    },
+  };
+
+  const getAvaliableErrors = (field) => {
+    if (!hasError) return false;
+    if (!errorBody.errors) return false;
+    if (!errorBody.errors[field]) return false;
+
+    return validationTable[field][errorBody.errors[field].kind];
+  };
 
   const attemptRegister = async () => {
-    if (await register(name, email, number, password)) {
+    const [successful, errors] = await register(name, email, number, password);
+    setErrorBody({});
+    setHasError(!successful);
+    if (successful) {
       history.push('/login');
+    } else {
+      setErrorBody(errors);
     }
   };
 
@@ -38,7 +62,8 @@ const SignUp = ({ register }) => {
               fullWidth
               type
               className={classes.field}
-              helperText="Full Name"
+              error={getAvaliableErrors('name')}
+              helperText={hasError ? getAvaliableErrors('name') : 'Full Name'}
               value={name}
               onChange={(e) => setName(e.target.value)}
               InputProps={{
@@ -53,7 +78,8 @@ const SignUp = ({ register }) => {
               fullWidth
               type="email"
               className={classes.field}
-              helperText="Email Address"
+              error={getAvaliableErrors('email')}
+              helperText={hasError ? getAvaliableErrors('email') : 'Email Address'}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               InputProps={{

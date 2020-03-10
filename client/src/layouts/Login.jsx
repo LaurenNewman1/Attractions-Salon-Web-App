@@ -15,13 +15,20 @@ const Login = ({ login }) => {
   const history = useHistory();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorBody, setErrorBody] = useState({});
+  const [hasError, setHasError] = useState(false);
 
   const attemptLogin = async () => {
-    if (await login(email, password)) {
-      console.log('??');
+    const [successful, error] = await login(email, password);
+    setHasError(!successful);
+    if (successful) {
       history.push('/profile');
+    } else {
+      setErrorBody(error);
     }
   };
+
+  const errorHelpingText = hasError ? errorBody.error : '';
 
   return (
     <Page>
@@ -35,8 +42,9 @@ const Login = ({ login }) => {
             <TextField
               fullWidth
               type="email"
+              error={hasError}
               className={classes.field}
-              helperText="Email Address"
+              helperText={hasError ? errorHelpingText : 'Email Address'}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               InputProps={{
@@ -51,7 +59,8 @@ const Login = ({ login }) => {
               fullWidth
               type="password"
               className={classes.field}
-              helperText="Password"
+              error={hasError}
+              helperText={hasError ? errorHelpingText : 'Password'}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               InputProps={{

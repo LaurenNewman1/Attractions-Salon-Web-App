@@ -1,9 +1,6 @@
 import { useState, useEffect } from 'react';
 
 const requestLogin = async (email, password) => {
-  console.log(email);
-  console.log(password);
-
   const res = await fetch('/api/login', {
     method: 'POST',
     cache: 'no-cache',
@@ -16,7 +13,7 @@ const requestLogin = async (email, password) => {
     body: JSON.stringify({ email, password }),
   });
 
-  return res.status === 200;
+  return [res.status === 200, await res.json()];
 };
 
 const requestRegister = async (name, email, number, password) => {
@@ -35,7 +32,7 @@ const requestRegister = async (name, email, number, password) => {
       }),
     });
 
-  return res.status === 200;
+  return [res.status === 200, await res.json()];
 };
 
 const requestLogout = async () => {
@@ -58,16 +55,13 @@ export default () => {
   // Call to login
   const login = async (email, password) => {
     const response = await requestLogin(email, password);
-    if (response) { isLoggedIn(true); }
+    if (response[0]) { isLoggedIn(true); }
 
-    console.log(response);
     return response;
   };
 
   // Call to register
   // const register = requestRegister;
-
- 
   // eslint-disable-next-line max-len
   const register = async (name, email, number, password) => requestRegister(name, email, number, password);
 
