@@ -36,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     padding: 10,
     paddingTop: 20,
+    wordWrap: 'anywhere',
   },
   rightContainer: {
     height: '100%',
