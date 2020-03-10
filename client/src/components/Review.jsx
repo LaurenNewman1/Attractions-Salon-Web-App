@@ -1,67 +1,42 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import {
-  Card, Typography, CardContent,
+  Card, Typography, CardContent, Grid,
 } from '@material-ui/core';
 import {
   Rating,
 } from '@material-ui/lab';
-import ReviewData from '../reviews.json';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import PropTypes from 'prop-types';
+import useStyles from '../css/ContactStyles';
 
-const useStyles = makeStyles({
-  root: {
-    maxWidth: 275,
-    marginBottom: 20,
-    minHeight: 225,
-    background: 'linear-gradient(180deg, #ffc1e3 26.82%, rgba(173, 126, 115, 0) 26.83%, #e7e7e7 26.83%)',
-  },
-  bullet: {
-    display: 'inline-block',
-    // margin: '0 2px',
-    transform: 'scale(0.8)',
-  },
-  title: {
-    fontSize: 14,
-  },
-  pos: {
-    // marginBottom: 12,
-    height: '100%',
-    marginTop: 5,
-  },
-});
-
-const Review = () => {
+const Review = ({ review }) => {
   const classes = useStyles();
-  //   const bull = <span className={classes.bullet}>•</span>;
-  return (
-    <div style={{ columns: '2 auto', marginTop: 25 }}>
-      {/* style={{ display: 'flex', margin: '10px' }} */}
-      {/* <Grid container spacing={3}>
-        <Grid item xs={6}> */}
-      {ReviewData.map((reviewDetail) => (
-        <div>
-          <Card className={classes.root}>
-            <CardContent>
-              <Typography variant="h5" component="h2" style={{ paddingBottom: 15 }}>
-                {reviewDetail.name}
-              </Typography>
-              <Rating name="read-only" value="5" readOnly />
-              <Typography className={classes.pos} color="textSecondary">
-                {reviewDetail.content}
-              </Typography>
-              {/* <Typography variant="body2" component="p">
-                well meaning and kindly.
-                <br />
-              </Typography> */}
-            </CardContent>
 
-          </Card>
-        </div>
-      ))}
-      {/* </Grid> */}
-      {/* </Grid> */}
-    </div>
+  return (
+    <Card>
+      <CardContent>
+        <Grid container spacing={1}>
+          <Grid item xs={8}>
+            <Rating value="5" readOnly icon={<FavoriteIcon color="primary" />} />
+            <Typography variant="body2">{review.content}</Typography>
+            <Typography variant="subtitle1" style={{ fontWeight: 'bold' }}>{review.name}</Typography>
+          </Grid>
+          <Grid item xs={4} className={classes.profileImg}>
+            <AccountCircle className={classes.icon} color="secondary" />
+          </Grid>
+        </Grid>
+      </CardContent>
+    </Card>
   );
+};
+
+Review.propTypes = {
+  review: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    content: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 export default Review;
