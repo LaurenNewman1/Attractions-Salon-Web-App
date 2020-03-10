@@ -1,7 +1,26 @@
-import morgan from 'morgan'
+import morgan from 'morgan';
+import mongoose from 'mongoose';
+import session from 'express-session';
+import connectMongo from 'connect-mongo';
 
-const production = (app) => {
-  app.use(morgan('dev'))
-}
+const MongoStore = connectMongo(session);
 
-export default production
+const production = async (app) => {
+  app.use(morgan('dev'));
+  const connection = mongoose.connect(process.env.DB_URL,
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useFindAndModify: false,
+    });
+  app.use(session({
+    store: new MongoStore({ mongooseConnection: connection }),
+    secret: process.env.STORE_KEY,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true },
+  }));
+  return connection;
+};
+
+export default production;

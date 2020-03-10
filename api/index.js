@@ -1,30 +1,20 @@
-import express from 'express'
-import proxy from 'express-http-proxy'
-import initializeDevelopment from './config/initializers/development.js'
-import initializeProduction from './config/initializers/production.js'
-import configureRouter from './config/routes.js'
-const inProduction = process.env.NODE_ENV === 'production'
+import configureApp from './config/init';
 
-const app = express()
-const port = inProduction ? process.env.PORT : 8080
+const onSignal = () => {
+  mongoose.disconnect();
+};
 
-// Environment Initialize
-// This would include things such as generating the mongoose connection and logging
-if (inProduction) {
-  initializeProduction(app)
-} else {
-  initializeDevelopment(app)
-}
+const startServer = async () => {
+  try {
+    const [app, closeDB, environment] = await configureApp();
+    const port = environment === 'production' ? process.env.PORT : 8080;
 
-// Define Router
-// This would include defining routes to the controllers
-configureRouter(app)
+    app.listen(port, () => console.log(`Server is listening on port ${port}!`));
+  } catch (err) {
+    console.error(err);
+  }
+};
 
-// Serve Front End
-if (inProduction) {
-  app.get('/*', express.static(__dirname + '/../client'));
-} else {
-  app.get('/*', proxy('http://localhost:3000'));
-}
+startServer();
 
-app.listen(port, () => console.log(`Server is listening on port ${port}!`))
+export default configureApp;
