@@ -14,7 +14,7 @@ const production = async (app) => {
       useFindAndModify: false,
     });
   app.use(session({
-    store: new MongoStore({ mongooseConnection: connection }),
+    store: new MongoStore({ mongooseConnection: connection.connection }),
     secret: process.env.STORE_KEY,
     resave: false,
     saveUninitialized: true,

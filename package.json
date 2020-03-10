@@ -30,6 +30,7 @@
     "case-sensitive-paths-webpack-plugin": "2.3.0",
     "connect-mongo": "^3.2.0",
     "cookie-parser": "^1.4.4",
+    "core-js": "2",
     "css-loader": "3.4.2",
     "dotenv": "^8.2.0",
     "dotenv-expand": "5.1.0",
