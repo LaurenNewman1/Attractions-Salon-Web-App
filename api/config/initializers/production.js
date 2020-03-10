@@ -7,7 +7,7 @@ const MongoStore = connectMongo(session);
 
 const production = async (app) => {
   app.use(morgan('dev'));
-  const connection = mongoose.connect(process.env.DB_URL,
+  const connection = await mongoose.connect(process.env.DB_URL,
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,
@@ -22,5 +22,6 @@ const production = async (app) => {
   }));
   return connection;
 };
+
 
 export default production;
