@@ -55,7 +55,10 @@ export default () => {
   // Call to login
   const login = async (email, password) => {
     const response = await requestLogin(email, password);
-    if (response[0]) { isLoggedIn(true); }
+    if (response[0]) {
+      isLoggedIn(true);
+      setUserData(response[1]);
+    }
 
     return response;
   };
