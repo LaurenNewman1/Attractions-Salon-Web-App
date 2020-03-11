@@ -10,7 +10,7 @@ import useStyles from '../css/BookStyles';
 import Details from './Details';
 import Calendar from './Calendar';
 import NewPayment from './NewPayment';
-import Review from './Review';
+import ReviewBooking from './ReviewBooking';
 
 const Book = () => {
   const [page, setPage] = useState(0);
@@ -26,7 +26,7 @@ const Book = () => {
       case 2:
         return <NewPayment />;
       case 3:
-        return <Review />;
+        return <ReviewBooking />;
       default:
         return null;
     }
