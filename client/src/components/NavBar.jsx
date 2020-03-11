@@ -9,12 +9,12 @@ import PropTypes from 'prop-types';
 import useStyles from '../css/PageStyles';
 import logo from '../images/logo.png';
 
-const NavBar = ({ loggedIn, logout }) => {
+const NavBar = ({ loggedIn }) => {
   const history = useHistory();
   const classes = useStyles();
 
   const userLogin = loggedIn
-    ? <Button onClick={() => logout()}>Logout</Button>
+    ? <Button onClick={() => history.push('/profile')}>Profile</Button>
     : <Button onClick={() => history.push('/login')}>Login</Button>;
 
   return (
@@ -35,7 +35,6 @@ const NavBar = ({ loggedIn, logout }) => {
 
 NavBar.propTypes = {
   loggedIn: PropTypes.bool.isRequired,
-  logout: PropTypes.func.isRequired,
 };
 
 

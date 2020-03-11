@@ -56,7 +56,7 @@ const App = () => {
             <Route path="/contact" component={Contact} />
             <Route path="/login" component={() => <Login login={login} />} />
             <Route path="/signUp" component={() => <SignUp register={register} />} />
-            <Route path="/profile" component={() => <Profile userData={userData} />} />
+            <Route path="/profile" component={() => <Profile userData={userData} logout={() => logout()} />} />
           </Switch>
         </Router>
       </ThemeProvider>
