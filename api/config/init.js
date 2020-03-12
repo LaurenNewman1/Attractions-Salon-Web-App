@@ -3,6 +3,7 @@ import proxy from 'express-http-proxy';
 import path from 'path';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
+import GetLogger from './logger';
 import initializeDevelopment from './initializers/development';
 import initializeProduction from './initializers/production';
 import initializeTest from './initializers/testing';
@@ -15,6 +16,11 @@ const inProduction = environment === 'production';
 
 export default async () => {
   const app = express();
+  const logger = GetLogger('Server Init');
+
+  logger.info('Starting Server...');
+  logger.debug(`NODE_ENV: ${environment}`);
+
   let connection;
 
   app.use(bodyParser.json());
@@ -36,9 +42,12 @@ export default async () => {
       console.error('Unknown node environment!');
   }
 
+  logger.debug('Middleware Configured');
+
   // Define Router
   // This would include defining routes to the controllers
   configureRouter(app);
+  logger.debug('Router Configured');
 
   // Serve Front End
   if (inProduction) {
