@@ -30,7 +30,7 @@ const Home = () => {
                 </Grid>
                 <Grid item xs={12} align="center" className={classes.bookBtn}>
                   <Button variant="contained" color="primary" onClick={() => history.push('/book')}>
-                    Make a Booking
+                    Request Booking
                   </Button>
                 </Grid>
               </Grid>
