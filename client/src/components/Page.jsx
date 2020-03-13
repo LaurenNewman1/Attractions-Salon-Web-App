@@ -29,7 +29,7 @@ Page.propTypes = {
 };
 
 Page.defaultProps = {
-  maxWidth: 'lg',
+  maxWidth: 'md',
 }
 
 export default Page;
