@@ -23,8 +23,10 @@ const router = (app) => {
   app.get('/api/services/:someId', services.read);
 
   // Appointment Routes
-  app.get('/api/appointments/:someId', appointments.read);
+  app.get('/api/appointments/:_id', appointments.read);
+  app.get('/api/appointments/users/:email', appointments.read);
   app.get('/api/appointments', appointments.readall);
+  app.get('/api/appointments/status/:confirmed', appointments.read);
   app.delete('/api/appointments/:someId', appointments.remove);
   app.put('/api/appointments/:someId', appointments.update);
   app.post('/api/appointments', appointments.create);
