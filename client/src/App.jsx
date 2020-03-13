@@ -13,6 +13,7 @@ import Login from './layouts/Login';
 import Profile from './layouts/Profile';
 import NavBar from './components/NavBar';
 import SignUp from './layouts/SignUp';
+import Requests from './layouts/admin/Requests'
 
 import useLogin from './stores/LoginStores';
 
@@ -57,6 +58,7 @@ const App = () => {
             <Route path="/login" component={() => <Login login={login} />} />
             <Route path="/signUp" component={() => <SignUp register={register} />} />
             <Route path="/profile" component={() => <Profile userData={userData} />} />
+            <Route path="/admin/requests" component={() => <Requests />} />
           </Switch>
         </Router>
       </ThemeProvider>
