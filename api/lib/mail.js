@@ -6,7 +6,7 @@ const logger = GetLogger('SendGrid Mail');
 if (process.env.SENDGRID_API_KEY) {
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 } else {
-  logger.error('Attempted to load the mail library without the api key set!');
+  throw new Error('Attempted to load the mail library without SENDGRID_API_KEY defined!');
 }
 
 const textMsg = {
@@ -15,6 +15,14 @@ const textMsg = {
     email: 'attractions-salon@attractionssalon.com',
     name: 'Attractions Salon',
   },
+};
+
+const unsubscribeData = {
+  Sender_Name: 'Attractions Salon',
+  Sender_Address: '4509 NW 23 Ave',
+  Sender_City: 'Gainesville',
+  Sender_State: 'Florida',
+  Sender_Zip: '32606',
 };
 
 export const SendConfirmationEmail = async (userID, confirmToken) => {
@@ -27,9 +35,14 @@ export const SendTextEmail = async (to, subject, text, onlyProd = true) => {
   try {
     await sgMail.send({
       ...textMsg,
-      to,
-      subject,
-      text,
+      personalizations: [{
+        dynamic_template_data: {
+          ...unsubscribeData,
+          text,
+          subject,
+        },
+        to,
+      }],
     });
     return true;
   } catch (err) {
