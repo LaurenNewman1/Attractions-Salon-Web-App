@@ -44,6 +44,7 @@
     "html-webpack-plugin": "4.0.0-beta.11",
     "identity-obj-proxy": "3.0.0",
     "mini-css-extract-plugin": "0.9.0",
+    "moment": "^2.24.0",
     "mongodb": "^3.5.3",
     "mongoose": "^5.9.2",
     "morgan": "^1.9.1",
