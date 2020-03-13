@@ -13,7 +13,7 @@ import Login from './layouts/Login';
 import Profile from './layouts/Profile';
 import NavBar from './components/NavBar';
 import SignUp from './layouts/SignUp';
-
+import Confirmation from './layouts/Confirmation';
 import useLogin from './stores/LoginStores';
 
 const App = () => {
@@ -56,7 +56,8 @@ const App = () => {
             <Route path="/contact" component={Contact} />
             <Route path="/login" component={() => <Login login={login} />} />
             <Route path="/signUp" component={() => <SignUp register={register} />} />
-            <Route path="/profile" component={() => <Profile userData={userData} />} />
+            <Route path="/profile" component={() => <Profile userData={userData} logout={() => logout()} />} />
+            <Route path="/confirmation/:id" component={Confirmation} />
           </Switch>
         </Router>
       </ThemeProvider>
