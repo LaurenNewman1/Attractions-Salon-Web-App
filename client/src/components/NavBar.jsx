@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 import useStyles from '../css/PageStyles';
 import logo from '../images/logo.png';
 
-const NavBar = ({ loggedIn }) => {
+const NavBar = ({ loggedIn, userData }) => {
   const history = useHistory();
   const classes = useStyles();
 
@@ -35,17 +35,35 @@ const NavBar = ({ loggedIn }) => {
     }
   };
 
+  const userButtons = (
+    <>
+      <Button onClick={() => history.push('/')} aria-label="logo">
+        <img src={logo} alt="logo" style={{ width: '150px' }} />
+      </Button>
+      <div className={classes.grow} />
+      <Button onClick={() => handleBook()}>Book</Button>
+      <Button onClick={() => history.push('/services')}>Services</Button>
+      <Button onClick={() => history.push('/contact')}>Contact</Button>
+      {userLogin}
+    </>
+  );
+
+  const adminButtons = (
+    <>
+      <Button onClick={() => history.push('/dashboard')}>Dashboard</Button>
+      <div className={classes.grow} />
+      <Button onClick={() => history.push('/requests')}>Requests</Button>
+      <Button onClick={() => history.push('/users')}>Users</Button>
+      <Button onClick={() => history.push('/adminServices')}>Services</Button>
+      <Button onClick={() => history.push('/adminReviews')}>Reviews</Button>
+      {userLogin}
+    </>
+  );
+  console.log(userData.role);
   return (
     <AppBar position="static">
       <Toolbar>
-        <Button onClick={() => history.push('/')} aria-label="logo">
-          <img src={logo} alt="logo" style={{ width: '150px' }} />
-        </Button>
-        <div className={classes.grow} />
-        <Button onClick={() => handleBook()}>Book</Button>
-        <Button onClick={() => history.push('/services')}>Services</Button>
-        <Button onClick={() => history.push('/contact')}>Contact</Button>
-        {userLogin}
+        {userData && userData.role === 2 ? adminButtons : userButtons}
       </Toolbar>
     </AppBar>
   );
@@ -53,6 +71,17 @@ const NavBar = ({ loggedIn }) => {
 
 NavBar.propTypes = {
   loggedIn: PropTypes.bool.isRequired,
+  userData: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    role: PropTypes.number.isRequired,
+    email: PropTypes.string.isRequired,
+    phone_number: PropTypes.string.isRequired,
+    password: PropTypes.string.isRequired,
+  }),
+};
+
+NavBar.defaultProps = {
+  userData: null,
 };
 
 
