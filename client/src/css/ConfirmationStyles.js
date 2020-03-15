@@ -11,7 +11,6 @@ const useStyles = makeStyles(() => ({
   },
   centerCol: {
     height: 'calc(100vh - 64px)',
-    background: '#fafafa',
   },
   text: {
     fontSize: '28px',
