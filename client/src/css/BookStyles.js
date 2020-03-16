@@ -14,13 +14,11 @@ const useStyles = makeStyles(() => ({
   footer: {
     position: 'fixed',
     left: 0,
-    bottom: 20,
+    bottom: 0,
     width: '100%',
-    display: 'flex',
-    justifyContent: 'center',
   },
   stepper: {
-    width: '80%',
+    width: '100%',
   },
 }));
 

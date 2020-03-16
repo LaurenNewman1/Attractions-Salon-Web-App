@@ -41,7 +41,6 @@ const Book = () => {
         <div className={classes.footer}>
           <MobileStepper
             steps={4}
-            position="static"
             variant="dots"
             className={classes.stepper}
             activeStep={page}
