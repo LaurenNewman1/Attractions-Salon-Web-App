@@ -1,5 +1,5 @@
 import {
-  Grid, TextField, InputAdornment, Button,
+  Grid, TextField, InputAdornment, Button, Typography,
 } from '@material-ui/core';
 import React, { useState } from 'react';
 import { Email, Lock } from '@material-ui/icons';
@@ -10,7 +10,7 @@ import useStyles from '../css/LoginStyles';
 import loginImg from '../images/loginImg.jpg';
 
 
-const Login = ({ login, fromBookPage, setFromBookPage }) => {
+const Login = ({ login, fromBookPage }) => {
   const classes = useStyles();
   const history = useHistory();
   const [email, setEmail] = useState('');
@@ -37,15 +37,22 @@ const Login = ({ login, fromBookPage, setFromBookPage }) => {
   const renderBookPage = () => {
     if (fromBookPage) {
       return (
-        <div className={classes.buttons}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => routeToBook()}
-          >
-            Proceed Without Account
-          </Button>
-        </div>
+        <>
+          <div className={classes.buttons}>
+            <Typography variant="h5">
+              -------------OR-------------
+            </Typography>
+          </div>
+          <div className={classes.buttons}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => routeToBook()}
+            >
+              Proceed Without Account
+            </Button>
+          </div>
+        </>
       );
     }
   };
@@ -116,7 +123,6 @@ const Login = ({ login, fromBookPage, setFromBookPage }) => {
 Login.propTypes = {
   login: PropTypes.func.isRequired,
   fromBookPage: PropTypes.bool.isRequired,
-  setFromBookPage: PropTypes.func.isRequired,
 };
 
 

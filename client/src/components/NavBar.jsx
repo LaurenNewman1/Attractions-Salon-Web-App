@@ -36,6 +36,7 @@ const NavBar = ({ loggedIn, setFromBookPage }) => {
     if (loggedIn) {
       history.push('/book');
     } else {
+      setFromBookPage(true);
       history.push('/login');
     }
   };
