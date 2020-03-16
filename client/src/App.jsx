@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
@@ -15,9 +15,12 @@ import NavBar from './components/NavBar';
 import SignUp from './layouts/SignUp';
 import Confirmation from './layouts/Confirmation';
 import useLogin from './stores/LoginStores';
+import ProfileAdmin from './layouts/ProfileAdmin';
 
 const App = () => {
   const [userData, loggedIn, login, register, logout] = useLogin();
+  const [editMode, setEditMode] = useState(false);
+  const [fromBookPage, setFromBookPage] = useState(true);
 
   console.log(`Logged In: ${loggedIn}`);
 
@@ -51,12 +54,13 @@ const App = () => {
           <NavBar loggedIn={loggedIn} logout={() => logout()} />
           <Switch>
             <Route exact path="/" component={Home} />
-            <Route path="/book" component={Book} />
+            <Route path="/book" component={Book} setFromBookPage={setFromBookPage} />
             <Route path="/services" component={Services} />
             <Route path="/contact" component={Contact} />
-            <Route path="/login" component={() => <Login login={login} />} />
+            <Route path="/login" component={() => <Login login={login} fromBookPage={fromBookPage} setFromBookPage={setFromBookPage} />} />
             <Route path="/signUp" component={() => <SignUp register={register} />} />
-            <Route path="/profile" component={() => <Profile userData={userData} logout={() => logout()} />} />
+            <Route path="/profile" component={() => <Profile userData={userData} logout={() => logout()} editMode={editMode} setEditMode={setEditMode} />} />
+            <Route path="/profileAdmin" component={() => <ProfileAdmin userData={userData} logout={() => logout()} editMode={editMode} setEditMode={setEditMode} />} />
             <Route path="/confirmation/:id" component={Confirmation} />
           </Switch>
         </Router>

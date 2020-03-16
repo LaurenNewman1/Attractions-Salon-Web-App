@@ -25,7 +25,7 @@ const useStyles = makeStyles(() => ({
     textAlign: 'center',
   },
   buttons: {
-    paddingTop: 30,
+    paddingTop: 20,
     textAlign: 'center',
   },
 }));
