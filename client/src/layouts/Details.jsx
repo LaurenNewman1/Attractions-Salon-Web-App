@@ -124,6 +124,7 @@ const Details = () => {
           </Select>
         </FormControl>
         <TextField
+          className={classes.textfield}
           label="Notes"
           multiline
           rowsMax="4"

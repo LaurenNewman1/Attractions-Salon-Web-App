@@ -8,9 +8,6 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'center',
     padding: 30,
   },
-  container: {
-    height: '100%',
-  },
   footer: {
     position: 'fixed',
     left: 0,

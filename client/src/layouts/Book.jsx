@@ -17,7 +17,6 @@ const Book = () => {
   const classes = useStyles();
 
   const renderPage = () => {
-    console.log(page);
     switch (page) {
       case 0:
         return <Details />;
@@ -35,7 +34,7 @@ const Book = () => {
   return (
     <Page>
       <div className={classes.page}>
-        <div container className={classes.container}>
+        <div>
           {renderPage()}
         </div>
         <div className={classes.footer}>
