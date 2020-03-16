@@ -1,6 +1,12 @@
 import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({
+  iconButton: {
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   header: {
     textAlign: 'center',
   },
@@ -21,7 +27,7 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     justifyContent: 'flex-end',
   },
-  adminButtons: {
+  buttons: {
     display: 'flex',
     justifyContent: 'center',
   },

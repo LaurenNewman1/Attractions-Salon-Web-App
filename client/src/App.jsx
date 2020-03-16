@@ -19,8 +19,7 @@ import useLogin from './stores/LoginStores';
 import ProfileAdmin from './layouts/ProfileAdmin';
 
 const App = () => {
-  const [userData, loggedIn, login, register, logout] = useLogin();
-  const [editMode, setEditMode] = useState(false);
+  const [userData, loggedIn, login, register, logout, changeProfile] = useLogin();
   const [fromBookPage, setFromBookPage] = useState(false);
 
   console.log(`Logged In: ${loggedIn}`);
@@ -61,8 +60,8 @@ const App = () => {
             <Route path="/contact" component={Contact} />
             <Route path="/login" component={() => <Login login={login} fromBookPage={fromBookPage} />} />
             <Route path="/signUp" component={() => <SignUp register={register} />} />
-            <Route path="/profile" component={() => <Profile userData={userData} logout={() => logout()} editMode={editMode} setEditMode={setEditMode} />} />
-            <Route path="/profileAdmin" component={() => <ProfileAdmin userData={userData} logout={() => logout()} editMode={editMode} setEditMode={setEditMode} />} />
+            <Route path="/profile" component={() => <Profile userData={userData} logout={() => logout()} changeProfile={changeProfile} />} />
+            <Route path="/profileAdmin" component={() => <ProfileAdmin userData={userData} logout={() => logout()} />} />
             <Route path="/confirmation/:id" component={Confirmation} />
           </Switch>
         </Router>

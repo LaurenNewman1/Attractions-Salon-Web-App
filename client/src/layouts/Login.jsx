@@ -55,6 +55,7 @@ const Login = ({ login, fromBookPage }) => {
         </>
       );
     }
+    return null;
   };
 
   return (
