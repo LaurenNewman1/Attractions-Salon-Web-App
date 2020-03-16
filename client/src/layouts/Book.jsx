@@ -36,6 +36,7 @@ const Book = () => {
       <div className={classes.page}>
         <div>
           {renderPage()}
+          <div className={classes.toolbar} />
         </div>
         <div className={classes.footer}>
           <MobileStepper

@@ -1,8 +1,7 @@
 import { makeStyles } from '@material-ui/core';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   page: {
-    height: 'calc(100vh - 64px)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -17,6 +16,7 @@ const useStyles = makeStyles(() => ({
   stepper: {
     width: '100%',
   },
+  toolbar: theme.mixins.toolbar,
 }));
 
 
