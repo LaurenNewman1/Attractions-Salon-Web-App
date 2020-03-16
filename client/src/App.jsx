@@ -51,7 +51,7 @@ const App = () => {
           <NavBar loggedIn={loggedIn} logout={() => logout()} />
           <Switch>
             <Route exact path="/" component={Home} />
-            <Route path="/book" component={Book} />
+            <Route path="/book" component={() => <Book userData={userData} />} />
             <Route path="/services" component={Services} />
             <Route path="/contact" component={Contact} />
             <Route path="/login" component={() => <Login login={login} />} />

@@ -22,7 +22,7 @@ const useStyles = makeStyles(() => ({
   },
   modelImg: {
     maxWidth: '100%',
-    maxHeight: '100%',
+    maxHeight: '90%',
     objectFit: 'contain',
     position: 'relative',
     bottom: 0,

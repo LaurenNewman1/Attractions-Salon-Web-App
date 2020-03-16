@@ -3,10 +3,12 @@ import {
   InputLabel, Select, MenuItem, Input, Chip,
 } from '@material-ui/core';
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import useStyles from '../css/DetailsStyles';
 import hairIllustration from '../images/hairIllustration.png';
 import eye from '../images/eye.png';
 import hand from '../images/hand.png';
+import loadServiceOptions from '../stores/DetailsStore';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -19,37 +21,63 @@ const MenuProps = {
   },
 };
 
-const temps = [
-  'test1', 'test2', 'test3',
-];
-
-const Details = () => {
+const Details = ({ userData }) => {
   const classes = useStyles();
   const theme = useTheme();
 
+  const [name, setName] = useState(userData ? userData.name : '');
+  const [email, setEmail] = useState(userData ? userData.email : null);
   const [type, setType] = useState('');
-  const [service, setService] = useState('');
+  const [service, setService] = useState({});
   const [addons, setAddons] = useState([]);
   const [specialist, setSpecialist] = useState('');
   const [notes, setNotes] = useState('');
 
+  const [serviceOptions, setServiceOptions] = useState([]);
+
   const addOn = (value) => {
     setAddons(value);
+  };
+
+  const changeType = async (newType) => {
+    setType(newType);
+    setServiceOptions(await loadServiceOptions(newType));
+    setService({});
+    setAddons([]);
+    setSpecialist('');
+  };
+
+  const changeService = (newService) => {
+    setService(newService);
+    setAddons([]);
+    setSpecialist('');
   };
 
   return (
     <>
       <h2 className={classes.header}>How can we help you today?</h2>
       <form>
-        <TextField required label="Name" className={classes.textfield} />
-        <TextField required label="Email" className={classes.textfield} />
+        <TextField
+          required
+          label="Name"
+          className={classes.textfield}
+          value={name}
+          onChange={(event) => setName(event.target.value)}
+        />
+        <TextField
+          required
+          label="Email"
+          className={classes.textfield}
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
+        />
         <Grid container spacing={3} className={classes.grid}>
           <Grid item xs={4}>
             <Card
               className={classes.card}
               style={{ borderColor: type === 'hair' ? theme.palette.primary.main : 'transparent' }}
             >
-              <CardActionArea onClick={() => setType('hair')}>
+              <CardActionArea onClick={() => changeType('hair')}>
                 <CardMedia component="image" image={hairIllustration} className={classes.media} />
                 <h5 className={classes.cardContent}>Hair</h5>
               </CardActionArea>
@@ -60,7 +88,7 @@ const Details = () => {
               className={classes.card}
               style={{ borderColor: type === 'wax' ? theme.palette.primary.main : 'transparent' }}
             >
-              <CardActionArea onClick={() => setType('wax')}>
+              <CardActionArea onClick={() => changeType('wax')}>
                 <CardMedia component="image" image={eye} className={classes.media} />
                 <h5 className={classes.cardContent}>Wax</h5>
               </CardActionArea>
@@ -71,7 +99,7 @@ const Details = () => {
               className={classes.card}
               style={{ borderColor: type === 'nails' ? theme.palette.primary.main : 'transparent' }}
             >
-              <CardActionArea onClick={() => setType('nails')}>
+              <CardActionArea onClick={() => changeType('nails')}>
                 <CardMedia component="image" image={hand} className={classes.media} />
                 <h5 className={classes.cardContent}>Nails</h5>
               </CardActionArea>
@@ -81,12 +109,20 @@ const Details = () => {
         <FormControl required className={classes.textfield}>
           <InputLabel>Service</InputLabel>
           <Select
+            // I think Select doesn't accept objects... this works except causes ui bug
             value={service}
-            onChange={(event) => setService(event.target.value)}
+            onChange={(event) => changeService(event.target.value)}
+            MenuProps={MenuProps}
           >
-            <MenuItem value="Test1">Test1</MenuItem>
-            <MenuItem value="Test2">Test2</MenuItem>
-            <MenuItem value="Test3">Test3</MenuItem>
+            {serviceOptions.map((serv) => (
+              <MenuItem key={serv.id} value={serv}>
+                {serv.name}
+                {' '}
+                ($
+                {serv.price}
+                )
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
         <FormControl className={classes.textfield}>
@@ -99,17 +135,23 @@ const Details = () => {
             renderValue={(selected) => (
               <div className={classes.chips}>
                 {selected.map((value) => (
-                  <Chip key={value} label={value} className={classes.chip} color="secondary" />
+                  <Chip key={value.name} label={value.name} className={classes.chip} color="secondary" />
                 ))}
               </div>
             )}
             MenuProps={MenuProps}
           >
-            {temps.map((name) => (
-              <MenuItem key={name} value={name}>
-                {name}
-              </MenuItem>
-            ))}
+            {service && service.addons
+              ? service.addons.map((add) => (
+                <MenuItem key={add.name} value={add}>
+                  {add.name}
+                  {' '}
+                  ($
+                  {add.price}
+                  )
+                </MenuItem>
+              ))
+              : null}
           </Select>
         </FormControl>
         <FormControl className={classes.textfield}>
@@ -117,6 +159,7 @@ const Details = () => {
           <Select
             value={specialist}
             onChange={(event) => setSpecialist(event.target.value)}
+            MenuProps={MenuProps}
           >
             <MenuItem value="Test1">Test1</MenuItem>
             <MenuItem value="Test2">Test2</MenuItem>
@@ -134,6 +177,14 @@ const Details = () => {
       </form>
     </>
   );
+};
+
+Details.propTypes = {
+  userData: PropTypes.shape({
+    email: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    phone_number: PropTypes.number.isRequired,
+  }).isRequired,
 };
 
 export default Details;

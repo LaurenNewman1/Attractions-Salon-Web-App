@@ -5,6 +5,7 @@ import {
 import {
   KeyboardArrowLeft, KeyboardArrowRight,
 } from '@material-ui/icons';
+import PropTypes from 'prop-types';
 import Page from '../components/Page';
 import useStyles from '../css/BookStyles';
 import Details from './Details';
@@ -12,14 +13,14 @@ import Calendar from './Calendar';
 import NewPayment from './NewPayment';
 import ReviewBooking from './ReviewBooking';
 
-const Book = () => {
+const Book = ({ userData }) => {
   const [page, setPage] = useState(0);
   const classes = useStyles();
 
   const renderPage = () => {
     switch (page) {
       case 0:
-        return <Details />;
+        return <Details userData={userData} />;
       case 1:
         return <Calendar />;
       case 2:
@@ -61,6 +62,14 @@ const Book = () => {
       </div>
     </Page>
   );
+};
+
+Book.propTypes = {
+  userData: PropTypes.shape({
+    email: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    phone_number: PropTypes.number.isRequired,
+  }).isRequired,
 };
 
 
