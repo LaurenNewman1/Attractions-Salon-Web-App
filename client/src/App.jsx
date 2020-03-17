@@ -9,6 +9,7 @@ import Home from './layouts/Home';
 import Book from './layouts/Book';
 import Services from './layouts/Services';
 import Contact from './layouts/Contact';
+import adminServices from './layouts/AdminServices';
 import Login from './layouts/Login';
 import Profile from './layouts/Profile';
 import NavBar from './components/NavBar';
@@ -58,6 +59,7 @@ const App = () => {
             <Route path="/signUp" component={() => <SignUp register={register} />} />
             <Route path="/profile" component={() => <Profile userData={userData} logout={() => logout()} />} />
             <Route path="/confirmation/:id" component={Confirmation} />
+            <Route path="/admin/services" component={adminServices} />
           </Switch>
         </Router>
       </ThemeProvider>
