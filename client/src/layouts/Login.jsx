@@ -10,7 +10,7 @@ import useStyles from '../css/LoginStyles';
 import loginImg from '../images/loginImg.jpg';
 
 
-const Login = ({ login }) => {
+const Login = ({ login, fromBookPage, setFromBookPage }) => {
   const classes = useStyles();
   const history = useHistory();
   const [email, setEmail] = useState('');
@@ -29,6 +29,26 @@ const Login = ({ login }) => {
   };
 
   const errorHelpingText = hasError ? errorBody.error : '';
+
+  const routeToBook = () => {
+    history.push('/book');
+  };
+
+  const renderBookPage = () => {
+    if (fromBookPage) {
+      return (
+        <div className={classes.buttons}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => routeToBook()}
+          >
+            Proceed Without Account
+          </Button>
+        </div>
+      );
+    }
+  };
 
   return (
     <Page>
@@ -84,6 +104,7 @@ const Login = ({ login }) => {
               New to Attractions?
               {' '}
               <Link to="/signUp">Create Account</Link>
+              {renderBookPage()}
             </div>
           </div>
         </Grid>
@@ -94,6 +115,8 @@ const Login = ({ login }) => {
 
 Login.propTypes = {
   login: PropTypes.func.isRequired,
+  fromBookPage: PropTypes.bool.isRequired,
+  setFromBookPage: PropTypes.func.isRequired,
 };
 
 

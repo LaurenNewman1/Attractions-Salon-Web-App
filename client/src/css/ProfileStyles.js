@@ -17,6 +17,14 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     justifyContent: 'center',
   },
+  edit: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+  },
+  adminButtons: {
+    display: 'flex',
+    justifyContent: 'center',
+  },
 }));
 
 export default useStyles;

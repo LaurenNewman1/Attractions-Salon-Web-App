@@ -1,22 +1,22 @@
 /* eslint-disable camelcase */
-import React, { useState } from 'react';
+import React from 'react';
 import { Grid, Button } from '@material-ui/core';
 import { AccountCircle } from '@material-ui/icons';
 import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
-import { useHistory, Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import Page from '../components/Page';
 import useStyles from '../css/ProfileStyles';
 
 // eslint-disable-next-line object-curly-newline
-const Profile = ({ userData, logout, editMode, setEditMode }) => {
+const ProfileAdmin = ({ userData, logout, editMode, setEditMode }) => {
   const { name, email, phone_number } = userData;
   const history = useHistory();
   const classes = useStyles();
 
-  const renderAdminPage = () => {
-    if (editMode) {
-      history.push('/profileAdmin');
+  const renderProfilePage = () => {
+    if (!editMode) {
+      history.push('/profile');
     }
   };
 
@@ -59,17 +59,25 @@ const Profile = ({ userData, logout, editMode, setEditMode }) => {
               Log Out
             </Button>
           </Grid>
-          <Grid item xs={12} md={6} className={classes.logout}>
+          <Grid item xs={12} md={6} className={classes.adminButtons}>
             <Button
               variant="contained"
               color="primary"
-              onClick={() => setEditMode(true)}
+              onClick={() => setEditMode(false)}
             >
-              Edit
+              Back
             </Button>
             <div>
-              {renderAdminPage()}
+              {renderProfilePage()}
             </div>
+          </Grid>
+          <Grid item xs={12} md={6} className={classes.adminButtons}>
+            <Button
+              variant="contained"
+              color="primary"
+            >
+              Save
+            </Button>
           </Grid>
         </Grid>
       </div>
@@ -77,7 +85,7 @@ const Profile = ({ userData, logout, editMode, setEditMode }) => {
   );
 };
 
-Profile.propTypes = {
+ProfileAdmin.propTypes = {
   userData: PropTypes.shape({
     email: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
@@ -88,4 +96,4 @@ Profile.propTypes = {
   setEditMode: PropTypes.func.isRequired,
 };
 
-export default Profile;
+export default ProfileAdmin;

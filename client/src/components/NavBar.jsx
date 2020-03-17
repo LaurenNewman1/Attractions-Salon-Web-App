@@ -11,9 +11,14 @@ import PropTypes from 'prop-types';
 import useStyles from '../css/PageStyles';
 import logo from '../images/logo.png';
 
-const NavBar = ({ loggedIn }) => {
+const NavBar = ({ loggedIn, setFromBookPage }) => {
   const history = useHistory();
   const classes = useStyles();
+
+  const routeToLogin = () => {
+    setFromBookPage(false);
+    history.push('/login');
+  };
 
   const userLogin = loggedIn
     ? (
@@ -25,7 +30,7 @@ const NavBar = ({ loggedIn }) => {
         <AccountCircle style={{ fontSize: 'xx-large' }} />
       </IconButton>
     )
-    : <Button onClick={() => history.push('/login')}>Login</Button>;
+    : <Button onClick={() => routeToLogin()}>Login</Button>;
 
   const handleBook = () => {
     if (loggedIn) {
@@ -56,6 +61,7 @@ const NavBar = ({ loggedIn }) => {
 
 NavBar.propTypes = {
   loggedIn: PropTypes.bool.isRequired,
+  setFromBookPage: PropTypes.func.isRequired,
 };
 
 
