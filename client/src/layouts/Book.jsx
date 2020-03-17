@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  MobileStepper, Button,
+  MobileStepper, Button, Container
 } from '@material-ui/core';
 import {
   KeyboardArrowLeft, KeyboardArrowRight,
@@ -34,32 +34,34 @@ const Book = ({ userData }) => {
 
   return (
     <Page>
-      <div className={classes.page}>
-        <div>
-          {renderPage()}
-          <div className={classes.toolbar} />
+      <Container maxWidth="md">
+        <div className={classes.page}>
+          <div>
+            {renderPage()}
+            <div className={classes.toolbar} />
+          </div>
+          <div className={classes.footer}>
+            <MobileStepper
+              steps={4}
+              variant="dots"
+              className={classes.stepper}
+              activeStep={page}
+              nextButton={(
+                <Button size="small" onClick={() => setPage((prev) => prev + 1)} disabled={page === 3}>
+                  Next
+                  <KeyboardArrowRight />
+                </Button>
+            )}
+              backButton={(
+                <Button size="small" onClick={() => setPage((prev) => prev - 1)} disabled={page === 0}>
+                  <KeyboardArrowLeft />
+                  Back
+                </Button>
+            )}
+            />
+          </div>
         </div>
-        <div className={classes.footer}>
-          <MobileStepper
-            steps={4}
-            variant="dots"
-            className={classes.stepper}
-            activeStep={page}
-            nextButton={(
-              <Button size="small" onClick={() => setPage((prev) => prev + 1)} disabled={page === 3}>
-                Next
-                <KeyboardArrowRight />
-              </Button>
-          )}
-            backButton={(
-              <Button size="small" onClick={() => setPage((prev) => prev - 1)} disabled={page === 0}>
-                <KeyboardArrowLeft />
-                Back
-              </Button>
-          )}
-          />
-        </div>
-      </div>
+      </Container>
     </Page>
   );
 };
