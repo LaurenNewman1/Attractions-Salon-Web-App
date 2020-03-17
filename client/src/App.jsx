@@ -51,10 +51,10 @@ const App = () => {
     >
       <ThemeProvider theme={theme}>
         <Router>
-          <NavBar loggedIn={loggedIn} logout={() => logout()} />
+          <NavBar loggedIn={loggedIn} setFromBookPage={setFromBookPage} logout={() => logout()} />
           <Switch>
             <Route exact path="/" component={Home} />
-            <Route path="/book" component={() => <Book userData={userData} />} />
+            <Route path="/book" component={() => <Book userData={userData} setFromBookPage={setFromBookPage} />} />
             <Route path="/services" component={Services} />
             <Route path="/contact" component={Contact} />
             <Route path="/login" component={() => <Login login={login} fromBookPage={fromBookPage} setFromBookPage={setFromBookPage} />} />
