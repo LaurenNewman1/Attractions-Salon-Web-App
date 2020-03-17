@@ -1,12 +1,15 @@
 import { makeStyles } from '@material-ui/core';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   textfield: {
     width: '100%',
     marginBottom: 5,
   },
+  formControl: {
+    width: '100%',
+  },
   media: {
-    height: 70,
+    height: 90,
   },
   cardContent: {
     margin: 5,
@@ -20,16 +23,13 @@ const useStyles = makeStyles((theme) => ({
   },
   header: {
     textAlign: 'center',
+    marginTop: 0,
+    paddingTop: 30,
   },
   card: {
     borderWidth: 2,
     borderStyle: 'solid',
     borderColor: 'transparent',
-  },
-  cardSelected: {
-    borderWidth: 2,
-    borderStyle: 'solid',
-    borderColor: theme.palette.primary.main,
   },
   chips: {
     display: 'flex',

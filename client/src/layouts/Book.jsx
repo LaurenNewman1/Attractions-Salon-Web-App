@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import {
-  MobileStepper, Button, Container
+  MobileStepper, Button, Container, Snackbar,
 } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 import {
   KeyboardArrowLeft, KeyboardArrowRight,
 } from '@material-ui/icons';
@@ -15,12 +16,59 @@ import ReviewBooking from './ReviewBooking';
 
 const Book = ({ userData }) => {
   const [page, setPage] = useState(0);
+  const [error, setError] = useState(false);
+  const [booking, setBooking] = useState({
+    name: userData ? userData.name : '',
+    email: userData ? userData.email : '',
+    phone_number: userData ? userData.phone_number : '',
+    confirmed: false,
+    time: '',
+    service: '',
+    addons: [],
+    specialist: '',
+    notes: '',
+  });
   const classes = useStyles();
+
+  const updateBooking = (...argus) => {
+    const newFields = { ...booking };
+    argus.forEach((argu) => {
+      const [fieldName, val] = argu;
+      newFields[fieldName] = val;
+      console.log(newFields);
+    });
+    setBooking(newFields);
+  };
+
+  const validateNext = () => {
+    switch (page) {
+      case 0:
+        if (booking.name.length && booking.email.length && booking.service.length) {
+          setPage((prev) => prev + 1);
+        } else {
+          setError(true);
+        }
+        break;
+      case 1:
+        break;
+      case 2:
+        break;
+      case 3:
+        break;
+      default:
+        break;
+    }
+  };
 
   const renderPage = () => {
     switch (page) {
       case 0:
-        return <Details userData={userData} />;
+        return (
+          <Details
+            booking={booking}
+            updateBooking={(...argu) => updateBooking(...argu)}
+          />
+        );
       case 1:
         return <Calendar />;
       case 2:
@@ -34,7 +82,7 @@ const Book = ({ userData }) => {
 
   return (
     <Page>
-      <Container maxWidth="md">
+      <Container maxWidth="sm">
         <div className={classes.page}>
           <div>
             {renderPage()}
@@ -47,7 +95,7 @@ const Book = ({ userData }) => {
               className={classes.stepper}
               activeStep={page}
               nextButton={(
-                <Button size="small" onClick={() => setPage((prev) => prev + 1)} disabled={page === 3}>
+                <Button size="small" onClick={() => validateNext()} disabled={page === 3}>
                   Next
                   <KeyboardArrowRight />
                 </Button>
@@ -62,6 +110,17 @@ const Book = ({ userData }) => {
           </div>
         </div>
       </Container>
+      <Snackbar
+        open={error}
+        autoHideDuration={2000}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        onClose={() => setError(false)}
+      >
+        <Alert severity="error">Please complete required fields!</Alert>
+      </Snackbar>
     </Page>
   );
 };
@@ -70,7 +129,7 @@ Book.propTypes = {
   userData: PropTypes.shape({
     email: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
-    phone_number: PropTypes.number.isRequired,
+    phone_number: PropTypes.string.isRequired,
   }).isRequired,
 };
 

@@ -21,36 +21,29 @@ const MenuProps = {
   },
 };
 
-const Details = ({ userData }) => {
+const Details = ({ booking, updateBooking }) => {
   const classes = useStyles();
   const theme = useTheme();
 
-  const [name, setName] = useState(userData ? userData.name : '');
-  const [email, setEmail] = useState(userData ? userData.email : null);
   const [type, setType] = useState('');
-  const [service, setService] = useState({});
-  const [addons, setAddons] = useState([]);
-  const [specialist, setSpecialist] = useState('');
-  const [notes, setNotes] = useState('');
 
   const [serviceOptions, setServiceOptions] = useState([]);
+  const [addOnOptions, setAddOnOptions] = useState([]);
 
   const addOn = (value) => {
-    setAddons(value);
+    updateBooking(['addons', value]);
   };
 
   const changeType = async (newType) => {
     setType(newType);
+    updateBooking(['service', ''], ['addons', []], ['specialist', '']);
     setServiceOptions(await loadServiceOptions(newType));
-    setService({});
-    setAddons([]);
-    setSpecialist('');
+    setAddOnOptions([]);
   };
 
   const changeService = (newService) => {
-    setService(newService);
-    setAddons([]);
-    setSpecialist('');
+    updateBooking(['service', newService], ['addons', []], ['specialist', '']);
+    setAddOnOptions(serviceOptions.find((s) => s._id === newService).addons);
   };
 
   return (
@@ -61,15 +54,15 @@ const Details = ({ userData }) => {
           required
           label="Name"
           className={classes.textfield}
-          value={name}
-          onChange={(event) => setName(event.target.value)}
+          value={booking.name}
+          onChange={(event) => updateBooking('name', event.target.value)}
         />
         <TextField
           required
           label="Email"
           className={classes.textfield}
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
+          value={booking.email}
+          onChange={(event) => updateBooking('email', event.target.value)}
         />
         <Grid container spacing={3} className={classes.grid}>
           <Grid item xs={4}>
@@ -106,16 +99,15 @@ const Details = ({ userData }) => {
             </Card>
           </Grid>
         </Grid>
-        <FormControl required className={classes.textfield}>
+        <FormControl required className={classes.formControl}>
           <InputLabel>Service</InputLabel>
           <Select
-            // I think Select doesn't accept objects... this works except causes ui bug
-            value={service}
+            value={booking.service}
             onChange={(event) => changeService(event.target.value)}
             MenuProps={MenuProps}
           >
             {serviceOptions.map((serv) => (
-              <MenuItem key={serv.id} value={serv}>
+              <MenuItem key={serv._id} value={serv._id}>
                 {serv.name}
                 {' '}
                 ($
@@ -125,11 +117,11 @@ const Details = ({ userData }) => {
             ))}
           </Select>
         </FormControl>
-        <FormControl className={classes.textfield}>
+        <FormControl className={classes.textfield} style={{ marginTop: 10 }}>
           <InputLabel>Add-ons</InputLabel>
           <Select
             multiple
-            value={addons}
+            value={booking.addons}
             onChange={(event) => addOn(event.target.value)}
             input={<Input />}
             renderValue={(selected) => (
@@ -141,29 +133,27 @@ const Details = ({ userData }) => {
             )}
             MenuProps={MenuProps}
           >
-            {service && service.addons
-              ? service.addons.map((add) => (
-                <MenuItem key={add.name} value={add}>
-                  {add.name}
-                  {' '}
-                  ($
-                  {add.price}
-                  )
-                </MenuItem>
-              ))
-              : null}
+            {addOnOptions.map((add) => (
+              <MenuItem key={add.name} value={add}>
+                {add.name}
+                {' '}
+                ($
+                {add.price}
+                )
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
         <FormControl className={classes.textfield}>
           <InputLabel>Preferred Specialist</InputLabel>
           <Select
-            value={specialist}
-            onChange={(event) => setSpecialist(event.target.value)}
+            value={booking.specialist}
+            onChange={(event) => updateBooking(['specialist', event.target.value])}
             MenuProps={MenuProps}
           >
-            <MenuItem value="Test1">Test1</MenuItem>
-            <MenuItem value="Test2">Test2</MenuItem>
-            <MenuItem value="Test3">Test3</MenuItem>
+            <MenuItem value="Test1">Specialist1</MenuItem>
+            <MenuItem value="Test2">Specialist2</MenuItem>
+            <MenuItem value="Test3">Specialist3</MenuItem>
           </Select>
         </FormControl>
         <TextField
@@ -171,8 +161,8 @@ const Details = ({ userData }) => {
           label="Notes"
           multiline
           rowsMax="4"
-          value={notes}
-          onChange={(event) => setNotes(event.target.value)}
+          value={booking.notes}
+          onChange={(event) => updateBooking(['notes', event.target.value])}
         />
       </form>
     </>
@@ -180,11 +170,18 @@ const Details = ({ userData }) => {
 };
 
 Details.propTypes = {
-  userData: PropTypes.shape({
-    email: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    phone_number: PropTypes.number.isRequired,
+  booking: PropTypes.shape({
+    name: PropTypes.string,
+    email: PropTypes.string,
+    phone_number: PropTypes.string,
+    confirmed: PropTypes.bool,
+    time: PropTypes.string,
+    service: PropTypes.string,
+    addons: PropTypes.array,
+    specialist: PropTypes.string,
+    notes: PropTypes.string,
   }).isRequired,
+  updateBooking: PropTypes.func.isRequired,
 };
 
 export default Details;
