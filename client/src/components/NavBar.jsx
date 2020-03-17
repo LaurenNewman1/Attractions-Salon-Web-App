@@ -36,18 +36,21 @@ const NavBar = ({ loggedIn }) => {
   };
 
   return (
-    <AppBar position="static">
-      <Toolbar>
-        <Button onClick={() => history.push('/')} aria-label="logo">
-          <img src={logo} alt="logo" style={{ width: '150px' }} />
-        </Button>
-        <div className={classes.grow} />
-        <Button onClick={() => handleBook()}>Book</Button>
-        <Button onClick={() => history.push('/services')}>Services</Button>
-        <Button onClick={() => history.push('/contact')}>Contact</Button>
-        {userLogin}
-      </Toolbar>
-    </AppBar>
+    <>
+      <AppBar position="fixed">
+        <Toolbar>
+          <Button onClick={() => history.push('/')} aria-label="logo">
+            <img src={logo} alt="logo" style={{ width: '150px' }} />
+          </Button>
+          <div className={classes.grow} />
+          <Button onClick={() => handleBook()}>Book</Button>
+          <Button onClick={() => history.push('/services')}>Services</Button>
+          <Button onClick={() => history.push('/contact')}>Contact</Button>
+          {userLogin}
+        </Toolbar>
+      </AppBar>
+      <div className={classes.toolbar} />
+    </>
   );
 };
 
