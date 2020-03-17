@@ -50,7 +50,7 @@ const Profile = ({ userData, logout, changeProfile }) => {
               color="primary"
               onClick={() => setEditMode(false)}
             >
-              Back
+              Cancel
             </Button>
           </Grid>
           <Grid item xs={12} md={6} className={classes.buttons}>
