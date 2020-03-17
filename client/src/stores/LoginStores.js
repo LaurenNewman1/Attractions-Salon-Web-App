@@ -48,6 +48,23 @@ const requestLogout = async () => {
 };
 
 
+const requestProfileChange = async (userId, params) => {
+  const res = await fetch(`/api/users/${userId}`, {
+    method: 'PUT',
+    cache: 'no-cache',
+    credentials: 'same-origin', // include, *same-origin, omit
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    redirect: 'follow', // manual, *follow, error
+    referrerPolicy: 'no-referrer', // no-referrer, *client
+    body: JSON.stringify(params),
+  });
+
+  return [res.status === 200, await res.json()];
+};
+
+
 export default () => {
   const [loggedIn, isLoggedIn] = useState(false);
   const [userData, setUserData] = useState({});
@@ -67,6 +84,21 @@ export default () => {
   // const register = requestRegister;
   // eslint-disable-next-line max-len
   const register = async (name, email, number, password) => requestRegister(name, email, number, password);
+
+  const changeProfile = async (userId, params) => {
+    const result = await requestProfileChange(userId, params);
+
+    if (result[0] === true) {
+      // it worked
+      setUserData({
+        userData,
+        ...params,
+      });
+    }
+
+    return result;
+  };
+
 
   const logout = async () => {
     if (await requestLogout()) { isLoggedIn(false); }
@@ -91,5 +123,5 @@ export default () => {
     });
   }, [loggedIn]);
 
-  return [userData, loggedIn, login, register, logout];
+  return [userData, loggedIn, login, register, logout, changeProfile];
 };

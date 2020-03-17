@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React, { useState } from 'react';
 import {
   BrowserRouter as Router,
@@ -15,14 +16,13 @@ import NavBar from './components/NavBar';
 import SignUp from './layouts/SignUp';
 import Confirmation from './layouts/Confirmation';
 import useLogin from './stores/LoginStores';
-import ProfileAdmin from './layouts/ProfileAdmin';
 
 const App = () => {
-  const [userData, loggedIn, login, register, logout] = useLogin();
-  const [editMode, setEditMode] = useState(false);
-  const [fromBookPage, setFromBookPage] = useState(true);
+  const [userData, loggedIn, login, register, logout, changeProfile] = useLogin();
+  const [fromBookPage, setFromBookPage] = useState(false);
 
   console.log(`Logged In: ${loggedIn}`);
+  console.log(`Book Variable: ${fromBookPage} `);
 
   const theme = createMuiTheme({
     palette: {
@@ -51,16 +51,15 @@ const App = () => {
     >
       <ThemeProvider theme={theme}>
         <Router>
-          <NavBar loggedIn={loggedIn} setFromBookPage={setFromBookPage} logout={() => logout()} />
+          <NavBar loggedIn={loggedIn} logout={() => logout()} fromBookPage={fromBookPage} setFromBookPage={setFromBookPage} />
           <Switch>
-            <Route exact path="/" component={Home} />
-            <Route path="/book" component={() => <Book userData={userData} setFromBookPage={setFromBookPage} />} />
+            <Route exact path="/" component={() => <Home loggedIn={loggedIn} setFromBookPage={setFromBookPage} />} />
+            <Route path="/book" component={() => <Book userData={userData} />} />
             <Route path="/services" component={Services} />
             <Route path="/contact" component={Contact} />
-            <Route path="/login" component={() => <Login login={login} fromBookPage={fromBookPage} setFromBookPage={setFromBookPage} />} />
+            <Route path="/login" component={() => <Login login={login} fromBookPage={fromBookPage} />} />
             <Route path="/signUp" component={() => <SignUp register={register} />} />
-            <Route path="/profile" component={() => <Profile userData={userData} logout={() => logout()} editMode={editMode} setEditMode={setEditMode} />} />
-            <Route path="/profileAdmin" component={() => <ProfileAdmin userData={userData} logout={() => logout()} editMode={editMode} setEditMode={setEditMode} />} />
+            <Route path="/profile" component={() => <Profile userData={userData} logout={() => logout()} changeProfile={changeProfile} />} />
             <Route path="/confirmation/:id" component={Confirmation} />
           </Switch>
         </Router>
