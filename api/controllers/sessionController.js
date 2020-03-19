@@ -19,7 +19,7 @@ export const create = async (req, res) => {
       res.status(403).type('json').send({ error: 'Invalid email or password.' });
     }
   } catch (err) {
-    res.status(403).type('json').send({ error: 'Invalid email or password.' });
+    res.status(500).type('json').send(err);
   }
 };
 

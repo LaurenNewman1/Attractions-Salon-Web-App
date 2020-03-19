@@ -1,12 +1,20 @@
 import argon2 from 'argon2';
+import _ from 'lodash';
 import User from '../model/user';
+import currentUserAbilities, { userAbilities } from '../helpers/ability';
+import GetLogger from '../config/logger';
+
+const logger = GetLogger('User Controller');
 
 export const read = async (req, res) => {
   // Find User from Database and return
   if (req.session.userID) {
-    const user = await User.findById(req.session.userID).exec();
-    if (user) {
-      res.status(200).type('json').send(user);
+    const ability = await currentUserAbilities(req);
+    if (ability.can('read', 'Self')) {
+      const user = await User.findById(req.session.userID).exec();
+      const permittedFields = User.accessibleFieldsBy(ability);
+      logger.info(permittedFields);
+      res.status(200).type('json').send(_.pick(user, permittedFields));
     } else {
       res.status(404).type('json').send({ error: 'User not found.' });
     }
@@ -36,6 +44,19 @@ export const update = async (req, res) => {
   try {
     const { insertedPassword, ...params } = req.body;
     const { someId } = req.params;
+    const userFind = await User.findById(someId).exec();
+
+    if (!userFind) {
+      res.status(404).type('json').send({ error: 'User not found' });
+      return;
+    }
+
+    const ability = userAbilities(userFind);
+
+    if (ability.cannot('update', userFind)) {
+      res.status(403).type('json').send({ error: 'Access Denied' });
+      return;
+    }
 
     if (params.password && !insertedPassword) {
       res.status(403).type('json').send({ error: 'Attempted to change password, but got old password incorrect.' });
@@ -43,13 +64,6 @@ export const update = async (req, res) => {
     }
 
     if (insertedPassword) {
-      const userFind = await User.findById(someId).exec();
-
-      if (!userFind) {
-        res.status(404).type('json').send({ error: 'User not found' });
-        return;
-      }
-
       if (!(await argon2.verify(userFind.password, insertedPassword))) {
         res.status(403).type('json').send({ error: 'Attempted to change password, but got old password incorrect.' });
         return;
