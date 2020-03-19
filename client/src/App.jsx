@@ -13,7 +13,7 @@ import Login from './layouts/Login';
 import Profile from './layouts/Profile';
 import NavBar from './components/NavBar';
 import SignUp from './layouts/SignUp';
-import Requests from './layouts/admin/Requests'
+import Requests from './layouts/admin/Requests';
 
 import useLogin from './stores/LoginStores';
 

@@ -10,7 +10,11 @@ const Page = ({ maxWidth, children }) => {
 
   return (
     <div className={classes.background}>
-      <Container maxWidth={maxWidth} disableGutters className={!maxWidth ? undefined : classes.topPagePadding}>
+      <Container
+        maxWidth={maxWidth}
+        disableGutters
+        className={!maxWidth ? undefined : classes.topPagePadding}
+      >
         { children }
       </Container>
     </div>
@@ -30,6 +34,6 @@ Page.propTypes = {
 
 Page.defaultProps = {
   maxWidth: 'md',
-}
+};
 
 export default Page;

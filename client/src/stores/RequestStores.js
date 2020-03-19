@@ -9,6 +9,8 @@ const MOCK_BOOK_REQUEST_REQUEST = [
     appointmentDatetime: now.toISOString(),
     service: '5e6ad904eca0accd655e5fc3',
     addons: [0],
+    phone_number: '0123456789',
+    email: 'janedoe@gmail.com',
     specialist: null,
     confirmed: false,
     notes: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse aliquam euismod fringilla. Phasellus ultrices dapibus.',
@@ -49,13 +51,15 @@ export default () => {
     const tempSeviceCache = usedServices;
 
     const callRequests = async () => {
-      //const bookRequestFetch = 
+      // const bookRequestFetch =
       const bookRequestJson = MOCK_BOOK_REQUEST_REQUEST;
 
       const stateArray = await Promise.all(
         bookRequestJson.map(async (request) => {
           if (!tempSeviceCache[request.service]) {
-            tempSeviceCache[request.service] = await fetchServiceDetails(tempSeviceCache, request.service);
+            tempSeviceCache[request.service] = await fetchServiceDetails(
+              tempSeviceCache, request.service,
+            );
           }
 
           return {
