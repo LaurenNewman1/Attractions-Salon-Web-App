@@ -2,7 +2,7 @@
 import React from 'react';
 import {
   Table, TableBody, TableCell, TableContainer, TableHead,
-  TableRow, Paper, TextField,
+  TableRow, Paper, TextField, InputAdornment,
 } from '@material-ui/core';
 import {
   AttachMoney,
@@ -21,6 +21,7 @@ const AddOnTable = ({ service }) => {
       <TableContainer component={Paper}>
         <Table size="small" aria-label="a dense table">
           <TableHead>
+            <TableRow><h3 style={{ paddingLeft: '10px' }}>Addons</h3></TableRow>
             <TableRow>
               <TableCell>Name</TableCell>
               <TableCell>Price</TableCell>
@@ -32,9 +33,17 @@ const AddOnTable = ({ service }) => {
                 <TextField defaultValue={service.name} />
               </TableCell>
               {/* <TableCell><AttachMoney /></TableCell> */}
-              <TableCell style={{ display: 'inline-block' }}>
-                <AttachMoney />
-                <TextField defaultValue={service.price} />
+              <TableCell>
+                <TextField
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <AttachMoney />
+                      </InputAdornment>
+                    ),
+                  }}
+                  defaultValue={service.price}
+                />
               </TableCell>
             </TableRow>
           </TableBody>

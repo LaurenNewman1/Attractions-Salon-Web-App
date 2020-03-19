@@ -7,12 +7,13 @@ import {
 import {
   AddCircle,
 } from '@material-ui/icons';
+import PropTypes from 'prop-types';
 import Page from '../components/Page';
 import useStyles from '../css/EditServiceStyles';
 import EditService from '../components/EditService';
 import fetchServicesByType from '../stores/ServicesStore';
 
-const adminServices = () => {
+const adminServices = ({ addService }) => {
   const classes = useStyles();
 
   const [nails, setNails] = useState([]);
@@ -26,6 +27,16 @@ const adminServices = () => {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
+  const [name, setName] = useState('');
+  const [type, setType] = useState('');
+  const [subType, setSubType] = useState('');
+  const [price, setPrice] = useState('');
+  const [time, setTime] = useState('');
+  const [description, setDescription] = useState('');
+  const [errorBody, setErrorBody] = useState({});
+  const [hasError, setHasError] = useState(false);
+  const [banner, setBanner] = useState('');
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -34,6 +45,20 @@ const adminServices = () => {
     setOpen(false);
   };
 
+
+  const attemptRegister = async () => {
+    console.log(addService(name, type, subType, price, time, description, banner));
+    // eslint-disable-next-line max-len
+    const [successful, errors] = await addService(name, type, subType, price, time, description, banner);
+    setErrorBody({});
+    setHasError(!successful);
+    if (successful) {
+      console.log('new service added');
+    } else {
+      setErrorBody(errors);
+    }
+    console.log(errorBody, hasError);
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -68,19 +93,26 @@ const adminServices = () => {
               <DialogTitle id="form-dialog-title">New Service</DialogTitle>
               <DialogContent>
                 <form className={classes.textfield} autoComplete="off">
-                  <TextField id="standard-basic" label="Name" />
-                  <TextField id="standard-basic" label="Type" />
-                  <TextField id="standard-basic" label="SubType" />
-                  <TextField id="standard-basic" label="Price" />
-                  <TextField id="standard-basic" label="Time" />
-                  <TextField id="outlined-multiline-static" multiline style={{ width: '88%' }} label="Description" />
+                  <TextField onChange={(e) => setName(e.target.value)} id="standard-basic" label="Name" />
+                  <TextField onChange={(e) => setType(e.target.value)} id="standard-basic" label="Type" />
+                  <TextField onChange={(e) => setSubType(e.target.value)} id="standard-basic" label="SubType" />
+                  <TextField onChange={(e) => setPrice(e.target.value)} id="standard-basic" label="Price" />
+                  <TextField onChange={(e) => setTime(e.target.value)} id="standard-basic" label="Time" />
+                  <TextField onChange={(e) => setBanner(e.target.value)} id="standard-basic" label="Banner" />
+                  <TextField
+                    onChange={(e) => setDescription(e.target.value)}
+                    id="outlined-multiline-static"
+                    multiline
+                    style={{ width: '88%' }}
+                    label="Description"
+                  />
                 </form>
               </DialogContent>
               <DialogActions>
                 <Button onClick={handleClose} color="primary">
                   Cancel
                 </Button>
-                <Button onClick={handleClose} color="primary">
+                <Button onClick={() => attemptRegister()} color="primary">
                   Save
                 </Button>
               </DialogActions>
@@ -159,6 +191,11 @@ const adminServices = () => {
         )}
     </Page>
   );
+};
+
+
+adminServices.propTypes = {
+  addService: PropTypes.func.isRequired,
 };
 
 export default adminServices;

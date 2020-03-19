@@ -1,3 +1,4 @@
+
 const fetchServicesByType = async (type) => {
   let ret;
   switch (type) {
@@ -47,3 +48,26 @@ const fetchServicesByType = async (type) => {
 };
 
 export default fetchServicesByType;
+
+const requestRegister = async (name, type, subType, price, time, description, banner) => {
+  const res = await fetch('/api/services',
+    {
+      method: 'POST',
+      cache: 'no-cache',
+      credentials: 'same-origin', // include, *same-origin, omit
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      redirect: 'follow', // manual, *follow, error
+      referrerPolicy: 'no-referrer', // no-referrer, *client
+      body: JSON.stringify({
+        name, type, subType, price, time, description, banner,
+      }),
+    });
+
+  return [res.status === 200, await res.json()];
+};
+
+
+// eslint-disable-next-line max-len
+export const addService = async (name, type, subType, price, time, description, banner) => requestRegister(name, type, subType, price, time, description, banner);

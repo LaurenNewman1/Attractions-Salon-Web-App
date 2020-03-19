@@ -41,13 +41,17 @@ const EditService = ({ service }) => {
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
-          <TextField
-            onClick={(e) => handleClick(e)}
-            disabled={clicked}
-            defaultValue={service.name}
-            className={classes.heading}
-            style={{ border: '5px' }}
-          />
+          {clicked
+            ? (<Typography>{service.name}</Typography>
+            )
+            : (
+              <TextField
+                onClick={(e) => handleClick(e)}
+                defaultValue={service.name}
+                className={classes.heading}
+                style={{ border: '5px' }}
+              />
+            ) }
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
           <form className={classes.textfield} autoComplete="off">
@@ -82,20 +86,21 @@ const EditService = ({ service }) => {
                 ),
               }}
             />
-            <TextField id="outlined-multiline-static" multiline style={{ width: '88%' }} label="Description" defaultValue={service.description} />
+            <TextField id="outlined-multiline-static" multiline style={{ width: '88%', paddingBottom: '20px' }} label="Description" defaultValue={service.description} />
+            <div className={classes.tablediv}>
+              <AddOnTable className={classes.table} label="Addons" service={service} />
+            </div>
           </form>
-          <Button />
         </ExpansionPanelDetails>
-        <AddOnTable service={service} />
         <DialogActions>
-          <Button color="primary">
+          <Button variant="contained" color="grey">
             Delete
           </Button>
           <div style={{ flex: '1 0 0' }} />
-          <Button color="primary">
+          <Button variant="contained" color="grey">
             Cancel
           </Button>
-          <Button color="primary">
+          <Button variant="contained" color="primary">
             Save
           </Button>
         </DialogActions>

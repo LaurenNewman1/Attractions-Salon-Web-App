@@ -8,6 +8,11 @@ const useStyles = makeStyles((theme) => ({
   table: {
     width: '60%',
   },
+  tablediv: {
+    // top: '100',
+    marginBottom: '90',
+    width: '88%',
+  },
   container: {
     display: 'flex',
     alignItems: 'center',
