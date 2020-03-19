@@ -1,11 +1,20 @@
 import Service from '../model/service';
+import currentUserAbilities from '../helpers/ability';
+import GetLogger from '../config/logger';
+
+const logger = GetLogger('Service Controller');
 
 export const create = async (req, res) => {
+  const ability = await currentUserAbilities(req);
+  if (ability.cannot('create', 'Service')) {
+    res.status(403).type('json').send({ error: 'Access Denied' });
+    return;
+  }
   try {
     const service = await Service.create(req.body);
     res.status(200).send(service);
   } catch (err) {
-    res.status(403).type('json').send(err);
+    res.status(400).type('json').send(err);
   }
 };
 

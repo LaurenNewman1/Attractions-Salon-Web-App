@@ -1,4 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
+import { accessibleFieldsPlugin, accessibleRecordsPlugin } from '@casl/mongoose';
 
 const Service = new Schema({
   name: {
@@ -30,5 +31,10 @@ const Service = new Schema({
     },
   ],
 });
+
+Service.plugin(accessibleFieldsPlugin);
+Service.plugin(accessibleRecordsPlugin);
+
+Service.method('modelName', () => 'Service', { suppressWarning: true });
 
 export default mongoose.model('Service', Service);

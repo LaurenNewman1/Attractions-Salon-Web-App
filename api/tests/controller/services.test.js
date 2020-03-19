@@ -1,12 +1,17 @@
+import User from '../../model/user';
 import Service from '../../model/service';
 import request from 'supertest';
 import configureApp from '../../config/init';
+import cookieParser from 'cookie-parser';
 
 describe('Service Controller', () => {
   let disconnectDB, app;
+  let agent;
 
   beforeEach(async () => {
     [app, disconnectDB] = await configureApp();
+    app.use(cookieParser());
+    agent = request.agent(app);
   });
 
   const getParams = (user) => {
@@ -24,6 +29,18 @@ describe('Service Controller', () => {
     price: "9.99",
   }
 
+  const validUser = {
+    name: 'test',
+    email: 'test@test.com',
+    password: 'testpassword',
+    role: 0,
+  }
+
+  const validLogin = {
+    email: 'test@test.com',
+    password: 'testpassword',
+  }
+
   const invalidService = {
     //name: undefined,
     price: 9.99,
@@ -33,21 +50,27 @@ describe('Service Controller', () => {
   describe(':create POST /services', () => {
     beforeEach(async (done) => {
       await Service.deleteMany({});
+      await User.deleteMany({});
+      await User.create(validUser);
+      agent = request.agent(app);
       done()
     });
 
     afterAll(async (done) => {
       await Service.deleteMany({});
+      await User.deleteMany({});
       await disconnectDB();
       done()
     });
 
     it ('should return 200 (OK) if given a valid service to create', async () => {
-      await request(app).post('/api/services').send(getParams(validService)).set('Accept', 'application/json').expect(200);
+      await agent.post('/api/login').send(getParams(validLogin)).set('Accept', 'application/json').expect(200);
+      await agent.post('/api/services').send(getParams(validService)).set('Accept', 'application/json').expect(200);
     });
 
     it ('should return 403 (Forbidden) if given an invalid serivce to create', async () => {
-      await request(app).post('/api/services').send(getParams(invalidService)).set('Accept', 'application/json').expect(403);
+      await agent.post('/api/login').send(getParams(validLogin)).set('Accept', 'application/json').expect(200);
+      await agent.post('/api/services').send(getParams(invalidService)).set('Accept', 'application/json').expect(403);
     });
   });
 
@@ -63,7 +86,7 @@ describe('Service Controller', () => {
       done()
     });
 
-    it ('should return 200 (OK) if given a valid user to read', async () => {
+    it ('should return 200 (OK) if given a valid service to read', async () => {
       const res = await request(app).post('/api/services').send(getParams(validService)).set('Accept', 'application/json');
       await request(app).get('/api/services/' + res.body._id).send(getParams(validService)).set('Accept', 'application/json').expect(200);
     });
