@@ -21,6 +21,8 @@ const router = (app) => {
   app.get('/api/services/types/:type', services.readType);
   app.get('/api/services/types/:type/:subtype', services.readType);
   app.get('/api/services/:someId', services.read);
+  app.put('/api/services/:_id',services.update);
+  app.delete('/api/services/:_id',services.remove);
 
   // Appointment Routes
   app.get('/api/appointments/:_id', appointments.read);
