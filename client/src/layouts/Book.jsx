@@ -60,6 +60,7 @@ const Book = ({ userData }) => {
     }
   };
 
+  // I changed this so that I could test NewPayment. new Payment and Calendar should be flipped
   const renderPage = () => {
     switch (page) {
       case 0:
@@ -70,9 +71,9 @@ const Book = ({ userData }) => {
           />
         );
       case 1:
-        return <Calendar />;
-      case 2:
         return <NewPayment />;
+      case 2:
+        return <Calendar />;
       case 3:
         return <ReviewBooking />;
       default:
