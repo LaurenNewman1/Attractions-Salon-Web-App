@@ -15,6 +15,20 @@ export const read = async (req, res) => {
   }
 };
 
+export const readByRole = async (req, res) => {
+  // Find User from Database by role and return
+  try {
+    const data = await User.find(req.params).exec();
+    if (!data || data.length == 0) {
+      res.status(404).type('json').send({ error: 'Users not found!' });
+    } else {
+      res.status(200).type('json').send(data);
+    }
+  } catch (err) {
+    res.status(400).type('json').send(err);
+  }
+};
+
 export const remove = async (req, res) => {
   // Find User from Database and remove
   try {
