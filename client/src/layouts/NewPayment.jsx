@@ -105,14 +105,12 @@ const NewPayment = () => {
             label="Remember this Card"
           />
         </div>
-        <div>
-          <Divider variant="middle" />
-        </div>
-
-        <div className={classes.buttons}>
+        <div className={classes.divider}>
+          <Divider variant="middle" style={{ flexGrow: 1 }} />
           <Typography variant="h5">
-            -------------OR-------------
+            OR
           </Typography>
+          <Divider variant="middle" style={{ flexGrow: 1 }} />
         </div>
         <div className={classes.checkBox}>
           <Button
