@@ -65,15 +65,7 @@ const Profile = ({ userData, logout, changeProfile }) => {
         </>
       );
     }
-    // return (
-    //   <Button
-    //     variant="contained"
-    //     color="primary"
-    //     onClick={() => setEditMode(true)}
-    //   >
-    //     Edit
-    //   </Button>
-    // );
+    return null;
   };
 
   const renderTextFields = () => {

@@ -70,6 +70,7 @@ const Book = ({ userData }) => {
         }
         break;
       case 1:
+        setPage((prev) => prev + 1);
         break;
       case 2:
         break;
@@ -97,9 +98,9 @@ const Book = ({ userData }) => {
           />
         );
       case 2:
-        return <Calendar />;
-      case 3:
         return <ReviewBooking />;
+      case 3:
+        return <Calendar />;
       default:
         return null;
     }
