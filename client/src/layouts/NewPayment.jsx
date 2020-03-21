@@ -28,14 +28,12 @@ const NewPayment = ({ updateCreditCard }) => {
           fullWidth
           type="Name"
           label="Name on Card"
-          value="string"
           onChange={(event) => updateCreditCard(['name', event.target.value])}
         />
         <TextField
           fullWidth
           type="Card Number"
           label="Card Number"
-          value="string"
           onChange={(event) => updateCreditCard(['cardNumber', event.target.value])}
 
         />
@@ -75,7 +73,6 @@ const NewPayment = ({ updateCreditCard }) => {
                 fullWidth
                 type="CVV"
                 label="CVV"
-                value="string"
                 onChange={(event) => updateCreditCard(['CVV', event.target.value])}
 
               />
@@ -87,7 +84,6 @@ const NewPayment = ({ updateCreditCard }) => {
             fullWidth
             type="Zip Code"
             label="Zip Code"
-            value="string"
             onChange={(event) => updateCreditCard(['zipCode', event.target.value])}
 
           />
