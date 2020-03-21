@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import {
   TextField, Button, Grid, FormControl,
   InputLabel, Select, MenuItem, FormControlLabel,
@@ -6,14 +7,13 @@ import {
 } from '@material-ui/core';
 import useStyles from '../css/NewPaymentStyles';
 
-const NewPayment = () => {
+// You need to do payLater and take a look at the update functions as well as expiration date
+
+const NewPayment = ({ updateCreditCard }) => {
   const classes = useStyles();
-  const [expirationDate, setExpirationDate] = useState('');
-  const [CVV, setCVV] = useState('');
-  const [nameOnCard, setNameOnCard] = useState('');
-  const [cardNumber, setCardNumber] = useState('');
-  const [zipCode, setZipCode] = useState('');
   const [checked, setChecked] = React.useState(false);
+  const [payLater, setPayLater] = useState(false);
+
 
   const handleChange = (event) => {
     setChecked(event.target.checked);
@@ -22,25 +22,22 @@ const NewPayment = () => {
 
   return (
     <>
-      {/* <Grid container className={classes.page}> */}
-      {/* <Grid item xs={12} sm={6} className={classes.imgContainer}>
-          <img src={NewPaymentImg} alt="" className={classes.modelImg} />
-        </Grid> */}
       <h1 className={classes.login}>Enter Payment Info</h1>
       <div>
         <TextField
           fullWidth
           type="Name"
           label="Name on Card"
-          value={nameOnCard}
-          onChange={(e) => setNameOnCard(e.target.value)}
+          value="string"
+          onChange={(event) => updateCreditCard(['name', event.target.value])}
         />
         <TextField
           fullWidth
           type="Card Number"
           label="Card Number"
-          value={cardNumber}
-          onChange={(e) => setCardNumber(e.target.value)}
+          value="string"
+          onChange={(event) => updateCreditCard(['cardNumber', event.target.value])}
+
         />
         <Grid container spacing={3}>
           <Grid container spacing={1}>
@@ -78,8 +75,9 @@ const NewPayment = () => {
                 fullWidth
                 type="CVV"
                 label="CVV"
-                value={CVV}
-                onChange={(e) => setCVV(e.target.value)}
+                value="string"
+                onChange={(event) => updateCreditCard(['CVV', event.target.value])}
+
               />
             </Grid>
           </Grid>
@@ -89,8 +87,9 @@ const NewPayment = () => {
             fullWidth
             type="Zip Code"
             label="Zip Code"
-            value={zipCode}
-            onChange={(e) => setZipCode(e.target.value)}
+            value="string"
+            onChange={(event) => updateCreditCard(['zipCode', event.target.value])}
+
           />
         </div>
         <div className={classes.checkBox}>
@@ -116,6 +115,7 @@ const NewPayment = () => {
           <Button
             variant="contained"
             color="primary"
+            onClick={() => setPayLater(true)}
           >
             Pay In Store
           </Button>
@@ -124,6 +124,18 @@ const NewPayment = () => {
 
     </>
   );
+};
+
+NewPayment.propTypes = {
+  creditCard: PropTypes.shape({
+    name: PropTypes.string,
+    cardNumber: PropTypes.string,
+    expMonth: PropTypes.string,
+    expYear: PropTypes.string,
+    CVV: PropTypes.string,
+    zipCode: PropTypes.string,
+  }).isRequired,
+  updateCreditCard: PropTypes.func.isRequired,
 };
 
 export default NewPayment;

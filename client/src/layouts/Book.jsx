@@ -30,6 +30,15 @@ const Book = ({ userData }) => {
   });
   const classes = useStyles();
 
+  const [creditCard, setCreditCard] = useState({
+    name: userData ? userData.name : '',
+    cardNumber: '',
+    expMonth: '',
+    expYear: '',
+    CVV: '',
+    zipCode: '',
+  });
+
   const updateBooking = (...argus) => {
     const newFields = { ...booking };
     argus.forEach((argu) => {
@@ -38,6 +47,17 @@ const Book = ({ userData }) => {
       console.log(newFields);
     });
     setBooking(newFields);
+  };
+
+
+  const updateCreditCard = (...argus) => {
+    const newFields = { ...creditCard };
+    argus.forEach((argu) => {
+      const [fieldName, val] = argu;
+      newFields[fieldName] = val;
+      console.log(newFields);
+    });
+    setCreditCard(newFields);
   };
 
   const validateNext = () => {
@@ -71,7 +91,11 @@ const Book = ({ userData }) => {
           />
         );
       case 1:
-        return <NewPayment />;
+        return (
+          <NewPayment
+            updateCreditCard={(...argu) => updateCreditCard(...argu)}
+          />
+        );
       case 2:
         return <Calendar />;
       case 3:
