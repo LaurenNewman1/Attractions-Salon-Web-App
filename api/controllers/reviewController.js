@@ -3,7 +3,10 @@ import Review from "../model/review";
 export const create = async (req, res) => {
     try {
         const params = req.body;
-        const date = new Date(params.time);
+        let date = "";
+        if(params.time) {
+            date = new Date(params.time);
+        }
         const body = {...params, time: date};
         const review = await Review.create(body);
         res.status(200).type('json').send(review);
@@ -15,7 +18,10 @@ export const create = async (req, res) => {
 export const update = async (req, res) => {
     try {
         const params = req.body;
-        const date = new Date(params.time);
+        let date;
+        if(params.time) {
+            date = new Date(params.time);
+        }
         const updatedBody = {...params, time: date};
         const review = await Review.findByIdAndUpdate(req.params.someId, updatedBody).exec();
 

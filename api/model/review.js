@@ -10,11 +10,9 @@ const Review = new Schema({
     },
     review: {
         type: String,
-        required: true,
     },
     time: {
         type: Date,
-        required: true,
     },
 });
 
