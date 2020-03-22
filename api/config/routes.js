@@ -25,6 +25,7 @@ const router = (app) => {
   app.post('/api/reviews', reviews.create);
   app.put('/api/reviews/:someId', reviews.update);
   app.get('/api/reviews/:someId', reviews.read);
+  app.get('/api/reviews', reviews.readall);
   app.delete('/api/reviews/:someId', reviews.remove);
 };
 
