@@ -16,6 +16,7 @@ export const userAbilities = (user) => {
     allow('read', 'User', ['_id', 'email', 'name', 'phone_number', 'role'], { _id: user._id });
     allow('update', 'User', ['email', 'name', 'phone_number', 'password'], { _id: user._id });
 
+    // Worker
     if (user.role > 0) {
       allow('view', 'AdminDashboard');
       allow('read', 'Appointment', { specialist: user._id });

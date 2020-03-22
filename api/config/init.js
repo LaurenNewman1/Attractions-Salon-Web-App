@@ -61,5 +61,5 @@ export default async () => {
     app.get('/*', proxy('http://localhost:3000'));
   }
 
-  return [app, () => connection.disconnect(), environment];
+  return [app, async () => connection.connection.close(), environment];
 };

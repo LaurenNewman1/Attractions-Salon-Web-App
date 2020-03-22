@@ -9,6 +9,7 @@ export const create = async (req, res) => {
       res.status(403).type('json').send({ error: 'Invalid email or password.' });
       return;
     }
+
     if (await argon2.verify(foundUser.password, params.password)) {
       if (!req.session.userID) {
         // eslint-disable-next-line no-underscore-dangle
