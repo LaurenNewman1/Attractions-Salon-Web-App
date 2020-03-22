@@ -68,6 +68,8 @@
     "resolve-url-loader": "3.1.1",
     "sass-loader": "8.0.2",
     "semver": "6.3.0",
+    "superagent": "^5.2.2",
+    "supertest": "^4.0.2",
     "stripe": "^8.29.0",
     "style-loader": "0.23.1",
     "terser-webpack-plugin": "2.3.4",
@@ -95,15 +97,13 @@
     "jest": "24.9.0",
     "jest-environment-jsdom-fourteen": "1.0.1",
     "jest-resolve": "24.9.0",
-    "jest-watch-typeahead": "0.4.2",
-    "superagent": "^5.2.2",
-    "supertest": "^4.0.2"
+    "jest-watch-typeahead": "0.4.2"
   },
   "scripts": {
     "front-run": "node scripts/start.js",
     "front-lint": "eslint --fix --ext .jsx,.js client/src/",
     "front-build": "node scripts/build.js",
-    "back-test": "jest --verbose --config api/jest.config.js tests/",
+    "back-test": "jest -i --forceExit --verbose --config api/jest.config.js tests/",
     "back-build": "cross-env NODE_ENV=development babel ./api --out-dir build/api",
     "back-run": "npm run back-build && node build/api/index.js",
     "back-lint": "eslint api/",
