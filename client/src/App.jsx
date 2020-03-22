@@ -16,10 +16,11 @@ import NavBar from './components/NavBar';
 import SignUp from './layouts/SignUp';
 import Confirmation from './layouts/Confirmation';
 import useLogin from './stores/LoginStores';
-import { addService } from './stores/ServicesStore';
+import { addService, deleteService, changeService } from './stores/ServiceActionsStore';
 
 const App = () => {
   const [userData, loggedIn, login, register, logout] = useLogin();
+  // const [changeService, deleteService, addService] = useService();
   console.log(`Logged In: ${loggedIn}`);
 
   const theme = createMuiTheme({
@@ -59,7 +60,7 @@ const App = () => {
             <Route path="/signUp" component={() => <SignUp register={register} />} />
             <Route path="/profile" component={() => <Profile userData={userData} logout={() => logout()} />} />
             <Route path="/confirmation/:id" component={Confirmation} />
-            <Route path="/admin/services" component={() => <AdminServices addService={addService} />} />
+            <Route path="/admin/services" component={() => <AdminServices addService={addService} deleteService={deleteService} changeService={changeService} />} />
           </Switch>
         </Router>
       </ThemeProvider>

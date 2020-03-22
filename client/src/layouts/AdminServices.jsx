@@ -13,7 +13,7 @@ import useStyles from '../css/EditServiceStyles';
 import EditService from '../components/EditService';
 import fetchServicesByType from '../stores/ServicesStore';
 
-const adminServices = ({ addService }) => {
+const adminServices = ({ addService, deleteService, changeService }) => {
   const classes = useStyles();
 
   const [nails, setNails] = useState([]);
@@ -29,13 +29,16 @@ const adminServices = ({ addService }) => {
 
   const [name, setName] = useState('');
   const [type, setType] = useState('');
-  const [subType, setSubType] = useState('');
+  const [subtype, setSubType] = useState('');
   const [price, setPrice] = useState('');
   const [time, setTime] = useState('');
   const [description, setDescription] = useState('');
   const [errorBody, setErrorBody] = useState({});
   const [hasError, setHasError] = useState(false);
   const [banner, setBanner] = useState('');
+  const [addonPrice, setAddonPrice] = useState('');
+  const [addonName, setAddonName] = useState('');
+  const [addons, setAddons] = useState([]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -46,14 +49,46 @@ const adminServices = ({ addService }) => {
   };
 
 
-  const attemptRegister = async () => {
-    console.log(addService(name, type, subType, price, time, description, banner));
+  const renderSavedPage = async (_id, params) => {
+    const successful = await changeService(_id, params);
+    console.log(_id);
+    if (successful) {
+      console.log('service updated');
+      console.log('params', params);
+      window.location.reload(false);
+    }
+    window.location.reload(false);
+  };
+  const attemptDelete = async (_id) => {
     // eslint-disable-next-line max-len
-    const [successful, errors] = await addService(name, type, subType, price, time, description, banner);
+    const successful = await deleteService(_id);
+    if (successful) {
+      console.log('service deleted!');
+      window.location.reload(false);
+    }
+  };
+  
+  const addAddon = () => {
+    setAddons([
+      ...addons,
+      {
+        name: addonName,
+        price: addonPrice,
+      },
+    ]);
+    return addons;
+  };
+  const attemptRegister = async () => {
+    // eslint-disable-next-line max-len
+    addAddon();
+    const [successful, errors] = await addService(name, type, subtype, price, time, description, banner, addons);
     setErrorBody({});
     setHasError(!successful);
     if (successful) {
+      console.log(addonName);
       console.log('new service added');
+      // const response = await addService(name, type, subtype, price, time, description, banner, addons);
+      console.log(addons);
     } else {
       setErrorBody(errors);
     }
@@ -95,11 +130,14 @@ const adminServices = ({ addService }) => {
                 <form className={classes.textfield} autoComplete="off">
                   <TextField onChange={(e) => setName(e.target.value)} id="standard-basic" label="Name" />
                   <TextField onChange={(e) => setType(e.target.value)} id="standard-basic" label="Type" />
-                  <TextField onChange={(e) => setSubType(e.target.value)} id="standard-basic" label="SubType" />
+                  <TextField onChange={(e) => setSubType(e.target.value)} id="standard-basic" label="subType" />
                   <TextField onChange={(e) => setPrice(e.target.value)} id="standard-basic" label="Price" />
                   <TextField onChange={(e) => setTime(e.target.value)} id="standard-basic" label="Time" />
                   <TextField onChange={(e) => setBanner(e.target.value)} id="standard-basic" label="Banner" />
+                  <TextField onChange={(e) => setAddonName(e.target.value)} id="standard-basic" label="AddonName" />
+                  <TextField onChange={(e) => setAddonPrice(e.target.value)} id="standard-basic" label="AddonPrice" />
                   <TextField
+                    onClick={addAddon}
                     onChange={(e) => setDescription(e.target.value)}
                     id="outlined-multiline-static"
                     multiline
@@ -121,7 +159,7 @@ const adminServices = ({ addService }) => {
             <Grid container spacing={3} className={classes.container}>
               {!nails.length ? null
                 : nails.map((service) => (
-                  <EditService service={service} />
+                  <EditService service={service} deleteService={(_id) => attemptDelete(_id)} changeService={(_id, params) => renderSavedPage(_id, params)} />
                 ))}
             </Grid>
             <Typography variant="h4" className={classes.header}>Wax</Typography>
@@ -129,7 +167,7 @@ const adminServices = ({ addService }) => {
               {!wax.length ? null
                 : wax.map((service) => (
                   //   <Grid item xs={6} sm={6} md={3}>
-                  <EditService service={service} />
+                  <EditService service={service} deleteService={(_id) => attemptDelete(_id)} changeService={(_id, params) => renderSavedPage(_id, params)} />
                   //   </Grid>
                 ))}
             </Grid>
@@ -138,16 +176,21 @@ const adminServices = ({ addService }) => {
               {!cuts.length ? null
                 : cuts.map((service) => (
                 //   <Grid item xs={12} sm={6} md={3}>
-                  <EditService service={service} />
+                  <EditService service={service} deleteService={(_id) => attemptDelete(_id)} changeService={(_id, params) => renderSavedPage(_id, params)} />
                 //   </Grid>
                 ))}
             </Grid>
             <Typography variant="h4" className={classes.header}>Hair Dyes</Typography>
-            <Grid container spacing={3} className={classes.container}>
+            <Grid
+              container
+              spacing={3}
+              className={classes.container}
+              deleteService={() => attemptDelete()}
+            >
               {!dyes.length ? null
                 : dyes.map((service) => (
                 //   <Grid item xs={12} sm={6} md={3}>
-                  <EditService service={service} />
+                  <EditService service={service} deleteService={(_id) => attemptDelete(_id)} changeService={(_id, params) => renderSavedPage(_id, params)} />
                 //   </Grid>
                 ))}
             </Grid>
@@ -156,7 +199,7 @@ const adminServices = ({ addService }) => {
               {!treatments.length ? null
                 : treatments.map((service) => (
                 //   <Grid item xs={12} sm={6} md={3}>
-                  <EditService service={service} />
+                  <EditService service={service} deleteService={(_id) => attemptDelete(_id)} changeService={(_id) => renderSavedPage(_id)} />
                 //   </Grid>
                 ))}
             </Grid>
@@ -165,7 +208,7 @@ const adminServices = ({ addService }) => {
               {!washes.length ? null
                 : washes.map((service) => (
                 //   <Grid item xs={12} sm={6} md={3}>
-                  <EditService service={service} />
+                  <EditService service={service} deleteService={(_id) => attemptDelete(_id)} changeService={(_id) => renderSavedPage(_id)} />
                 //   </Grid>
                 ))}
             </Grid>
@@ -174,7 +217,7 @@ const adminServices = ({ addService }) => {
               {!stylings.length ? null
                 : stylings.map((service) => (
                 //   <Grid item xs={12} sm={6} md={3}>
-                  <EditService service={service} />
+                  <EditService service={service} deleteService={(_id) => attemptDelete(_id)} changeService={(_id) => renderSavedPage(_id)} />
                 //   </Grid>
                 ))}
             </Grid>
@@ -183,7 +226,7 @@ const adminServices = ({ addService }) => {
               {!extensions.length ? null
                 : extensions.map((service) => (
                 //   <Grid item xs={12} sm={6} md={3}>
-                  <EditService service={service} />
+                  <EditService service={service} deleteService={(_id) => attemptDelete(_id)} changeService={(_id) => renderSavedPage(_id)} />
                 //   </Grid>
                 ))}
             </Grid>
@@ -196,6 +239,8 @@ const adminServices = ({ addService }) => {
 
 adminServices.propTypes = {
   addService: PropTypes.func.isRequired,
+  deleteService: PropTypes.func.isRequired,
+  changeService: PropTypes.func.isRequired,
 };
 
 export default adminServices;
