@@ -62,3 +62,12 @@ export const read = async (req, res) => {
         res.status(400).type('json').send(err);
     }
 };
+
+export const readall = async(req, res) => {
+    try{
+        const data = await Review.find({});
+        res.status(200).send(data);
+    } catch {
+        res.status(400).type('json').send(err);
+    }
+}
