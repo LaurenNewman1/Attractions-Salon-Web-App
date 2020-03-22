@@ -16,6 +16,11 @@ import NavBar from './components/NavBar';
 import SignUp from './layouts/SignUp';
 import Confirmation from './layouts/Confirmation';
 import useLogin from './stores/LoginStores';
+import Requests from './layouts/admin/Requests';
+import Dashboard from './layouts/admin/Dashboard';
+import Users from './layouts/admin/Users';
+import AdminServices from './layouts/admin/AdminServices';
+import AdminReviews from './layouts/admin/AdminReviews';
 
 const App = () => {
   const [userData, loggedIn, login, register, logout, changeProfile] = useLogin();
@@ -51,7 +56,7 @@ const App = () => {
     >
       <ThemeProvider theme={theme}>
         <Router>
-          <NavBar loggedIn={loggedIn} logout={() => logout()} fromBookPage={fromBookPage} setFromBookPage={setFromBookPage} />
+          <NavBar loggedIn={loggedIn} logout={() => logout()} userData={userData} fromBookPage={fromBookPage} setFromBookPage={setFromBookPage} />
           <Switch>
             <Route exact path="/" component={() => <Home loggedIn={loggedIn} setFromBookPage={setFromBookPage} />} />
             <Route path="/book" component={() => <Book userData={userData} />} />
@@ -61,6 +66,13 @@ const App = () => {
             <Route path="/signUp" component={() => <SignUp register={register} />} />
             <Route path="/profile" component={() => <Profile userData={userData} logout={() => logout()} changeProfile={changeProfile} />} />
             <Route path="/confirmation/:id" component={Confirmation} />
+
+            {/* Admin */}
+            <Route path="/dashboard" component={Dashboard} />
+            <Route path="/requests" component={Requests} />
+            <Route path="/users" component={Users} />
+            <Route path="/adminReviews" component={AdminReviews} />
+            <Route path="/adminServices" component={AdminServices} />
           </Switch>
         </Router>
       </ThemeProvider>
