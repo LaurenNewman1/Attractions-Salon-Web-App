@@ -1,6 +1,7 @@
 import * as users from '../controllers/userController';
 import * as services from '../controllers/serviceController';
 import * as sessions from '../controllers/sessionController';
+import * as reviews from '../controllers/reviewController';
 
 const router = (app) => {
   // Session Routes
@@ -19,6 +20,13 @@ const router = (app) => {
   app.get('/api/services/types/:type', services.readType);
   app.get('/api/services/types/:type/:subtype', services.readType);
   app.get('/api/services/:someId', services.read);
+
+  // Review Routes
+  app.post('/api/reviews', reviews.create);
+  app.put('/api/reviews/:someId', reviews.update);
+  app.get('/api/reviews/:someId', reviews.read);
+  app.get('/api/reviews', reviews.readall);
+  app.delete('/api/reviews/:someId', reviews.remove);
 };
 
 export default router;
