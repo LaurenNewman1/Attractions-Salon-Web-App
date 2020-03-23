@@ -1,53 +1,40 @@
 import User from '../../model/user';
-import request from 'supertest';
-import configureApp from '../../config/init';
 import argon2 from 'argon2';
 
+import { getParams, SetupTesting, CleanUp } from '../helpers/test_helper'
+import { userParams as validUser, MakeUser } from '../factories/user'
+
 describe('User Controller', () => {
-  let disconnectDB, app;
+  let agent, disconnectDB, refreshAgent;
 
   beforeEach(async () => {
-    [app, disconnectDB] = await configureApp();
+    [agent, refreshAgent, disconnectDB] = await SetupTesting();
   });
-
-  const getParams = (user) => {
-    let result = ''
-    Object.keys(user).forEach((key) => result += `${key}=${user[key]}&`)
-    return result.slice(0, -1);
-  }
-
-  const validUser = {
-    name: 'test',
-    email: 'test@test.com',
-    password: 'testpassword',
-    role: 0,
-  }
 
   describe('POST /create', () => {
     beforeEach(async (done) => {
-      await User.deleteMany({});
-      done()
+      await CleanUp();
+      done();
     });
 
     afterAll(async (done) => {
-      await User.deleteMany({});
-      await disconnectDB();
+      await CleanUp(disconnectDB);
       done()
-    });
+    });;
 
     it ('should return 200 (OK) if given a valid user to create', async () => {
-      await request(app).post('/api/users').send(getParams(validUser)).set('Accept', 'application/json').expect(200);
+      await agent.post('/api/users').send(getParams(validUser)).set('Accept', 'application/json').expect(200);
     });
 
     it ('should generator a hashed password given the plaintext user password', async () => {
-      await request(app).post('/api/users').send(getParams(validUser)).set('Accept', 'application/json').expect(200).then(res => {
+      await agent.post('/api/users').send(getParams(validUser)).set('Accept', 'application/json').expect(200).then(res => {
         argon2.verify(res.body.password, validUser.password).then((result) => expect(result).toEqual(true));
       });
     });
 
     it ('should return 403 (Forbidden) if given an incalid user to create', async () => {
       const { email, ...invalidUser } = validUser
-      await request(app).post('/api/users').send(getParams(invalidUser)).set('Accept', 'application/json').expect(403);
+      await agent.post('/api/users').send(getParams(invalidUser)).set('Accept', 'application/json').expect(403);
     });
   });
 
@@ -55,23 +42,21 @@ describe('User Controller', () => {
     let user;
 
     beforeEach(async (done) => {
-      await User.deleteMany({});
-      try {
-        user = await User.create({...validUser, password: await argon2.hash(validUser.password)});
-        done()
-      } catch (err) {
-        console.error(err);
-      }
+      await CleanUp();
+      user = await MakeUser();
+      done();
     });
 
     afterAll(async (done) => {
-      await User.deleteMany({});
-      await disconnectDB();
+      await CleanUp(disconnectDB);
       done()
     });
 
-    it ('should return 200 (OK) if given a valid user to create', async () => {
-      await request(app).put(`/api/users/${user._id}`).send(getParams({ name: 'test' })).set('Accept', 'application/json').expect(200);
+    it ('should return 200 (OK) if given a valid user to update', async () => {
+      await agent.put(`/api/users/${user._id}`)
+        .send(getParams({ name: 'test' }))
+        .set('Accept', 'application/json')
+        .expect(200);
     });
 
     it ('should return 403 (Forbidden) to attempt to update the password without the old one', async () => {
@@ -81,7 +66,10 @@ describe('User Controller', () => {
         password: 'test1password',
         role: 1
       };
-      await request(app).put(`/api/users/${user._id}`).send(getParams(updateParams)).set('Accept', 'application/json').expect(403);
+      await agent.put(`/api/users/${user._id}`)
+        .send(getParams(updateParams))
+        .set('Accept', 'application/json')
+        .expect(403);
     });
 
 
@@ -93,7 +81,7 @@ describe('User Controller', () => {
         insertedPassword: 'wrong',
         role: 1
       };
-      await request(app).put(`/api/users/${user._id}`).send(getParams(updateParams)).set('Accept', 'application/json').expect(403);
+      await agent.put(`/api/users/${user._id}`).send(getParams(updateParams)).set('Accept', 'application/json').expect(403);
     });
 
     it ('should correctly update all of the attributes', async () => {
@@ -106,7 +94,7 @@ describe('User Controller', () => {
         role: 1
       };
       const { insertedPassword, ...compareParams } = updateParams;
-      await request(app).put(`/api/users/${user._id}`).send(getParams(updateParams)).set('Accept', 'application/json').expect(200);
+      await agent.put(`/api/users/${user._id}`).send(getParams(updateParams)).set('Accept', 'application/json').expect(200);
       user = await User.findById(user._id).exec();
       const updatedUser = {
         name: user.name,
@@ -121,27 +109,26 @@ describe('User Controller', () => {
 
   describe('DELETE /users/:someId', () => {
     beforeEach(async (done) => {
-      await User.deleteMany({});
+      await CleanUp();
       done()
     });
 
     afterAll(async (done) => {
-      await User.deleteMany({});
-      await disconnectDB();
+      await CleanUp(disconnectDB);
       done()
     });
 
     it ('should return 200 (OK) if given a valid user to delete', async () => {
-      const res = await request(app).post('/api/users').send(getParams(validUser)).set('Accept', 'application/json');
-      await request(app).delete('/api/users/' + res.body._id).send(getParams(validUser)).set('Accept', 'application/json').expect(200);
+      const res = await agent.post('/api/users').send(getParams(validUser)).set('Accept', 'application/json');
+      await agent.delete('/api/users/' + res.body._id).send(getParams(validUser)).set('Accept', 'application/json').expect(200);
     });
 
     it ('should return 404 (Not Found) if given an invalid user to delete', async () => {
-      await request(app).delete('/api/users/5e5b0129be7a7430e036ee9a').send(getParams(validUser)).set('Accept', 'application/json').expect(404);
+      await agent.delete('/api/users/5e5b0129be7a7430e036ee9a').send(getParams(validUser)).set('Accept', 'application/json').expect(404);
     });
 
     it ('should return 400 (Bad Request) if given an invalid path', async () => {
-      await request(app).delete('/api/users/random').send(getParams(validUser)).set('Accept', 'application/json').expect(400);
+      await agent.delete('/api/users/random').send(getParams(validUser)).set('Accept', 'application/json').expect(400);
     });
   });
 });

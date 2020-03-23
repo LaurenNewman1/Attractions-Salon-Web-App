@@ -1,6 +1,7 @@
 import * as users from '../controllers/userController';
 import * as services from '../controllers/serviceController';
 import * as sessions from '../controllers/sessionController';
+import * as reviews from '../controllers/reviewController';
 import * as appointments from '../controllers/appointmentController';
 
 const router = (app) => {
@@ -32,6 +33,13 @@ const router = (app) => {
   app.delete('/api/appointments/:someId', appointments.remove);
   app.put('/api/appointments/:someId', appointments.update);
   app.post('/api/appointments', appointments.create);
+
+  // Review Routes
+  app.post('/api/reviews', reviews.create);
+  app.put('/api/reviews/:someId', reviews.update);
+  app.get('/api/reviews/:someId', reviews.read);
+  app.get('/api/reviews', reviews.readall);
+  app.delete('/api/reviews/:someId', reviews.remove);
 };
 
 export default router;

@@ -30,7 +30,7 @@ const SignUp = ({ register }) => {
     },
   };
 
-  const getAvaliableErrors = (field) => {
+  const getAvailableErrors = (field) => {
     if (!hasError) return false;
     if (!errorBody.errors) return false;
     if (!errorBody.errors[field]) return false;
@@ -62,8 +62,8 @@ const SignUp = ({ register }) => {
               fullWidth
               type
               className={classes.field}
-              error={getAvaliableErrors('name')}
-              helperText={hasError ? getAvaliableErrors('name') : 'Full Name'}
+              error={getAvailableErrors('name')}
+              helperText={hasError ? getAvailableErrors('name') : 'Full Name'}
               value={name}
               onChange={(e) => setName(e.target.value)}
               InputProps={{
@@ -78,8 +78,8 @@ const SignUp = ({ register }) => {
               fullWidth
               type="email"
               className={classes.field}
-              error={getAvaliableErrors('email')}
-              helperText={hasError ? getAvaliableErrors('email') : 'Email Address'}
+              error={getAvailableErrors('email')}
+              helperText={hasError ? getAvailableErrors('email') : 'Email Address'}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               InputProps={{

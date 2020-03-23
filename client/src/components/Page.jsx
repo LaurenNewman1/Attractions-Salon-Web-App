@@ -5,13 +5,19 @@ import {
 import PropTypes from 'prop-types';
 import useStyles from '../css/PageStyles';
 
-const Page = ({ children }) => {
+const Page = ({ maxWidth, children }) => {
   const classes = useStyles();
 
   return (
-    <Container maxWidth={false} className={classes.background}>
-      { children }
-    </Container>
+    <div className={classes.background}>
+      <Container
+        maxWidth={maxWidth}
+        disableGutters
+        className={!maxWidth ? undefined : classes.topPagePadding}
+      >
+        { children }
+      </Container>
+    </div>
   );
 };
 
@@ -20,6 +26,14 @@ Page.propTypes = {
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node,
   ]).isRequired,
+  maxWidth: PropTypes.oneOfType([
+    PropTypes.bool,
+    PropTypes.string,
+  ]),
+};
+
+Page.defaultProps = {
+  maxWidth: 'lg',
 };
 
 export default Page;
