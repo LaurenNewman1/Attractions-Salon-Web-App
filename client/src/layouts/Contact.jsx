@@ -8,7 +8,6 @@ import {
 import Page from '../components/Page';
 import useStyles from '../css/ContactStyles';
 import Review from '../components/Review';
-import ReviewData from '../data/reviews.json';
 import fetchReviews from '../stores/ReviewStore';
 
 const Contact = () => {
