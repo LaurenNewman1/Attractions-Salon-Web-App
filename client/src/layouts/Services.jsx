@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Typography, Grid, CircularProgress,
+  Typography, Grid,
 } from '@material-ui/core';
 import Page from '../components/Page';
 import useStyles from '../css/ServiceStyles';
 import ServiceCard from '../components/ServiceCard';
 import fetchServicesByType from '../stores/ServicesStore';
+import Loading from '../components/Loading';
 
 const Services = () => {
   const classes = useStyles();
@@ -38,7 +39,7 @@ const Services = () => {
 
   return (
     <Page>
-      {loading ? <CircularProgress className={classes.loading} />
+      {loading ? <Loading />
         : (
           <div className={classes.root}>
             <Typography variant="h4">Nails</Typography>

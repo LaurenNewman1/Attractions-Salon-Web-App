@@ -70,11 +70,11 @@ const App = () => {
             <Route path="/confirmation/:id" component={Confirmation} />
 
             {/* Admin */}
-            <Route path="/dashboard" component={Dashboard} />
-            <Route path="/requests" component={Requests} />
-            <Route path="/users" component={Users} />
-            <Route path="/adminReviews" component={AdminReviews} />
-            <Route path="/admin/services" component={() => <AdminServices addService={addService} deleteService={deleteService} changeService={changeService} />} />
+            <Route path="/admin/dashboard" component={Dashboard} />
+            <Route path="/admin/requests" component={Requests} />
+            <Route path="/admin/users" component={Users} />
+            <Route path="/admin/reviews" component={AdminReviews} />
+            <Route path="/admin/services" component={AdminServices} />
           </Switch>
         </Router>
       </ThemeProvider>

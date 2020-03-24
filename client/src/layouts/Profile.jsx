@@ -65,6 +65,7 @@ const Profile = ({ userData, logout, changeProfile }) => {
         </>
       );
     }
+    return null;
     // return (
     //   <Button
     //     variant="contained"
