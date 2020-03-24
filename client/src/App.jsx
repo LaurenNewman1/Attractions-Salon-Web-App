@@ -10,6 +10,7 @@ import Home from './layouts/Home';
 import Book from './layouts/Book';
 import Services from './layouts/Services';
 import Contact from './layouts/Contact';
+import AdminServices from './layouts/AdminServices';
 import Login from './layouts/Login';
 import Profile from './layouts/Profile';
 import NavBar from './components/NavBar';
@@ -21,11 +22,12 @@ import Dashboard from './layouts/admin/Dashboard';
 import Users from './layouts/admin/Users';
 import AdminServices from './layouts/admin/AdminServices';
 import AdminReviews from './layouts/admin/AdminReviews';
+import { addService, deleteService, changeService } from './stores/ServiceActionsStore';
 
 const App = () => {
   const [userData, loggedIn, login, register, logout, changeProfile] = useLogin();
   const [fromBookPage, setFromBookPage] = useState(false);
-
+  // const [changeService, deleteService, addService] = useService();
   console.log(`Logged In: ${loggedIn}`);
   console.log(`Book Variable: ${fromBookPage} `);
 
@@ -72,7 +74,7 @@ const App = () => {
             <Route path="/requests" component={Requests} />
             <Route path="/users" component={Users} />
             <Route path="/adminReviews" component={AdminReviews} />
-            <Route path="/adminServices" component={AdminServices} />
+            <Route path="/admin/services" component={() => <AdminServices addService={addService} deleteService={deleteService} changeService={changeService} />} />
           </Switch>
         </Router>
       </ThemeProvider>
