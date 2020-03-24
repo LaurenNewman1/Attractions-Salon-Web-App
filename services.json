@@ -412,5 +412,122 @@
         "time": 60.0,
         "banner": "chinWax.jpg",
         "type": "wax"
+    },
+    {
+        "name": "Full Set",
+        "description" : "Nails are applied with a complete new set of acrylic nails.",
+        "price": 40.0,
+        "time": 60.0,
+        "banner": "fullSet.jpg",
+        "type": "nails",
+        "subtype": "full set"
+    },
+    {
+        "name": "Specialty Full Set",
+        "description" : "Nails are applied with a special set of acrylic nails",
+        "price": 50.0,
+        "time": 60.0,
+        "banner": "specialtyFullSet.jpg",
+        "type": "nails",
+        "subtype": "full set"
+    },
+    {
+        "name": "Pink and White Full set with gel",
+        "description" : "Nails are applied with a special set of pink and white gel nails",
+        "price": 60.0,
+        "time": 60.0,
+        "banner": "pinkWhite.jpg",
+        "type": "nails",
+        "subtype": "full set"
+    },
+    {
+        "name": "Fill",
+        "description" : "Nails are reshaped and are applied with a new coat of color",
+        "price": 30.0,
+        "time": 60.0,
+        "banner": "fill.jpg",
+        "type": "nails",
+        "subtype": "fills"
+    },
+    {
+        "name": "Fill with Gel Polish",
+        "description" : "Nails are filed and are applied with a new coat of color and gel polish",
+        "price": 40.0,
+        "time": 60.0,
+        "banner": "nailPolish.jpg",
+        "type": "nails",
+        "subtype": "fills"
+    },
+    {
+        "name": "Gel Polish Change",
+        "description" : "Nails are applied with a new coat of gel polish",
+        "price": 25.0,
+        "time": 60.0,
+        "banner": "gelPolishChange.jpg",
+        "type": "nails",
+        "subtype": "fills"
+    },
+    {
+        "name": "Pink and White Fill",
+        "description" : "Nails are applied with a new coat of pink and white polish",
+        "price": 55.0,
+        "time": 60.0,
+        "banner": "pinkAndWhiteFill.jpg",
+        "type": "nails",
+        "subtype": "fills"
+    },
+    {
+        "name": "Spa Manicure",
+        "description" : "Nails are shaped beautifully with a hand massage to relieve tension",
+        "price": 25.0,
+        "time": 60.0,
+        "banner": "spaManicure.jpg",
+        "type": "nails",
+        "subtype": "manicure"
+    },
+    {
+        "name": "Gel Manicure",
+        "description" : "Nails are shaped beautifully with gel polish to strengthen the nails",
+        "price": 35.0,
+        "time": 60.0,
+        "banner": "gelManicure.jpg",
+        "type": "nails",
+        "subtype": "manicure"
+    },
+    {
+        "name": "Basic Pedicure",
+        "description" : "Toe nails are cleaned and shaped beautifully",
+        "price": 30.0,
+        "time": 60.0,
+        "banner": "basicPedicure.jpg",
+        "type": "nails",
+        "subtype": "pedicure"
+    },
+    {
+        "name": "Spa Pedicure",
+        "description" : "Toe nails are shaped beautifully with a foot massage to relieve tension",
+        "price": 40.0,
+        "time": 60.0,
+        "banner": "spaPedicure.jpg",
+        "type": "nails",
+        "subtype": "pedicure"
+    },
+    {
+        "name": "Extreme Pedicure",
+        "description" : "A spa pedicure that includes a complete foot exfoliation for a smooth complexion",
+        "price": 50.0,
+        "time": 60.0,
+        "banner": "extremePedicure.jpg",
+        "type": "nails",
+        "subtype": "pedicure"
+    },
+    {
+        "name": "Toe Polish",
+        "description" : "Toe nails are applied with a color polish",
+        "price": 10.0,
+        "time": 60.0,
+        "banner": "toePolish.jpg",
+        "type": "nails",
+        "subtype": "pedicure"
     }
 ]
