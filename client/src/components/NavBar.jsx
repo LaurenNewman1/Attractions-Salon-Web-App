@@ -56,12 +56,12 @@ const NavBar = ({ loggedIn, userData, setFromBookPage }) => {
 
   const adminButtons = (
     <>
-      <Button onClick={() => history.push('/dashboard')}>Dashboard</Button>
+      <Button onClick={() => history.push('/admin/dashboard')}>Dashboard</Button>
       <div className={classes.grow} />
-      <Button onClick={() => history.push('/requests')}>Requests</Button>
-      <Button onClick={() => history.push('/users')}>Users</Button>
-      <Button onClick={() => history.push('/adminServices')}>Services</Button>
-      <Button onClick={() => history.push('/adminReviews')}>Reviews</Button>
+      <Button onClick={() => history.push('/admin/requests')}>Requests</Button>
+      <Button onClick={() => history.push('/admin/users')}>Users</Button>
+      <Button onClick={() => history.push('/admin/services')}>Services</Button>
+      <Button onClick={() => history.push('/admin/reviews')}>Reviews</Button>
       {userLogin}
     </>
   );
