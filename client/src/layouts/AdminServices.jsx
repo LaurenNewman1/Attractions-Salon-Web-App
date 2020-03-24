@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 
 import React, { useState, useEffect } from 'react';
 import {
@@ -12,6 +13,7 @@ import Page from '../components/Page';
 import useStyles from '../css/EditServiceStyles';
 import EditService from '../components/EditService';
 import fetchServicesByType from '../stores/ServicesStore';
+import NewService from '../components/NewService';
 
 const adminServices = ({ addService, deleteService, changeService }) => {
   const classes = useStyles();
@@ -25,28 +27,28 @@ const adminServices = ({ addService, deleteService, changeService }) => {
   const [stylings, setStylings] = useState([]);
   const [extensions, setExtensions] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
 
-  const [name, setName] = useState('');
-  const [type, setType] = useState('');
-  const [subtype, setSubType] = useState('');
-  const [price, setPrice] = useState('');
-  const [time, setTime] = useState('');
-  const [description, setDescription] = useState('');
-  const [errorBody, setErrorBody] = useState({});
-  const [hasError, setHasError] = useState(false);
-  const [banner, setBanner] = useState('');
-  const [addonPrice, setAddonPrice] = useState('');
-  const [addonName, setAddonName] = useState('');
-  const [addons, setAddons] = useState([]);
+  // const [name, setName] = useState('');
+  // const [type, setType] = useState('');
+  // const [subtype, setSubType] = useState('');
+  // const [price, setPrice] = useState('');
+  // const [time, setTime] = useState('');
+  // const [description, setDescription] = useState('');
+  // const [errorBody, setErrorBody] = useState({});
+  // const [hasError, setHasError] = useState(false);
+  // const [banner, setBanner] = useState('');
+  // const [addonPrice, setAddonPrice] = useState('');
+  // const [addonName, setAddonName] = useState('');
+  // const [addons, setAddons] = useState([]);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+  // const handleClickOpen = () => {
+  //   setOpen(true);
+  // };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  // const handleClose = () => {
+  //   setOpen(false);
+  // };
 
 
   const renderSavedPage = async (_id, params) => {
@@ -67,33 +69,32 @@ const adminServices = ({ addService, deleteService, changeService }) => {
       window.location.reload(false);
     }
   };
-  
-  const addAddon = () => {
-    setAddons([
-      ...addons,
-      {
-        name: addonName,
-        price: addonPrice,
-      },
-    ]);
-    return addons;
-  };
-  const attemptRegister = async () => {
-    // eslint-disable-next-line max-len
-    addAddon();
-    const [successful, errors] = await addService(name, type, subtype, price, time, description, banner, addons);
-    setErrorBody({});
-    setHasError(!successful);
-    if (successful) {
-      console.log(addonName);
-      console.log('new service added');
-      // const response = await addService(name, type, subtype, price, time, description, banner, addons);
-      console.log(addons);
-    } else {
-      setErrorBody(errors);
-    }
-    console.log(errorBody, hasError);
-  };
+  // const addAddon = () => {
+  //   setAddons([
+  //     ...addons,
+  //     {
+  //       name: addonName,
+  //       price: addonPrice,
+  //     },
+  //   ]);
+  //   return addons;
+  // };
+  // const attemptRegister = async () => {
+  //   // eslint-disable-next-line max-len
+  //   addAddon();
+  //   const [successful, errors] = await addService(name, type, subtype, price, time, description, banner, addons);
+  //   setErrorBody({});
+  //   setHasError(!successful);
+  //   if (successful) {
+  //     console.log(addonName);
+  //     console.log('new service added');
+  //     // const response = await addService(name, type, subtype, price, time, description, banner, addons);
+  //     console.log(addons);
+  //   } else {
+  //     setErrorBody(errors);
+  //   }
+  //   console.log(errorBody, hasError);
+  // };
 
   useEffect(() => {
     async function fetchData() {
@@ -120,11 +121,12 @@ const adminServices = ({ addService, deleteService, changeService }) => {
               <h1 className={classes.pageHead}>
                 Services
               </h1>
-              <IconButton className={classes.button} variant="outlined" color="primary" onClick={handleClickOpen}>
+              <NewService addService={addService} />
+              {/* <IconButton className={classes.button} variant="outlined" color="primary" onClick={handleClickOpen}>
                 <AddCircle />
-              </IconButton>
+              </IconButton> */}
             </div>
-            <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+            {/* <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
               <DialogTitle id="form-dialog-title">New Service</DialogTitle>
               <DialogContent>
                 <form className={classes.textfield} autoComplete="off">
@@ -154,7 +156,7 @@ const adminServices = ({ addService, deleteService, changeService }) => {
                   Save
                 </Button>
               </DialogActions>
-            </Dialog>
+            </Dialog> */}
             <Typography variant="h4" className={classes.header}>Nails</Typography>
             <Grid container spacing={3} className={classes.container}>
               {!nails.length ? null

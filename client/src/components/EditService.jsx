@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 
 import React from 'react';
 import {
@@ -27,7 +28,8 @@ const EditService = ({ service, deleteService, changeService }) => {
   const [time, setTime] = React.useState(service.time);
   const [price, setPrice] = React.useState(service.price);
   const [description, setDescription] = React.useState(service.description);
-  const [addons, setAddons] = React.useState(service.addons);
+  const [addons] = React.useState(service.addons);
+  const [close, setClose] = React.useState(false);
 
   // console.log(service.addons);
   // const handleChange = (key, val) => {
@@ -51,15 +53,20 @@ const EditService = ({ service, deleteService, changeService }) => {
   };
   const handleOpen = () => {
     setClicked(!clicked);
+    setClose(true);
+  };
+
+  const handleClose = () => {
+    setClose(false);
   };
 
   const handleClick = (e) => {
     e.stopPropagation();
   };
 
-  const handleDelete = () => {
-    console.log(service);
-  };
+  // const handleDelete = () => {
+  //   console.log(service);
+  // };
   const updateAddonName = (e, index) => {
     console.log('name value', e);
     addons[index].name = e;
@@ -73,7 +80,7 @@ const EditService = ({ service, deleteService, changeService }) => {
   //   }
   return (
     <div className={classes.root}>
-      <ExpansionPanel>
+      <ExpansionPanel expanded={close}>
         <ExpansionPanelSummary
           onClick={handleOpen}
           expandIcon={<ExpandMore />}
@@ -145,7 +152,7 @@ const EditService = ({ service, deleteService, changeService }) => {
             Delete
           </Button>
           <div style={{ flex: '1 0 0' }} />
-          <Button variant="contained" color="grey">
+          <Button variant="contained" onClick={handleClose} color="grey">
             Cancel
           </Button>
           {/* <Button variant="contained" color="primary" onClick={() => changeService(service._id, service)}>
