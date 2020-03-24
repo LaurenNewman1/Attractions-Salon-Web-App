@@ -53,7 +53,11 @@ const EditService = ({ service, deleteService, changeService }) => {
   };
   const handleOpen = () => {
     setClicked(!clicked);
-    setClose(true);
+    if (close) {
+      setClose(false);
+    } else {
+      setClose(true);
+    }
   };
 
   const handleClose = () => {
