@@ -50,20 +50,6 @@ const Details = ({ booking, updateBooking }) => {
     <>
       <h2 className={classes.header}>How can we help you today?</h2>
       <form>
-        <TextField
-          required
-          label="Name"
-          className={classes.textfield}
-          value={booking.name}
-          onChange={(event) => updateBooking('name', event.target.value)}
-        />
-        <TextField
-          required
-          label="Email"
-          className={classes.textfield}
-          value={booking.email}
-          onChange={(event) => updateBooking('email', event.target.value)}
-        />
         <Grid container spacing={3} className={classes.grid}>
           <Grid item xs={4}>
             <Card

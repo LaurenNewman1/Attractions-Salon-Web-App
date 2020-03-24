@@ -18,9 +18,9 @@ const Review = ({ review }) => {
       <CardContent>
         <Grid container spacing={1}>
           <Grid item xs={8}>
-            <Rating value="5" readOnly icon={<FavoriteIcon color="primary" />} />
-            <Typography variant="body2">{review.content}</Typography>
-            <Typography variant="subtitle1" style={{ fontWeight: 'bold' }}>{review.name}</Typography>
+            <Rating value={review.rating} readOnly icon={<FavoriteIcon color="primary" />} />
+            <Typography variant="body2">{review.review}</Typography>
+            <Typography variant="subtitle1" style={{ fontWeight: 'bold' }}>{review.reviewer}</Typography>
           </Grid>
           <Grid item xs={4} className={classes.profileImg}>
             <AccountCircle className={classes.icon} color="secondary" />
@@ -33,9 +33,10 @@ const Review = ({ review }) => {
 
 Review.propTypes = {
   review: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    name: PropTypes.string.isRequired,
-    content: PropTypes.string.isRequired,
+    _id: PropTypes.number.isRequired,
+    reviewer: PropTypes.string.isRequired,
+    review: PropTypes.string.isRequired,
+    rating: PropTypes.number.isRequired,
   }).isRequired,
 };
 
