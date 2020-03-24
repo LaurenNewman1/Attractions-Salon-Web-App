@@ -22,7 +22,7 @@ const Book = ({ userData }) => {
     email: userData ? userData.email : '',
     phone_number: userData ? userData.phone_number : '',
     confirmed: false,
-    time: '',
+    time: new Date(Date.now()).toISOString(),
     service: '',
     addons: [],
     specialist: '',
@@ -43,13 +43,18 @@ const Book = ({ userData }) => {
   const validateNext = () => {
     switch (page) {
       case 0:
-        if (booking.name.length && booking.email.length && booking.service.length) {
+        if (booking.service.length) {
           setPage((prev) => prev + 1);
         } else {
           setError(true);
         }
         break;
       case 1:
+        if (booking.name && booking.email) {
+          setPage((prev) => prev + 1);
+        } else {
+          setError(true);
+        }
         break;
       case 2:
         break;
@@ -70,7 +75,12 @@ const Book = ({ userData }) => {
           />
         );
       case 1:
-        return <Calendar />;
+        return (
+          <Calendar
+            booking={booking}
+            updateBooking={(...argu) => updateBooking(...argu)}
+          />
+        );
       case 2:
         return <NewPayment />;
       case 3:
