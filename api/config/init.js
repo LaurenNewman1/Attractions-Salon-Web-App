@@ -14,6 +14,10 @@ dotenv.config();
 const environment = process.env.NODE_ENV ? process.env.NODE_ENV : 'development';
 const inProduction = environment === 'production';
 
+if (process.env.NODE_ENV === 'test') {
+  process.env.LOGGING = 'warn';
+}
+
 export default async () => {
   const app = express();
   const logger = GetLogger('Server Init');
@@ -57,5 +61,5 @@ export default async () => {
     app.get('/*', proxy('http://localhost:3000'));
   }
 
-  return [app, () => connection.disconnect(), environment];
+  return [app, async () => connection.connection.close(), environment];
 };
