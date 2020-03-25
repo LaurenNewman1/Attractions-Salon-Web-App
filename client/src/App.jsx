@@ -21,6 +21,7 @@ import Dashboard from './layouts/admin/Dashboard';
 import Users from './layouts/admin/Users';
 import AdminServices from './layouts/admin/AdminServices';
 import AdminReviews from './layouts/admin/AdminReviews';
+import { addService, deleteService, changeService } from './stores/ServiceActionsStore';
 
 const App = () => {
   const [userData, loggedIn, login, register, logout, changeProfile] = useLogin();
@@ -55,7 +56,13 @@ const App = () => {
     >
       <ThemeProvider theme={theme}>
         <Router>
-          <NavBar loggedIn={loggedIn} logout={() => logout()} userData={userData} fromBookPage={fromBookPage} setFromBookPage={setFromBookPage} />
+          <NavBar
+            loggedIn={loggedIn}
+            logout={() => logout()}
+            userData={userData}
+            fromBookPage={fromBookPage}
+            setFromBookPage={setFromBookPage}
+          />
           <Switch>
             <Route exact path="/" component={() => <Home loggedIn={loggedIn} setFromBookPage={setFromBookPage} />} />
             <Route path="/book" component={() => <Book userData={userData} />} />
@@ -63,7 +70,16 @@ const App = () => {
             <Route path="/contact" component={Contact} />
             <Route path="/login" component={() => <Login login={login} fromBookPage={fromBookPage} />} />
             <Route path="/signUp" component={() => <SignUp register={register} />} />
-            <Route path="/profile" component={() => <Profile userData={userData} logout={() => logout()} changeProfile={changeProfile} />} />
+            <Route
+              path="/profile"
+              component={() => (
+                <Profile
+                  userData={userData}
+                  logout={() => logout()}
+                  changeProfile={changeProfile}
+                />
+              )}
+            />
             <Route path="/confirmation/:id" component={Confirmation} />
 
             {/* Admin */}
@@ -71,7 +87,16 @@ const App = () => {
             <Route path="/admin/requests" component={Requests} />
             <Route path="/admin/users" component={Users} />
             <Route path="/admin/reviews" component={AdminReviews} />
-            <Route path="/admin/services" component={AdminServices} />
+            <Route
+              path="/admin/services"
+              component={() => (
+                <AdminServices
+                  addService={addService}
+                  deleteService={deleteService}
+                  changeService={changeService}
+                />
+              )}
+            />
           </Switch>
         </Router>
       </ThemeProvider>

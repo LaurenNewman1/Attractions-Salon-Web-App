@@ -32,7 +32,7 @@ const EditService = ({ service, deleteService, changeService }) => {
   const renderSavedPage = () => {
     changeService(service._id, {
       name,
-      type,
+      type: type.toLowerCase(),
       subtype,
       time,
       price,
@@ -128,7 +128,7 @@ const EditService = ({ service, deleteService, changeService }) => {
           Delete
         </Button>
         <div style={{ flex: '1 0 0' }} />
-        <Button variant="contained" color="grey">
+        <Button>
           Cancel
         </Button>
         <Button variant="contained" color="primary" onClick={() => renderSavedPage()}>

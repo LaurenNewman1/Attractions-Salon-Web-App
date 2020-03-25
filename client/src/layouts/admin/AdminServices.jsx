@@ -1,13 +1,14 @@
 
 import React, { useState, useEffect } from 'react';
 import {
-  Typography, Button, TextField, Fab,
+  Typography, Button, TextField, Fab, InputAdornment,
   Dialog, DialogActions, DialogContent, DialogTitle,
 } from '@material-ui/core';
 import {
-  Add,
+  Add, Schedule, AttachMoney,
 } from '@material-ui/icons';
 import PropTypes from 'prop-types';
+import Alert, { TYPE_ERROR } from '../../components/Alert';
 import Page from '../../components/Page';
 import Loading from '../../components/Loading';
 import useStyles from '../../css/EditServiceStyles';
@@ -38,6 +39,12 @@ const adminServices = ({ addService, deleteService, changeService }) => {
   const [addonPrice, setAddonPrice] = useState('');
   const [addonName, setAddonName] = useState('');
   const [addons, setAddons] = useState([]);
+
+  const [alert, setAlert] = useState({
+    open: false,
+    type: '',
+    text: '',
+  });
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -74,9 +81,17 @@ const adminServices = ({ addService, deleteService, changeService }) => {
   };
 
   const attemptRegister = async () => {
+    const lowerType = type.toLowerCase();
     addAddon();
-    await addService(name, type, subtype, price,
-      time, description, banner, addons);
+    if (!name.length || !type.length || !description.length) {
+      setAlert({ open: true, type: TYPE_ERROR, text: 'Please complete required fields.' });
+    } else if (lowerType !== 'hair' && lowerType !== 'nails' && lowerType !== 'wax') {
+      setAlert({ open: true, type: TYPE_ERROR, text: 'Valid types are hair, nails, or wax.' });
+    } else {
+      handleClose();
+      await addService(name, lowerType, subtype, price,
+        time, description, banner, addons);
+    }
   };
 
   useEffect(() => {
@@ -97,6 +112,7 @@ const adminServices = ({ addService, deleteService, changeService }) => {
 
   return (
     <Page maxWidth="md">
+      {loading ? <Loading /> : null}
       <Typography
         className={classes.pageHead}
         align="center"
@@ -110,114 +126,152 @@ const adminServices = ({ addService, deleteService, changeService }) => {
           <Add />
         </Fab>
       </Typography>
-      <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">New Service</DialogTitle>
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Add a new service</DialogTitle>
         <DialogContent>
-          <form className={classes.textfield} autoComplete="off">
-            <TextField onChange={(e) => setName(e.target.value)} id="standard-basic" label="Name" />
-            <TextField onChange={(e) => setType(e.target.value)} id="standard-basic" label="Type" />
-            <TextField onChange={(e) => setSubType(e.target.value)} id="standard-basic" label="subType" />
-            <TextField onChange={(e) => setPrice(e.target.value)} id="standard-basic" label="Price" />
-            <TextField onChange={(e) => setTime(e.target.value)} id="standard-basic" label="Time" />
-            <TextField onChange={(e) => setBanner(e.target.value)} id="standard-basic" label="Banner" />
-            <TextField onChange={(e) => setAddonName(e.target.value)} id="standard-basic" label="AddonName" />
-            <TextField onChange={(e) => setAddonPrice(e.target.value)} id="standard-basic" label="AddonPrice" />
+          <form className={classes.textfield}>
             <TextField
+              required
+              onChange={(e) => setName(e.target.value)}
+              className={classes.add}
+              label="Name"
+            />
+            <TextField
+              required
+              onChange={(e) => setType(e.target.value)}
+              className={classes.add}
+              label="Type"
+            />
+            <TextField
+              onChange={(e) => setSubType(e.target.value)}
+              className={classes.add}
+              label="subType"
+            />
+            <TextField
+              label="Price"
+              className={classes.add}
+              onChange={(e) => setPrice(e.target.value)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <AttachMoney />
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <TextField
+              label="Time"
+              className={classes.add}
+              onChange={(e) => setTime(e.target.value)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Schedule />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <Typography>mins</Typography>
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <TextField onChange={(e) => setBanner(e.target.value)} className={classes.add} label="Image" />
+            <TextField onChange={(e) => setAddonName(e.target.value)} className={classes.add} label="AddonName" />
+            <TextField onChange={(e) => setAddonPrice(e.target.value)} className={classes.add} label="AddonPrice" />
+            <TextField
+              required
               onClick={addAddon}
               onChange={(e) => setDescription(e.target.value)}
-              id="outlined-multiline-static"
               multiline
-              style={{ width: '88%' }}
+              style={{ width: '93%' }}
               label="Description"
             />
           </form>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={() => attemptRegister()} color="primary">
-            Save
-          </Button>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={() => attemptRegister()} variant="contained" color="primary">Save</Button>
         </DialogActions>
       </Dialog>
-      {loading ? <Loading />
-        : (
-          <>
-            <Typography variant="h4" className={classes.header}>Nails</Typography>
-            {!nails.length ? null
-              : nails.map((service) => (
-                <EditService
-                  service={service}
-                  deleteService={(_id) => attemptDelete(_id)}
-                  changeService={(_id, params) => renderSavedPage(_id, params)}
-                />
-              ))}
-            <Typography variant="h4" className={classes.header}>Wax</Typography>
-            {!wax.length ? null
-              : wax.map((service) => (
-                <EditService
-                  service={service}
-                  deleteService={(_id) => attemptDelete(_id)}
-                  changeService={(_id, params) => renderSavedPage(_id, params)}
-                />
-              ))}
-            <Typography variant="h4" className={classes.header}>Hair Cuts</Typography>
-            {!cuts.length ? null
-              : cuts.map((service) => (
-                <EditService
-                  service={service}
-                  deleteService={(_id) => attemptDelete(_id)}
-                  changeService={(_id, params) => renderSavedPage(_id, params)}
-                />
-              ))}
-            <Typography variant="h4" className={classes.header}>Hair Dyes</Typography>
-            {!dyes.length ? null
-              : dyes.map((service) => (
-                <EditService
-                  service={service}
-                  deleteService={(_id) => attemptDelete(_id)}
-                  changeService={(_id, params) => renderSavedPage(_id, params)}
-                />
-              ))}
-            <Typography variant="h4" className={classes.header}>Hair Treatment</Typography>
-            {!treatments.length ? null
-              : treatments.map((service) => (
-                <EditService
-                  service={service}
-                  deleteService={(_id) => attemptDelete(_id)}
-                  changeService={(_id) => renderSavedPage(_id)}
-                />
-              ))}
-            <Typography variant="h4" className={classes.header}>Hair Wash/Dry</Typography>
-            {!washes.length ? null
-              : washes.map((service) => (
-                <EditService
-                  service={service}
-                  deleteService={(_id) => attemptDelete(_id)}
-                  changeService={(_id) => renderSavedPage(_id)}
-                />
-              ))}
-            <Typography variant="h4" className={classes.header}>Hair Styling</Typography>
-            {!stylings.length ? null
-              : stylings.map((service) => (
-                <EditService
-                  service={service}
-                  deleteService={(_id) => attemptDelete(_id)}
-                  changeService={(_id) => renderSavedPage(_id)}
-                />
-              ))}
-            <Typography variant="h4" className={classes.header}>Hair Extensions</Typography>
-            {!extensions.length ? null
-              : extensions.map((service) => (
-                <EditService
-                  service={service}
-                  deleteService={(_id) => attemptDelete(_id)}
-                  changeService={(_id) => renderSavedPage(_id)}
-                />
-              ))}
-          </>
-        )}
+      <Typography variant="h5" className={classes.header}>Nails</Typography>
+      {!nails.length ? null
+        : nails.map((service) => (
+          <EditService
+            service={service}
+            deleteService={(_id) => attemptDelete(_id)}
+            changeService={(_id, params) => renderSavedPage(_id, params)}
+          />
+        ))}
+      <Typography variant="h5" className={classes.header}>Wax</Typography>
+      {!wax.length ? null
+        : wax.map((service) => (
+          <EditService
+            service={service}
+            deleteService={(_id) => attemptDelete(_id)}
+            changeService={(_id, params) => renderSavedPage(_id, params)}
+          />
+        ))}
+      <Typography variant="h5" className={classes.header}>Hair Cuts</Typography>
+      {!cuts.length ? null
+        : cuts.map((service) => (
+          <EditService
+            service={service}
+            deleteService={(_id) => attemptDelete(_id)}
+            changeService={(_id, params) => renderSavedPage(_id, params)}
+          />
+        ))}
+      <Typography variant="h5" className={classes.header}>Hair Dyes</Typography>
+      {!dyes.length ? null
+        : dyes.map((service) => (
+          <EditService
+            service={service}
+            deleteService={(_id) => attemptDelete(_id)}
+            changeService={(_id, params) => renderSavedPage(_id, params)}
+          />
+        ))}
+      <Typography variant="h5" className={classes.header}>Hair Treatment</Typography>
+      {!treatments.length ? null
+        : treatments.map((service) => (
+          <EditService
+            service={service}
+            deleteService={(_id) => attemptDelete(_id)}
+            changeService={(_id) => renderSavedPage(_id)}
+          />
+        ))}
+      <Typography variant="h5" className={classes.header}>Hair Wash/Dry</Typography>
+      {!washes.length ? null
+        : washes.map((service) => (
+          <EditService
+            service={service}
+            deleteService={(_id) => attemptDelete(_id)}
+            changeService={(_id) => renderSavedPage(_id)}
+          />
+        ))}
+      <Typography variant="h5" className={classes.header}>Hair Styling</Typography>
+      {!stylings.length ? null
+        : stylings.map((service) => (
+          <EditService
+            service={service}
+            deleteService={(_id) => attemptDelete(_id)}
+            changeService={(_id) => renderSavedPage(_id)}
+          />
+        ))}
+      <Typography variant="h5" className={classes.header}>Hair Extensions</Typography>
+      {!extensions.length ? null
+        : extensions.map((service) => (
+          <EditService
+            service={service}
+            deleteService={(_id) => attemptDelete(_id)}
+            changeService={(_id) => renderSavedPage(_id)}
+          />
+        ))}
+      <Alert
+        open={alert.open}
+        type={alert.type}
+        text={alert.text}
+        onClose={() => setAlert({ open: false, type: '', text: '' })}
+      />
     </Page>
   );
 };

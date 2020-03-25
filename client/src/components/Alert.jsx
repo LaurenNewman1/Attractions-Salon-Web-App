@@ -5,8 +5,10 @@ import {
 import { Alert } from '@material-ui/lab';
 import PropTypes from 'prop-types';
 
-export const TYPE_SUCCESS = 'success';
-export const TYPE_ERROR = 'error';
+export const TYPE_SUCCESS = 'success'; // green
+export const TYPE_ERROR = 'error'; // red
+export const TYPE_WARNING = 'warning'; // orange
+export const TYPE_INFO = 'info'; // blue
 
 const AlertBar = ({
   open, type, text, onClose,
