@@ -19,7 +19,11 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
   },
   pageHead: {
-    textAlign: 'center',
+    paddingTop: 20,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    whiteSpace: 'nowrap',
   },
   button: {
     position: 'absolute',
@@ -34,16 +38,8 @@ const useStyles = makeStyles((theme) => ({
     right: '50%',
   },
   header: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
     marginTop: 40,
-    marginBottom: 40,
   },
-  //   truncateOverflow: {
-  //     overflow: 'hidden',
-  //     height: 60,
-  //   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
     fontWeight: theme.typography.fontWeightRegular,

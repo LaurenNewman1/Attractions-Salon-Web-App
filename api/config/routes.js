@@ -11,7 +11,7 @@ const router = (app) => {
 
   // User Routes
   app.get('/api/users', users.read);
-  app.get('/api/users/roles/:role', users.readByRole)
+  app.get('/api/users/roles/:role', users.readByRole);
   app.delete('/api/users/:someId', users.remove);
   app.put('/api/users/:someId', users.update);
   app.post('/api/users', users.create);
@@ -22,8 +22,8 @@ const router = (app) => {
   app.get('/api/services/types/:type', services.readType);
   app.get('/api/services/types/:type/:subtype', services.readType);
   app.get('/api/services/:someId', services.read);
-  app.put('/api/services/:_id',services.update);
-  app.delete('/api/services/:_id',services.remove);
+  app.put('/api/services/:_id', services.update);
+  app.delete('/api/services/:_id', services.remove);
 
   // Appointment Routes
   app.get('/api/appointments/:_id', appointments.read);
