@@ -2,7 +2,7 @@ import {
   Grid, TextField, InputAdornment, Button, Typography,
 } from '@material-ui/core';
 import React, { useState } from 'react';
-import { Email, Lock } from '@material-ui/icons';
+import { Email, Lock, Divider } from '@material-ui/icons';
 import { useHistory, Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Page from '../components/Page';
@@ -38,10 +38,12 @@ const Login = ({ login, fromBookPage }) => {
     if (fromBookPage) {
       return (
         <>
-          <div className={classes.buttons}>
+          <div className={classes.divider}>
+            <Divider variant="middle" style={{ flexGrow: 1 }} />
             <Typography variant="h5">
-              -------------OR-------------
+              OR
             </Typography>
+            <Divider variant="middle" style={{ flexGrow: 1 }} />
           </div>
           <div className={classes.buttons}>
             <Button

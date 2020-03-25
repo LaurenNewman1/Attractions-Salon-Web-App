@@ -12,6 +12,7 @@ import useStyles from '../css/BookStyles';
 import Details from './Details';
 import Calendar from './Calendar';
 import NewPayment from './NewPayment';
+import ConfirmPayment from './ConfirmPayment';
 import ReviewBooking from './ReviewBooking';
 
 const Book = ({ userData }) => {
@@ -63,11 +64,13 @@ const Book = ({ userData }) => {
   const validateNext = () => {
     switch (page) {
       case 0:
-        if (booking.service.length) {
-          setPage((prev) => prev + 1);
-        } else {
-          setError(true);
-        }
+        // This is temporary
+        // if (booking.service.length) {
+        //   setPage((prev) => prev + 1);
+        // } else {
+        //   setError(true);
+        // }
+        setPage((prev) => prev + 1);
         break;
       case 1:
         if (booking.name && booking.email) {
@@ -77,6 +80,8 @@ const Book = ({ userData }) => {
         }
         break;
       case 2:
+        // This is just temporary
+        setPage((prev) => prev + 1);
         break;
       case 3:
         break;
@@ -102,14 +107,18 @@ const Book = ({ userData }) => {
             updateBooking={(...argu) => updateBooking(...argu)}
           />
         );
-        case 2:
+      case 2:
         return (
           <NewPayment
             updateCreditCard={(...argu) => updateCreditCard(...argu)}
           />
         );
       case 3:
-        return <Calendar />;
+        return (
+          <ConfirmPayment
+            booking={booking}
+          />
+        );
       default:
         return null;
     }

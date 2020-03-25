@@ -20,7 +20,6 @@ import useLogin from './stores/LoginStores';
 import Requests from './layouts/admin/Requests';
 import Dashboard from './layouts/admin/Dashboard';
 import Users from './layouts/admin/Users';
-import AdminServices from './layouts/admin/AdminServices';
 import AdminReviews from './layouts/admin/AdminReviews';
 import { addService, deleteService, changeService } from './stores/ServiceActionsStore';
 
