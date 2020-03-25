@@ -3,8 +3,37 @@ import _ from 'lodash';
 import User from '../model/user';
 import currentUserAbilities, { userAbilities } from '../helpers/ability';
 import GetLogger from '../config/logger';
+import genForgetPasswordHash from '../helpers/user';
+import { SendForgetPassword } from '../lib/mail';
 
 const logger = GetLogger('User Controller');
+
+export const genForgetPassword = async (req, res) => {
+  const { email } = req.body;
+  const user = await User.find({ email }).exec();
+  if (user) {
+    user.forget_password_id = genForgetPasswordHash();
+    await user.save();
+    await SendForgetPassword(user.email, user.forget_password_id, false);
+  }
+
+  res.sendStatus(200);
+};
+
+export const updatePassword = async (req, res) => {
+  const { password } = req.body;
+  const { id } = req.params;
+
+  const user = await User.find({ forget_password_id: id });
+  if (user) {
+    const hash = await argon2.hash(password);
+    user.password = hash;
+    await user.save();
+    res.sendStatus(200);
+  } else {
+    res.sendStatus(401);
+  }
+};
 
 export const read = async (req, res) => {
   // Find User from Database and return

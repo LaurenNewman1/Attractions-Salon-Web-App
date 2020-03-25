@@ -25,6 +25,28 @@ const unsubscribeData = {
   Sender_Zip: '32606',
 };
 
+export const SendForgetPassword = async (email, token, onlyProd = true) => {
+  if (process.env.NODE_ENV !== 'production' && onlyProd) return true;
+
+  try {
+    await sgMail.send({
+      ...textMsg,
+      personalizations: [{
+        dynamic_template_data: {
+          ...unsubscribeData,
+          text: token,
+          "Someone is trying to reset your password,",
+        },
+        email,
+      }],
+    });
+    return true;
+  } catch (err) {
+    logger.error(err.toString());
+    return false;
+  }
+};
+
 export const SendConfirmationEmail = async (userID, confirmToken) => {
 
 };

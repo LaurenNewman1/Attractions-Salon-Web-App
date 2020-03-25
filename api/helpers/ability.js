@@ -13,6 +13,7 @@ export const userAbilities = (user) => {
   // Logged In
   if (user) {
     allow('read', 'Self', ['_id', 'email', 'name', 'phone_number', 'role']);
+    allow('reset_password', 'Self');
     allow('read', 'User', ['_id', 'email', 'name', 'phone_number', 'role'], { _id: user._id });
     allow('update', 'User', ['email', 'name', 'phone_number', 'password'], { _id: user._id });
 
