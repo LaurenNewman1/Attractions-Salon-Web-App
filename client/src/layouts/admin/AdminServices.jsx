@@ -18,7 +18,10 @@ import fetchServicesByType from '../../stores/ServicesStore';
 const adminServices = ({ addService, deleteService, changeService }) => {
   const classes = useStyles();
 
-  const [nails, setNails] = useState([]);
+  const [fullSets, setFullSets] = useState([]);
+  const [fills, setFills] = useState([]);
+  const [manicures, setManicures] = useState([]);
+  const [pedicures, setPedicures] = useState([]);
   const [wax, setWax] = useState([]);
   const [cuts, setCuts] = useState([]);
   const [dyes, setDyes] = useState([]);
@@ -97,14 +100,17 @@ const adminServices = ({ addService, deleteService, changeService }) => {
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
-      setNails(await fetchServicesByType('nails'));
-      setWax(await fetchServicesByType('wax'));
-      setCuts(await fetchServicesByType('cuts'));
-      setDyes(await fetchServicesByType('dyes'));
-      setTreatments(await fetchServicesByType('treatments'));
-      setWashes(await fetchServicesByType('washes'));
-      setStylings(await fetchServicesByType('stylings'));
-      setExtensions(await fetchServicesByType('extensions'));
+      setFullSets(await fetchServicesByType('nails', 'full set'));
+      setFills(await fetchServicesByType('nails', 'fills'));
+      setManicures(await fetchServicesByType('nails', 'manicure'));
+      setPedicures(await fetchServicesByType('nails', 'pedicure'));
+      setWax(await fetchServicesByType('wax', ''));
+      setCuts(await fetchServicesByType('hair', 'cut'));
+      setDyes(await fetchServicesByType('hair', 'dye'));
+      setTreatments(await fetchServicesByType('hair', 'treatment'));
+      setWashes(await fetchServicesByType('hair', 'wash'));
+      setStylings(await fetchServicesByType('hair', 'styling'));
+      setExtensions(await fetchServicesByType('hair', 'extension'));
       setLoading(false);
     }
     fetchData();
@@ -194,24 +200,6 @@ const adminServices = ({ addService, deleteService, changeService }) => {
           <Button onClick={() => attemptRegister()} variant="contained" color="primary">Save</Button>
         </DialogActions>
       </Dialog>
-      <Typography variant="h5" className={classes.header}>Nails</Typography>
-      {!nails.length ? null
-        : nails.map((service) => (
-          <EditService
-            service={service}
-            deleteService={(_id) => attemptDelete(_id)}
-            changeService={(_id, params) => renderSavedPage(_id, params)}
-          />
-        ))}
-      <Typography variant="h5" className={classes.header}>Wax</Typography>
-      {!wax.length ? null
-        : wax.map((service) => (
-          <EditService
-            service={service}
-            deleteService={(_id) => attemptDelete(_id)}
-            changeService={(_id, params) => renderSavedPage(_id, params)}
-          />
-        ))}
       <Typography variant="h5" className={classes.header}>Hair Cuts</Typography>
       {!cuts.length ? null
         : cuts.map((service) => (
@@ -264,6 +252,51 @@ const adminServices = ({ addService, deleteService, changeService }) => {
             service={service}
             deleteService={(_id) => attemptDelete(_id)}
             changeService={(_id) => renderSavedPage(_id)}
+          />
+        ))}
+      <Typography variant="h5" className={classes.header}>Wax</Typography>
+      {!wax.length ? null
+        : wax.map((service) => (
+          <EditService
+            service={service}
+            deleteService={(_id) => attemptDelete(_id)}
+            changeService={(_id, params) => renderSavedPage(_id, params)}
+          />
+        ))}
+      <Typography variant="h5" className={classes.header}>Full Sets</Typography>
+      {!fullSets.length ? null
+        : fullSets.map((service) => (
+          <EditService
+            service={service}
+            deleteService={(_id) => attemptDelete(_id)}
+            changeService={(_id, params) => renderSavedPage(_id, params)}
+          />
+        ))}
+      <Typography variant="h5" className={classes.header}>Fills</Typography>
+      {!fills.length ? null
+        : fills.map((service) => (
+          <EditService
+            service={service}
+            deleteService={(_id) => attemptDelete(_id)}
+            changeService={(_id, params) => renderSavedPage(_id, params)}
+          />
+        ))}
+      <Typography variant="h5" className={classes.header}>Manicures</Typography>
+      {!manicures.length ? null
+        : manicures.map((service) => (
+          <EditService
+            service={service}
+            deleteService={(_id) => attemptDelete(_id)}
+            changeService={(_id, params) => renderSavedPage(_id, params)}
+          />
+        ))}
+      <Typography variant="h5" className={classes.header}>Pedicures</Typography>
+      {!pedicures.length ? null
+        : pedicures.map((service) => (
+          <EditService
+            service={service}
+            deleteService={(_id) => attemptDelete(_id)}
+            changeService={(_id, params) => renderSavedPage(_id, params)}
           />
         ))}
       <Alert

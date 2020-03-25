@@ -424,7 +424,7 @@
     },
     {
         "name": "Specialty Full Set",
-        "description" : "Nails are applied with a special set of acrylic nails",
+        "description" : "Nails are applied with a special set of acrylic nails.",
         "price": 50.0,
         "time": 60.0,
         "banner": "specialtyFullSet.jpg",
@@ -433,7 +433,7 @@
     },
     {
         "name": "Pink and White Full set with gel",
-        "description" : "Nails are applied with a special set of pink and white gel nails",
+        "description" : "Also known as french tips, nails are applied with a pink base and white tips.",
         "price": 60.0,
         "time": 60.0,
         "banner": "pinkWhite.jpg",
@@ -442,7 +442,7 @@
     },
     {
         "name": "Fill",
-        "description" : "Nails are reshaped and are applied with a new coat of color",
+        "description" : "Gaps in the polish are filled in, and nails are filed and shaped.",
         "price": 30.0,
         "time": 60.0,
         "banner": "fill.jpg",
@@ -451,7 +451,7 @@
     },
     {
         "name": "Fill with Gel Polish",
-        "description" : "Nails are filed and are applied with a new coat of color and gel polish",
+        "description" : "Gaps in the gel polish are filled in, and nails are filed and shaped.",
         "price": 40.0,
         "time": 60.0,
         "banner": "nailPolish.jpg",
@@ -460,7 +460,7 @@
     },
     {
         "name": "Gel Polish Change",
-        "description" : "Nails are applied with a new coat of gel polish",
+        "description" : "A new coat of gel polish is applied.",
         "price": 25.0,
         "time": 60.0,
         "banner": "gelPolishChange.jpg",
@@ -469,7 +469,7 @@
     },
     {
         "name": "Pink and White Fill",
-        "description" : "Nails are applied with a new coat of pink and white polish",
+        "description" : "Gaps in the french tips are filled in, and nails are filed and shaped.",
         "price": 55.0,
         "time": 60.0,
         "banner": "pinkAndWhiteFill.jpg",
@@ -478,7 +478,7 @@
     },
     {
         "name": "Spa Manicure",
-        "description" : "Nails are shaped beautifully with a hand massage to relieve tension",
+        "description" : "Nails are shaped and polished with a hand massage to relieve tension.",
         "price": 25.0,
         "time": 60.0,
         "banner": "spaManicure.jpg",
@@ -487,7 +487,7 @@
     },
     {
         "name": "Gel Manicure",
-        "description" : "Nails are shaped beautifully with gel polish to strengthen the nails",
+        "description" : "Nails are shaped and polished with gel with a hand massage to relieve tension.",
         "price": 35.0,
         "time": 60.0,
         "banner": "gelManicure.jpg",
@@ -496,7 +496,7 @@
     },
     {
         "name": "Basic Pedicure",
-        "description" : "Toe nails are cleaned and shaped beautifully",
+        "description" : "Toe nails are cleaned, shaped, and polished.",
         "price": 30.0,
         "time": 60.0,
         "banner": "basicPedicure.jpg",
@@ -505,7 +505,7 @@
     },
     {
         "name": "Spa Pedicure",
-        "description" : "Toe nails are shaped beautifully with a foot massage to relieve tension",
+        "description" : "Toe nails are cleaned, shaped, and polished with a foot massage to relieve tension.",
         "price": 40.0,
         "time": 60.0,
         "banner": "spaPedicure.jpg",
@@ -514,7 +514,7 @@
     },
     {
         "name": "Extreme Pedicure",
-        "description" : "A spa pedicure that includes a complete foot exfoliation for a smooth complexion",
+        "description" : "A spa pedicure that includes a complete foot exfoliation for a smooth complexion.",
         "price": 50.0,
         "time": 60.0,
         "banner": "extremePedicure.jpg",
@@ -523,7 +523,7 @@
     },
     {
         "name": "Toe Polish",
-        "description" : "Toe nails are applied with a color polish",
+        "description" : "Toe nails are applied with a color polish.",
         "price": 10.0,
         "time": 60.0,
         "banner": "toePolish.jpg",
