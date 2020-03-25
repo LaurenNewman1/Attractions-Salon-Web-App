@@ -10,7 +10,6 @@ import Home from './layouts/Home';
 import Book from './layouts/Book';
 import Services from './layouts/Services';
 import Contact from './layouts/Contact';
-import AdminServices from './layouts/AdminServices';
 import Login from './layouts/Login';
 import Profile from './layouts/Profile';
 import NavBar from './components/NavBar';
@@ -27,7 +26,6 @@ import { addService, deleteService, changeService } from './stores/ServiceAction
 const App = () => {
   const [userData, loggedIn, login, register, logout, changeProfile] = useLogin();
   const [fromBookPage, setFromBookPage] = useState(false);
-  // const [changeService, deleteService, addService] = useService();
   console.log(`Logged In: ${loggedIn}`);
   console.log(`Book Variable: ${fromBookPage} `);
 
@@ -58,7 +56,13 @@ const App = () => {
     >
       <ThemeProvider theme={theme}>
         <Router>
-          <NavBar loggedIn={loggedIn} logout={() => logout()} userData={userData} fromBookPage={fromBookPage} setFromBookPage={setFromBookPage} />
+          <NavBar
+            loggedIn={loggedIn}
+            logout={() => logout()}
+            userData={userData}
+            fromBookPage={fromBookPage}
+            setFromBookPage={setFromBookPage}
+          />
           <Switch>
             <Route exact path="/" component={() => <Home loggedIn={loggedIn} setFromBookPage={setFromBookPage} />} />
             <Route path="/book" component={() => <Book userData={userData} />} />
@@ -66,15 +70,33 @@ const App = () => {
             <Route path="/contact" component={Contact} />
             <Route path="/login" component={() => <Login login={login} fromBookPage={fromBookPage} />} />
             <Route path="/signUp" component={() => <SignUp register={register} />} />
-            <Route path="/profile" component={() => <Profile userData={userData} logout={() => logout()} changeProfile={changeProfile} />} />
+            <Route
+              path="/profile"
+              component={() => (
+                <Profile
+                  userData={userData}
+                  logout={() => logout()}
+                  changeProfile={changeProfile}
+                />
+              )}
+            />
             <Route path="/confirmation/:id" component={Confirmation} />
 
             {/* Admin */}
-            <Route path="/dashboard" component={Dashboard} />
-            <Route path="/requests" component={Requests} />
-            <Route path="/users" component={Users} />
-            <Route path="/adminReviews" component={AdminReviews} />
-            <Route path="/admin/services" component={() => <AdminServices addService={addService} deleteService={deleteService} changeService={changeService} />} />
+            <Route path="/admin/dashboard" component={Dashboard} />
+            <Route path="/admin/requests" component={Requests} />
+            <Route path="/admin/users" component={Users} />
+            <Route path="/admin/reviews" component={AdminReviews} />
+            <Route
+              path="/admin/services"
+              component={() => (
+                <AdminServices
+                  addService={addService}
+                  deleteService={deleteService}
+                  changeService={changeService}
+                />
+              )}
+            />
           </Switch>
         </Router>
       </ThemeProvider>

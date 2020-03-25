@@ -13,7 +13,9 @@ import PropTypes from 'prop-types';
 // } from 'react-router-dom';
 import useStyles from '../css/EditServiceStyles';
 
-const AddOnTable = ({ addon, updateAddonName, updateAddonPrice, index }) => {
+const AddOnTable = ({
+  addon, updateAddonName, updateAddonPrice, index,
+}) => {
   const classes = useStyles();
   const [price, setPrice] = React.useState(addon.price);
   const [name, setName] = React.useState(addon.name);
