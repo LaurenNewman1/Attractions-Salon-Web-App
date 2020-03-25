@@ -28,6 +28,12 @@ const useStyles = makeStyles(() => ({
     paddingTop: 20,
     textAlign: 'center',
   },
+  divider: {
+    display: 'flex',
+    flewFlow: 'row nowrap',
+    justifyContents: 'stretch',
+    alignItems: 'center',
+  },
   linkButton: {
     backgroundColor: 'transparent',
     border: 'none',
