@@ -67,13 +67,15 @@ export default () => {
 
   const deleteReview = async (_id) => {
     setLoading(true);
-    if (await requestDelete(_id)) {
+    const success = await requestDelete(_id);
+    if (success) {
       const allReviews = [...reviews];
       allReviews.splice(reviews.findIndex((r) => r._id === _id), 1);
       setReviews(allReviews);
     }
     updateNewReview(['reviewer', ''], ['rating', 5], ['review', '']);
     setLoading(false);
+    return success;
   };
 
   const addReview = async () => {
@@ -86,16 +88,19 @@ export default () => {
     }
     updateNewReview(['reviewer', ''], ['rating', 5], ['review', '']);
     setLoading(false);
+    return success;
   };
 
   const saveReview = async (index) => {
     setLoading(true);
-    await requestReviewUpdate(reviews[index]._id, {
+    // eslint-disable-next-line no-unused-vars
+    const [success, rev] = await requestReviewUpdate(reviews[index]._id, {
       reviewer: reviews[index].reviewer,
       rating: reviews[index].rating,
       review: reviews[index].review,
     });
     setLoading(false);
+    return success;
   };
 
   const updateReviews = (index, ...argus) => {

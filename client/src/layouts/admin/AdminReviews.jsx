@@ -13,6 +13,7 @@ import useStyles from '../../css/AdminReviewsStyles';
 import useReviews from '../../stores/ReviewsStore';
 import Loading from '../../components/Loading';
 import HeartRating from '../../components/HeartRating';
+import Alert, { TYPE_SUCCESS, TYPE_ERROR } from '../../components/Alert';
 
 const AdminReviews = () => {
   const classes = useStyles();
@@ -20,9 +21,45 @@ const AdminReviews = () => {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [dialog, setDialog] = useState(false);
   const [viewing, setViewing] = useState({});
+  const [alert, setAlert] = useState({
+    open: false,
+    type: '',
+    text: '',
+  });
 
   const [reviews, newReview, loading, updateReviews,
     updateNewReview, deleteReview, addReview, saveReview] = useReviews();
+
+  const onClickAdd = async () => {
+    setDialog(false);
+    const success = await addReview();
+    setAlert({
+      open: true,
+      type: success ? TYPE_SUCCESS : TYPE_ERROR,
+      text: success ? 'Review added successfully.' : 'Failed to add review.',
+    });
+  };
+
+  const onClickDelete = async (_id) => {
+    setConfirmDelete(false);
+    setOpen(false);
+    const success = await deleteReview(_id);
+    setAlert({
+      open: true,
+      type: success ? TYPE_SUCCESS : TYPE_ERROR,
+      text: success ? 'Review deleted successfully.' : 'Deletion failed.',
+    });
+  };
+
+  const onClickSave = async (index) => {
+    const success = await saveReview(index);
+    setAlert({
+      open: true,
+      type: success ? TYPE_SUCCESS : TYPE_ERROR,
+      text: success ? 'Review saved successfully.' : 'Save failed.',
+    });
+    setOpen(false);
+  };
 
   const cancelChanges = (index) => {
     updateReviews(index, ['reviewer', viewing.reviewer], ['rating', viewing.rating], ['review', viewing.review]);
@@ -60,6 +97,7 @@ const AdminReviews = () => {
 
   return (
     <Page maxWidth="md">
+      {loading ? <Loading disableShrink /> : null}
       <Typography
         className={classes.header}
         align="center"
@@ -73,7 +111,7 @@ const AdminReviews = () => {
           <Add />
         </Fab>
       </Typography>
-      {loading ? <Loading />
+      {!reviews || !reviews.length ? null
         : (reviews.map((review, index) => (
           <ExpansionPanel
             key={review._id}
@@ -104,7 +142,7 @@ const AdminReviews = () => {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={() => { saveReview(index); setOpen(false); }}
+                onClick={() => onClickSave(index)}
               >
                 Save
               </Button>
@@ -139,10 +177,7 @@ const AdminReviews = () => {
           <Button
             variant="contained"
             color="primary"
-            onClick={() => {
-              setDialog(false);
-              addReview();
-            }}
+            onClick={() => onClickAdd()}
           >
             Save
           </Button>
@@ -151,18 +186,20 @@ const AdminReviews = () => {
       {confirmDelete
         ? (
           <Confirm
-            open={setConfirmDelete !== false}
+            open={confirmDelete !== false}
             title={`Delete ${reviews[confirmDelete].reviewer}'s review?`}
             content="Clicking delete will permanently remove this review."
             confirmText="Delete"
-            onConfirm={() => {
-              deleteReview(reviews[confirmDelete]._id);
-              setConfirmDelete(false);
-              setOpen(false);
-            }}
+            onConfirm={() => onClickDelete(reviews[confirmDelete]._id)}
             onCancel={() => setConfirmDelete(false)}
           />
         ) : null}
+      <Alert
+        open={alert.open}
+        type={alert.type}
+        text={alert.text}
+        onClose={() => setAlert({ open: false, type: '', text: '' })}
+      />
     </Page>
   );
 };
