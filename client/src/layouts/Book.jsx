@@ -60,6 +60,7 @@ const Book = ({ userData }) => {
     });
     setCreditCard(newFields);
   };
+  // The Calendar Page(#2) needs to go to the newPayment or confirmPayment depending on whether or not the credit card was inputted
 
   const validateNext = () => {
     switch (page) {
@@ -84,6 +85,11 @@ const Book = ({ userData }) => {
         setPage((prev) => prev + 1);
         break;
       case 3:
+        // Temporary
+        setPage((prev) => prev + 1);
+        break;
+        // case 4 is Temporary
+      case 4:
         break;
       default:
         break;
@@ -119,6 +125,12 @@ const Book = ({ userData }) => {
             booking={booking}
           />
         );
+      case 4:
+        return (
+          <ReviewBooking
+            booking={booking}
+          />
+        );
       default:
         return null;
     }
@@ -134,12 +146,12 @@ const Book = ({ userData }) => {
           </div>
           <div className={classes.footer}>
             <MobileStepper
-              steps={4}
+              steps={5}
               variant="dots"
               className={classes.stepper}
               activeStep={page}
               nextButton={(
-                <Button size="small" onClick={() => validateNext()} disabled={page === 3}>
+                <Button size="small" onClick={() => validateNext()} disabled={page === 4}>
                   Next
                   <KeyboardArrowRight />
                 </Button>
