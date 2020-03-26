@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  TextField, Button, Grid, Typography, Divider, Paper, Link,
+  Button, Grid, Typography, Divider, Paper, Link,
 } from '@material-ui/core';
+import { Link as RouterLink } from 'react-router-dom';
 import useStyles from '../css/ConfirmPayment';
 import creditCardCircles from '../images/masterCardCircles.png';
 
@@ -10,7 +11,7 @@ const ConfirmPayment = ({ booking }) => {
   const classes = useStyles();
   const [payLater, setPayLater] = useState(false);
 
-  // The link needs to be changed to something that works, rn it does not work.
+  // The link needs to be changed to something that works, rn it does not work. it needs to go to the new Credit Card Page
   // Maybe do something like book and change the page based off of some variable(state) being true
 
   return (
@@ -19,16 +20,15 @@ const ConfirmPayment = ({ booking }) => {
       <div>
         <Grid container>
           <Grid item xs={1} />
-          <Grid item xs={10}>
+          <Grid item xs={10} className={classes.page}>
             <Paper className={classes.paper}>
               <img src={creditCardCircles} alt="Circles" className={classes.circles} />
-              <br />
-              <br />
               <div className={classes.login}>
                 <Typography variant="h4">
-                  ....    ....    ....    1234
+                  ....&nbsp;&nbsp;&nbsp;&nbsp;....&nbsp;&nbsp;&nbsp;&nbsp;....&nbsp;&nbsp;&nbsp;&nbsp;1234
                 </Typography>
               </div>
+              <div className={classes.middleSpace} />
               <div className={classes.spacing}>
                 <Typography>
                   Name
@@ -52,7 +52,7 @@ const ConfirmPayment = ({ booking }) => {
           <Grid item xs={1} />
         </Grid>
         <div className={classes.link}>
-          <Link to="/signUp">Change Card</Link>
+          <Link to="/book" component={RouterLink} className={classes.actualLink}>Change Card</Link>
         </div>
         <br />
         <div className={classes.divider}>
