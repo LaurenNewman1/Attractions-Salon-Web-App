@@ -20,12 +20,19 @@ import useLogin from './stores/LoginStores';
 import Requests from './layouts/admin/Requests';
 import Dashboard from './layouts/admin/Dashboard';
 import Users from './layouts/admin/Users';
-import AdminServices from './layouts/admin/AdminServices';
 import AdminReviews from './layouts/admin/AdminReviews';
 import { addService, deleteService, changeService } from './stores/ServiceActionsStore';
 
 const App = () => {
-  const [userData, loggedIn, login, register, logout, changeProfile] = useLogin();
+  const [
+    userData,
+    loggedIn,
+    login,
+    register,
+    logout,
+    changeProfile,
+    requestResetPassword
+  ] = useLogin();
   const [fromBookPage, setFromBookPage] = useState(false);
   // const [changeService, deleteService, addService] = useService();
   console.log(`Logged In: ${loggedIn}`);
@@ -64,7 +71,7 @@ const App = () => {
             <Route path="/book" component={() => <Book userData={userData} />} />
             <Route path="/services" component={Services} />
             <Route path="/contact" component={Contact} />
-            <Route path="/login" component={() => <Login login={login} fromBookPage={fromBookPage} />} />
+            <Route path="/login" component={() => <Login login={login} fromBookPage={fromBookPage} resetPassword={requestResetPassword} />} />
             <Route path="/signUp" component={() => <SignUp register={register} />} />
             <Route path="/profile" component={() => <Profile userData={userData} logout={() => logout()} changeProfile={changeProfile} />} />
             <Route path="/confirmation/:id" component={Confirmation} />

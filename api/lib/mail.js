@@ -1,6 +1,8 @@
 import sgMail from '@sendgrid/mail';
+import dotenv from 'dotenv';
 import GetLogger from '../config/logger';
 
+dotenv.config();
 const logger = GetLogger('SendGrid Mail');
 
 if (process.env.SENDGRID_API_KEY) {
@@ -31,11 +33,12 @@ export const SendForgetPassword = async (email, token, onlyProd = true) => {
   try {
     await sgMail.send({
       ...textMsg,
+      template_id: 'd-2eacea9ec7b94dd59daa1d4ef1acc42c',
       personalizations: [{
         dynamic_template_data: {
           ...unsubscribeData,
-          text: token,
-          "Someone is trying to reset your password,",
+          code: token,
+          subject: 'Someone is trying to reset your password',
         },
         email,
       }],

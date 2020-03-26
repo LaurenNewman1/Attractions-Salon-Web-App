@@ -10,11 +10,11 @@ const logger = GetLogger('User Controller');
 
 export const genForgetPassword = async (req, res) => {
   const { email } = req.body;
-  const user = await User.find({ email }).exec();
+  const user = await User.findOne({ email }).exec();
   if (user) {
     user.forget_password_id = genForgetPasswordHash();
     await user.save();
-    await SendForgetPassword(user.email, user.forget_password_id, false);
+    await SendForgetPassword(user.email, user.forget_password_id);
   }
 
   res.sendStatus(200);
