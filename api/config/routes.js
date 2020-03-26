@@ -15,6 +15,8 @@ const router = (app) => {
   app.delete('/api/users/:someId', users.remove);
   app.put('/api/users/:someId', users.update);
   app.post('/api/users', users.create);
+  app.post('/api/login/reset', users.genForgetPassword);
+  app.post('/api/users/password/:token', users.updatePassword);
 
   // Service Routes
   app.post('/api/services', services.create);

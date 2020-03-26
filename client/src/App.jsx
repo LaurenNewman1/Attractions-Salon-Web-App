@@ -12,6 +12,7 @@ import Services from './layouts/Services';
 import Contact from './layouts/Contact';
 import Login from './layouts/Login';
 import Profile from './layouts/Profile';
+import ResetPassword from './layouts/ResetPassword';
 import NavBar from './components/NavBar';
 import SignUp from './layouts/SignUp';
 import Confirmation from './layouts/Confirmation';
@@ -19,12 +20,20 @@ import useLogin from './stores/LoginStores';
 import Requests from './layouts/admin/Requests';
 import Dashboard from './layouts/admin/Dashboard';
 import Users from './layouts/admin/Users';
-import AdminServices from './layouts/admin/AdminServices';
 import AdminReviews from './layouts/admin/AdminReviews';
 import { addService, deleteService, changeService } from './stores/ServiceActionsStore';
 
 const App = () => {
-  const [userData, loggedIn, login, register, logout, changeProfile] = useLogin();
+  const [
+    userData,
+    loggedIn,
+    login,
+    register,
+    logout,
+    changeProfile,
+    requestResetPassword,
+    requestPasswordUpdate,
+  ] = useLogin();
   const [fromBookPage, setFromBookPage] = useState(false);
   console.log(`Logged In: ${loggedIn}`);
   console.log(`Book Variable: ${fromBookPage} `);
@@ -68,7 +77,8 @@ const App = () => {
             <Route path="/book" component={() => <Book userData={userData} />} />
             <Route path="/services" component={Services} />
             <Route path="/contact" component={Contact} />
-            <Route path="/login" component={() => <Login login={login} fromBookPage={fromBookPage} />} />
+            <Route path="/login" component={() => <Login login={login} fromBookPage={fromBookPage} resetPassword={requestResetPassword} />} />
+            <Route path="/resetpassword/:token" component={() => <ResetPassword attemptReset={requestPasswordUpdate} />} />
             <Route path="/signUp" component={() => <SignUp register={register} />} />
             <Route
               path="/profile"
