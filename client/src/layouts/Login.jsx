@@ -1,8 +1,8 @@
 import {
-  Grid, TextField, InputAdornment, Button, Typography,
+  Grid, TextField, InputAdornment, Button, Typography, Divider,
 } from '@material-ui/core';
 import React, { useState } from 'react';
-import { Email, Lock, Divider } from '@material-ui/icons';
+import { Email, Lock } from '@material-ui/icons';
 import { useHistory, Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Page from '../components/Page';

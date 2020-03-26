@@ -1,32 +1,41 @@
 import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({
-  page: {
-    height: 'calc(100vh - 64px)',
-    display: 'flex',
-    alignItems: 'center',
-  },
-  modelImg: {
-    maxHeight: '100%',
-    objectFit: 'cover',
-    position: 'relative',
-    bottom: 0,
-  },
-  form: {
-    padding: '5%',
-  },
-  imgContainer: {
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'flex-end',
-  },
+
   login: {
     textAlign: 'center',
   },
   buttons: {
     paddingTop: 20,
     textAlign: 'center',
+  },
+  spacing: {
+    display: 'flex',
+  },
+  middleSpace: {
+    flex: '1 0 auto',
+  },
+  information: {
+    marginLeft: 60,
+    marginRight: 60,
+  },
+  card: {
+    borderWidth: 2,
+    borderStyle: 'solid',
+    borderColor: 'transparent',
+  },
+  media: {
+    height: 90,
+  },
+  cardContent: {
+    margin: 5,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  grid: {
+    marginTop: 10,
+    marginBottom: 10,
   },
 }));
 

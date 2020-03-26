@@ -30,11 +30,11 @@ const ConfirmPayment = ({ booking }) => {
               </div>
               <div className={classes.middleSpace} />
               <div className={classes.spacing}>
-                <Typography>
+                <Typography variant="h6">
                   Name
                 </Typography>
                 <div className={classes.middleSpace} />
-                <Typography>
+                <Typography variant="h6">
                   Exp
                 </Typography>
               </div>
@@ -52,8 +52,16 @@ const ConfirmPayment = ({ booking }) => {
           <Grid item xs={1} />
         </Grid>
         <div className={classes.link}>
-          <Link to="/book" component={RouterLink} className={classes.actualLink}>Change Card</Link>
+          <Button
+            color="background"
+            style={{ textDecoration: 'underline' }}
+            target="_blank"
+            // You need to actually link this - look at contact
+          >
+            Change Card
+          </Button>
         </div>
+        <br />
         <br />
         <div className={classes.divider}>
           <Divider variant="middle" style={{ flexGrow: 1 }} />
@@ -67,6 +75,7 @@ const ConfirmPayment = ({ booking }) => {
             variant="contained"
             color="primary"
             onClick={() => setPayLater(true)}
+            // You need to figure this one out too
           >
             Pay In Store
           </Button>
