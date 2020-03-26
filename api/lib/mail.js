@@ -40,7 +40,7 @@ export const SendForgetPassword = async (email, token, onlyProd = true) => {
           code: token,
           subject: 'Someone is trying to reset your password',
         },
-        email,
+        to: email,
       }],
     });
     return true;

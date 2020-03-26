@@ -51,6 +51,22 @@ const requestResetPassword = async (email) => {
   return res.status === 200;
 };
 
+const requestPasswordUpdate = async (token, password) => {
+  const res = await fetch(`/api/users/password/${token}`, {
+    method: 'POST',
+    cache: 'no-cache',
+    credentials: 'same-origin', // include, *same-origin, omit
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    redirect: 'follow', // manual, *follow, error
+    referrerPolicy: 'no-referrer', // no-referrer, *client
+    body: JSON.stringify({ password }),
+  });
+
+  return res.status === 200;
+};
+
 
 const requestLogout = async () => {
   const res = await fetch('/api/logout', {
@@ -139,5 +155,5 @@ export default () => {
     });
   }, [loggedIn]);
 
-  return [userData, loggedIn, login, register, logout, changeProfile, requestResetPassword];
+  return [userData, loggedIn, login, register, logout, changeProfile, requestResetPassword, requestPasswordUpdate];
 };

@@ -22,12 +22,13 @@ export const genForgetPassword = async (req, res) => {
 
 export const updatePassword = async (req, res) => {
   const { password } = req.body;
-  const { id } = req.params;
+  const { token } = req.params;
 
-  const user = await User.find({ forget_password_id: id });
+  const user = await User.findOne({ forget_password_id: token });
   if (user) {
     const hash = await argon2.hash(password);
     user.password = hash;
+    user.forget_password_id = undefined;
     await user.save();
     res.sendStatus(200);
   } else {

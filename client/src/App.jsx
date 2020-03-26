@@ -13,6 +13,7 @@ import Contact from './layouts/Contact';
 import AdminServices from './layouts/AdminServices';
 import Login from './layouts/Login';
 import Profile from './layouts/Profile';
+import ResetPassword from './layouts/ResetPassword';
 import NavBar from './components/NavBar';
 import SignUp from './layouts/SignUp';
 import Confirmation from './layouts/Confirmation';
@@ -31,7 +32,8 @@ const App = () => {
     register,
     logout,
     changeProfile,
-    requestResetPassword
+    requestResetPassword,
+    requestPasswordUpdate,
   ] = useLogin();
   const [fromBookPage, setFromBookPage] = useState(false);
   // const [changeService, deleteService, addService] = useService();
@@ -72,6 +74,7 @@ const App = () => {
             <Route path="/services" component={Services} />
             <Route path="/contact" component={Contact} />
             <Route path="/login" component={() => <Login login={login} fromBookPage={fromBookPage} resetPassword={requestResetPassword} />} />
+            <Route path="/resetpassword/:token" component={() => <ResetPassword attemptReset={requestPasswordUpdate} />} />
             <Route path="/signUp" component={() => <SignUp register={register} />} />
             <Route path="/profile" component={() => <Profile userData={userData} logout={() => logout()} changeProfile={changeProfile} />} />
             <Route path="/confirmation/:id" component={Confirmation} />
