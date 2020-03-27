@@ -40,8 +40,9 @@ const Requests = () => {
   };
 
   console.log(addonCreate);
+  console.log(requests);
 
-  const requestCards = requests.map((request, index) => (
+  const requestCards = !loading ? requests.map((request, index) => (
     <Card>
       <CardContent>
         <Typography variant="h5" component="h2">{request.name}</Typography>
@@ -165,7 +166,7 @@ const Requests = () => {
         <Button style={{ marginLeft: 'auto' }} variant="contained" color="primary">Confirm</Button>
       </CardActions>
     </Card>
-  ));
+  )) : null;
 
   return (
     <Page>
