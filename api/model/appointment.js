@@ -31,7 +31,16 @@ const Appointment = new Schema({
     },
    notes: {
         type: String
-    }
+    },
+    addons: [
+        {
+            name: {
+                type: String,
+                required: true,
+            },
+            price: Number,
+        },
+    ],
 });
 
 export default mongoose.model('Appointment', Appointment);
