@@ -37,13 +37,6 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 5,
     backgroundColor: theme.palette.secondary.main,
   },
-  loading: {
-    position: 'absolute',
-    top: '50%',
-    bottom: '50%',
-    left: '50%',
-    right: '50%',
-  },
   header: {
     marginTop: 40,
   },

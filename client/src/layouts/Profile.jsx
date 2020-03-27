@@ -1,53 +1,155 @@
 /* eslint-disable camelcase */
-import React from 'react';
-import { Grid } from '@material-ui/core';
+import React, { useState } from 'react';
+import {
+  Grid, Button, TextField, IconButton, Icon,
+} from '@material-ui/core';
+import { AccountCircle, Edit as EditIcon } from '@material-ui/icons';
 import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
-import ProfileComponent from '../components/Profile';
+import { useHistory } from 'react-router-dom';
 import Page from '../components/Page';
+import useStyles from '../css/ProfileStyles';
 
-const style = {
-  Paper: { padding: 20, marginTop: 10, marginBottom: 10 },
-  Paper2: { padding: 10, marginTop: 5, marginBottom: 5 },
-};
-
-const Profile = ({ userData }) => {
+// eslint-disable-next-line object-curly-newline
+const Profile = ({ userData, logout, changeProfile }) => {
   const { name, email, phone_number } = userData;
+  const [textBoxValues, setTextBoxValues] = React.useState({});
+  const history = useHistory();
+  const classes = useStyles();
+  const [editMode, setEditMode] = useState(false);
+
+  React.useEffect(() => {
+    setTextBoxValues(userData);
+  }, [userData]);
+
+
+  const updateTextBoxValue = (key, val) => {
+    setTextBoxValues({
+      ...textBoxValues,
+      [key]: val,
+    });
+  };
+
+  const renderSavedPage = () => {
+    setEditMode(false);
+    changeProfile(userData._id, {
+      email: textBoxValues.email,
+      phone_number: textBoxValues.phone_number,
+      name: textBoxValues.name,
+    });
+    // This is where you will be updating all the stuff on the backend
+  };
+
+  const renderEditablePage = () => {
+    if (editMode) {
+      return (
+        <>
+          <Grid item xs={12} md={6} className={classes.buttons}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => setEditMode(false)}
+            >
+              Back
+            </Button>
+          </Grid>
+          <Grid item xs={12} md={6} className={classes.buttons}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => renderSavedPage()}
+            >
+              Save
+            </Button>
+          </Grid>
+        </>
+      );
+    }
+    return null;
+    // return (
+    //   <Button
+    //     variant="contained"
+    //     color="primary"
+    //     onClick={() => setEditMode(true)}
+    //   >
+    //     Edit
+    //   </Button>
+    // );
+  };
+
+  const renderTextFields = () => {
+    if (!editMode) {
+      return (
+        <div>
+          <Typography variant="h6" gutterBottom>
+            Email:
+            {' '}
+            {email}
+          </Typography>
+          <Typography variant="h6" gutterBottom>
+            Phone:
+            {' '}
+            {phone_number}
+          </Typography>
+          <Typography variant="h6" gutterBottom>
+            Card: .... .... .... 1234
+          </Typography>
+        </div>
+      );
+    }
+    return (
+      <div>
+        <TextField style={{ paddingBottom: 10 }} defaultValue={name} label="Name" value={textBoxValues.name} onChange={(e) => updateTextBoxValue('name', e.target.value)} />
+        <br />
+        <TextField style={{ paddingBottom: 10 }} defaultValue={email} label="Email" value={textBoxValues.email} onChange={(e) => updateTextBoxValue('email', e.target.value)} />
+        <br />
+        <TextField style={{ paddingBottom: 10 }} defaultValue={phone_number} label="Phone Number" value={textBoxValues.phone_number} onChange={(e) => updateTextBoxValue('phone_number', e.target.value)} />
+        <br />
+        <TextField defaultValue=".... .... .... 1234" label="Credit Card" />
+      </div>
+    );
+  };
+
   return (
     <Page>
-      <div>
-        <h1 style={{ textAlign: 'center' }}>
-          Profile
-        </h1>
+      <div style={{
+        display: 'flex',
+        flexFlow: 'row nowrap',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+      >
+        <h1 className={classes.header}>Profile</h1>
+        {!editMode && (
+        <IconButton onClick={() => setEditMode(true)}>
+          <Icon>
+            <EditIcon />
+          </Icon>
+        </IconButton>
+        )}
       </div>
-      <div style={style.Paper2} elevation={5}>
-        <Grid
-          container
-          style={{
-            paddingLeft: 200, paddingRight: 200, paddingTop: 10, alignItems: 'center',
-          }}
-        >
-          <Grid item xs={12} md={6}>
-            <ProfileComponent name={name} />
+      <div>
+        <Grid container spacing={8} className={classes.container}>
+          <Grid item xs={12} md={6} className={classes.leftContainer}>
+            <div>
+              <AccountCircle style={{ fontSize: 120 }} />
+              <Typography variant="h6" gutterBottom style={{ textAlign: 'center' }}>{name}</Typography>
+            </div>
           </Grid>
           <Grid item xs={12} md={6}>
-            <div
-              className="Person Details"
-              style={{ paddingLeft: 60 }}
+            {renderTextFields()}
+          </Grid>
+          <Grid item xs={12} className={classes.logout}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => { logout(); history.push('/'); }}
             >
-              <Typography variant="h6" gutterBottom>
-                Email:
-                {email}
-              </Typography>
-              <Typography variant="h6" gutterBottom>
-                Phone:
-                {' '}
-                {phone_number}
-              </Typography>
-              <Typography variant="h6" gutterBottom>
-                Card: .... .... .... 1234
-              </Typography>
-            </div>
+              Log Out
+            </Button>
+          </Grid>
+          <Grid item xs={12} md={6} className={classes.logout}>
+            {renderEditablePage()}
           </Grid>
         </Grid>
       </div>
@@ -57,10 +159,13 @@ const Profile = ({ userData }) => {
 
 Profile.propTypes = {
   userData: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
     email: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     phone_number: PropTypes.number.isRequired,
   }).isRequired,
+  logout: PropTypes.func.isRequired,
+  changeProfile: PropTypes.func.isRequired,
 };
 
 export default Profile;

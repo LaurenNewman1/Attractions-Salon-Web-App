@@ -3,13 +3,23 @@ import {
   Grid, Typography, Button,
 } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import Page from '../components/Page';
 import useStyles from '../css/HomeStyles';
 import coverModel from '../images/coverModel.png';
 
-const Home = () => {
+const Home = ({ loggedIn, setFromBookPage }) => {
   const classes = useStyles();
   const history = useHistory();
+
+  const handleBook = () => {
+    if (loggedIn) {
+      history.push('/book');
+    } else {
+      setFromBookPage(true);
+      history.push('/login');
+    }
+  };
 
   return (
     <Page maxWidth={false}>
@@ -29,7 +39,7 @@ const Home = () => {
                   </Typography>
                 </Grid>
                 <Grid item xs={12} align="center" className={classes.bookBtn}>
-                  <Button variant="contained" color="primary" onClick={() => history.push('/book')}>
+                  <Button variant="contained" color="primary" onClick={() => handleBook()}>
                     Request Booking
                   </Button>
                 </Grid>
@@ -43,6 +53,11 @@ const Home = () => {
       </Grid>
     </Page>
   );
+};
+
+Home.propTypes = {
+  loggedIn: PropTypes.bool.isRequired,
+  setFromBookPage: PropTypes.func.isRequired,
 };
 
 

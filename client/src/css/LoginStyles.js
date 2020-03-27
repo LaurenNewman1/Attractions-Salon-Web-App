@@ -25,8 +25,23 @@ const useStyles = makeStyles(() => ({
     textAlign: 'center',
   },
   buttons: {
-    paddingTop: 30,
+    paddingTop: 20,
     textAlign: 'center',
+  },
+  linkButton: {
+    backgroundColor: 'transparent',
+    border: 'none',
+    cursor: 'pointer',
+    textDecoration: 'underline',
+    margin: 0,
+    color: 'purple',
+    padding: 0,
+    '&:hover': {
+      textDecoration: 'none',
+    },
+    '&:focus': {
+      textDecoration: 'none',
+    },
   },
 }));
 
