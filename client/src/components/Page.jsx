@@ -11,6 +11,7 @@ const Page = ({ maxWidth, children }) => {
   return (
     <div className={classes.background}>
       <Container
+        style={{ minHeight: 'calc(100vh - 64px)' }}
         maxWidth={maxWidth}
         disableGutters
         className={!maxWidth ? undefined : classes.topPagePadding}
