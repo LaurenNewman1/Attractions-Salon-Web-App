@@ -5,6 +5,10 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     alignItems: 'center',
   },
+  chips: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
 }));
 
 export default useStyles;

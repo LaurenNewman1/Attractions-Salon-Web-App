@@ -1,56 +1,51 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
-  Button,
-  Typography,
-  Card,
-  CardActions,
-  CardContent,
-  IconButton,
-  InputAdornment,
-  TextField,
-  Table,
-  TableBody,
-  TableCell,
-  InputLabel,
-  Select,
-  MenuItem,
-  TableHead,
-  TableRow,
-  Grid,
+  Button, Typography, Card, CardActions, CardContent, IconButton,
+  InputAdornment, TextField, Chip, InputLabel, CardHeader,
+  Select, MenuItem, Input, FormControl, Grid,
 } from '@material-ui/core';
 import {
-  Delete, Check, Phone, Email,
+  Phone, Email,
 } from '@material-ui/icons';
 import Event from '@material-ui/icons/Event';
 import { MuiPickersUtilsProvider, DateTimePicker } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 import Page from '../../components/Page';
 import Loading from '../../components/Loading';
-
+import useStyles from '../../css/RequestsStyles';
 import useRequests from '../../stores/RequestStores';
 
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
 const Requests = () => {
-  const [requests, usedServices, loading, addAddon, deleteAddon] = useRequests();
-  const [addonCreate, setAddonCreate] = useState([]);
+  const [requests, services, specialists, loading, updateRequests] = useRequests();
+  const classes = useStyles();
 
-  const setAddon = (requestIndex, addonIndex) => {
-    const addonClone = [...addonCreate];
-    addonClone[requestIndex] = addonIndex;
-    setAddonCreate(addonClone);
-  };
+  // const setAddon = (requestIndex, addonIndex) => {
+  //   const addonClone = [...addonCreate];
+  //   addonClone[requestIndex] = addonIndex;
+  //   setAddonCreate(addonClone);
+  // };
 
-  console.log(addonCreate);
-  console.log(requests);
-
-  const requestCards = !loading ? requests.map((request, index) => (
+  const requestCards = requests.length ? requests.map((request, index) => (
     <Card>
+      <CardHeader
+        title={request.name}
+        subheader={`Requested ${request.dateOrdered.fromNow()}`}
+        style={{ paddingBottom: 0 }}
+      />
       <CardContent>
-        <Typography variant="h5" component="h2">{request.name}</Typography>
         <Grid container spacing={6}>
           <Grid item xs={12} sm={6}>
-            <Typography color="textSecondary" gutterBottom>
-              Requested {request.dateOrdered.fromNow()}
-            </Typography>
             <Typography color="textSecondary" gutterBottom style={{ display: 'flex', alignItems: 'center ', marginTop: 10 }}>
               <Phone color="primary" /> {request.phone_number}
             </Typography>
@@ -61,8 +56,8 @@ const Requests = () => {
               style={{ width: '100%', marginTop: 10 }}
               disablePast
               label="Appointment Date and Time"
-              value={request.appointmentDatetime}
-              onChange={() => {}}
+              value={Date.parse(request.appointmentDatetime)}
+              onChange={(date) => updateRequests(index, ['appointmentDatetime', date.toISOString()])}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -73,91 +68,83 @@ const Requests = () => {
                 ),
               }}
             />
+            <FormControl style={{ width: '100%', marginTop: 10 }}>
+              <InputLabel>Specialist</InputLabel>
+              <Select
+                value={request.specialist}
+                onChange={(e) => updateRequests(index, ['specialist', e.target.value])}
+              >
+                {specialists.map((specialist) => {
+                  if (specialist.services.find((s) => s === request.service)) {
+                    return (
+                      <MenuItem key={specialist._id} value={specialist._id}>
+                        {specialist.name}
+                      </MenuItem>
+                    );
+                  }
+                  return null;
+                })}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <FormControl style={{ width: '100%' }}>
+              <InputLabel>Service</InputLabel>
+              <Select
+                value={request.service}
+                onChange={(e) => updateRequests(index, ['service', e.target.value])}
+              >
+                {services.map((serv) => (
+                  <MenuItem key={serv._id} value={serv._id}>
+                    {serv.name}
+                    {' '}
+                    ($
+                    {serv.price}
+                    )
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl style={{ width: '100%', marginTop: 10 }}>
+              {console.log(request)}
+              <InputLabel>Add-ons</InputLabel>
+              <Select
+                multiple
+                value={request.addons}
+                onChange={(e) => updateRequests(index, ['addons', e.target.value])}
+                input={<Input />}
+                renderValue={(selected) => (
+                  <div className={classes.chips}>
+                    {selected.map((value) => (
+                      <Chip
+                        key={value.name}
+                        label={value.name}
+                        className={classes.chip}
+                        color="secondary"
+                      />
+                    ))}
+                  </div>
+                )}
+                MenuProps={MenuProps}
+              >
+                {services.find((s) => s._id === request.service).addons.map((add) => (
+                  <MenuItem key={add.name} value={add}>
+                    {add.name}
+                    {' '}
+                    ($
+                    {add.price}
+                    )
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
             <TextField
               style={{ width: '100%', marginTop: 10 }}
               label="Notes"
               multiline
               value={request.notes}
+              onChange={(e) => updateRequests(index, ['notes', e.target.value])}
             />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              style={{ width: '100%', marginTop: 10 }}
-              label="Main Service"
-              value={usedServices[request.service].name}
-            />
-            <Typography variant="subtitle2" component="h5" style={{ marginTop: '1em' }}>
-              Addons
-            </Typography>
-            <Table stickyHeader size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell>Name</TableCell>
-                  <TableCell>Price</TableCell>
-                  <TableCell> </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {request.addons.map((addonIndex) => {
-                  console.log(usedServices);
-                  const addon = usedServices[request.service].addons[addonIndex];
-                  return (
-                    <TableRow key={addonIndex}>
-                      <TableCell>{addon.name}</TableCell>
-                      <TableCell>${addon.price}</TableCell>
-                      <TableCell>
-                        <IconButton
-                          size="small"
-                          aria-label="delete"
-                          onClick={() => deleteAddon(index, addonIndex)}
-                        >
-                          <Delete />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-                <TableRow>
-                  <TableCell>
-                    <InputLabel shrink>
-                      Add an Addon
-                    </InputLabel>
-                    <Select
-                      autoWidth
-                      displayEmpty
-                      style={{ width: '100%' }}
-                      value={addonCreate[index]}
-                      onChange={(e) => setAddon(index, e.target.value)}
-                    >
-                      {request.addons.map((addonIndex) => {
-                        const addon = usedServices[request.service].addons[addonIndex];
-                        return <MenuItem value={addonIndex}>{addon.name}</MenuItem>;
-                      })}
-                    </Select>
-                  </TableCell>
-                  <TableCell>
-                    {
-                  addonCreate[index] && addonCreate[index] !== -1
-                    ? usedServices[request.service].addons[addonCreate[index]].price
-                    : null
-                }
-                  </TableCell>
-                  <TableCell>
-                    <IconButton
-                      size="small"
-                      aria-label="save"
-                      color="primary"
-                      onClick={() => {
-                        addAddon(index, addonCreate[index]);
-                        setAddon(index, -1);
-                      }}
-                    >
-                      <Check />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
           </Grid>
         </Grid>
       </CardContent>
@@ -169,7 +156,7 @@ const Requests = () => {
   )) : null;
 
   return (
-    <Page>
+    <Page width="md">
       <MuiPickersUtilsProvider utils={MomentUtils}>
         <Typography
           align="center"
