@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
   Button,
-  CircularProgress,
   Typography,
   Card,
   CardActions,
@@ -26,6 +25,7 @@ import Event from '@material-ui/icons/Event';
 import { MuiPickersUtilsProvider, DateTimePicker } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 import Page from '../../components/Page';
+import Loading from '../../components/Loading';
 
 import useRequests from '../../stores/RequestStores';
 
@@ -38,10 +38,6 @@ const Requests = () => {
     addonClone[requestIndex] = addonIndex;
     setAddonCreate(addonClone);
   };
-
-  console.log(loading);
-
-  const loadingSpinner = <CircularProgress />;
 
   console.log(addonCreate);
 
@@ -182,7 +178,7 @@ const Requests = () => {
         >
           Requested Bookings
         </Typography>
-        {loading ? loadingSpinner : requestCards}
+        {loading ? <Loading /> : requestCards}
       </MuiPickersUtilsProvider>
     </Page>
   );
