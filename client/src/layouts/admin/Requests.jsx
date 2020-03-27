@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 import {
   Button, Typography, Card, CardActions, CardContent, IconButton,
   InputAdornment, TextField, Chip, InputLabel, CardHeader,
@@ -37,10 +38,10 @@ const Requests = () => {
   // };
 
   const requestCards = requests.length ? requests.map((request, index) => (
-    <Card>
+    <Card className={classes.card}>
       <CardHeader
         title={request.name}
-        subheader={`Requested ${request.dateOrdered.fromNow()}`}
+        subheader={`Requested ${moment(request.timeOrdered).fromNow()}`}
         style={{ paddingBottom: 0 }}
       />
       <CardContent>
@@ -56,8 +57,8 @@ const Requests = () => {
               style={{ width: '100%', marginTop: 10 }}
               disablePast
               label="Appointment Date and Time"
-              value={Date.parse(request.appointmentDatetime)}
-              onChange={(date) => updateRequests(index, ['appointmentDatetime', date.toISOString()])}
+              value={Date.parse(request.time)}
+              onChange={(date) => updateRequests(index, ['time', date.toISOString()])}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -106,7 +107,6 @@ const Requests = () => {
               </Select>
             </FormControl>
             <FormControl style={{ width: '100%', marginTop: 10 }}>
-              {console.log(request)}
               <InputLabel>Add-ons</InputLabel>
               <Select
                 multiple
@@ -115,9 +115,9 @@ const Requests = () => {
                 input={<Input />}
                 renderValue={(selected) => (
                   <div className={classes.chips}>
-                    {selected.map((value) => (
+                    {selected.map((value) => ( // Problems: cannot remove addons from customer
                       <Chip
-                        key={value.name}
+                        key={value._id}
                         label={value.name}
                         className={classes.chip}
                         color="secondary"
@@ -127,15 +127,16 @@ const Requests = () => {
                 )}
                 MenuProps={MenuProps}
               >
-                {services.find((s) => s._id === request.service).addons.map((add) => (
-                  <MenuItem key={add.name} value={add}>
-                    {add.name}
-                    {' '}
-                    ($
-                    {add.price}
-                    )
-                  </MenuItem>
-                ))}
+                {services.find((s) => s._id === request.service)
+                  ? services.find((s) => s._id === request.service).addons.map((add) => (
+                    <MenuItem key={add.name} value={add}>
+                      {add.name}
+                      {' '}
+                      ($
+                      {add.price}
+                      )
+                    </MenuItem>
+                  )) : null}
               </Select>
             </FormControl>
             <TextField

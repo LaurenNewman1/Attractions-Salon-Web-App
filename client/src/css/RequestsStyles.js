@@ -9,6 +9,9 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     flexWrap: 'wrap',
   },
+  card: {
+    marginBottom: 20,
+  },
 }));
 
 export default useStyles;
