@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Button, Grid, Typography, Divider, Paper, Link,
+  Button, Grid, Typography, Divider, Paper,
 } from '@material-ui/core';
-import { Link as RouterLink } from 'react-router-dom';
 import useStyles from '../css/ConfirmPayment';
 import creditCardCircles from '../images/masterCardCircles.png';
 
