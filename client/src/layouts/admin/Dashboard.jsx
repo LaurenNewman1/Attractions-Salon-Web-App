@@ -24,9 +24,11 @@ const MOCK_APPOINTMENTS = [
 
 const Dashboard = () => (
   <Page>
-    <DashboardCalendar
-      appointments={MOCK_APPOINTMENTS}
-    />
+    <div style={{ paddingTop: '32px' }}>
+      <DashboardCalendar
+        appointments={MOCK_APPOINTMENTS}
+      />
+    </div>
   </Page>
 );
 
