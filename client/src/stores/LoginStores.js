@@ -155,5 +155,6 @@ export default () => {
     });
   }, [loggedIn]);
 
-  return [userData, loggedIn, login, register, logout, changeProfile, requestResetPassword, requestPasswordUpdate];
+  return [userData, loggedIn, login, register, logout,
+    changeProfile, requestResetPassword, requestPasswordUpdate];
 };

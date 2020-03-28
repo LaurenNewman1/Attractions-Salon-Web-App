@@ -128,8 +128,7 @@ const Login = ({ login, fromBookPage, resetPassword }) => {
                     ),
                   }}
                 />
-              )
-            }
+              )}
             <div className={classes.buttons}>
               <Button
                 variant="contained"
