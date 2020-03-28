@@ -129,6 +129,6 @@ export default () => {
     }
   }, []);
 
-  return [reviews, newReview, loading, updateReviews,
+  return [reviews, loading, newReview, updateReviews,
     updateNewReview, deleteReview, addReview, saveReview];
 };

@@ -33,7 +33,7 @@ const Calendar = ({ booking, updateBooking }) => {
               label="Name"
               className={classes.textfield}
               value={booking.name}
-              onChange={(event) => updateBooking('name', event.target.value)}
+              onChange={(event) => updateBooking(['name', event.target.value])}
             />
           </Grid>
           <Grid item xs={12}>
@@ -42,7 +42,7 @@ const Calendar = ({ booking, updateBooking }) => {
               label="Email"
               className={classes.textfield}
               value={booking.email}
-              onChange={(event) => updateBooking('email', event.target.value)}
+              onChange={(event) => updateBooking(['email', event.target.value])}
             />
           </Grid>
           <Grid item xs={12} sm={6}>

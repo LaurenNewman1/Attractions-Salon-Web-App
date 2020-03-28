@@ -119,19 +119,20 @@ const adminServices = ({ addService, deleteService, changeService }) => {
   return (
     <Page maxWidth="md">
       {loading ? <Loading /> : null}
-      <Typography
-        className={classes.pageHead}
-        align="center"
-        variant="h4"
-        display="block"
-        gutterBottom
-      >
-        <div style={{ width: 40 }} />
-        Services
-        <Fab color="primary" aria-label="add" size="small" onClick={handleClickOpen}>
-          <Add />
-        </Fab>
-      </Typography>
+      <div style={{ paddingTop: 5 }}>
+        <h1
+          className={classes.pageHead}
+          align="center"
+          display="block"
+          gutterBottom
+        >
+          <div style={{ width: 40 }} />
+          Services
+          <Fab color="primary" aria-label="add" size="small" onClick={handleClickOpen}>
+            <Add />
+          </Fab>
+        </h1>
+      </div>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Add a new service</DialogTitle>
         <DialogContent>

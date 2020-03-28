@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   page: {
     height: 'calc(100vh - 64px)',
     display: 'flex',
@@ -13,7 +13,8 @@ const useStyles = makeStyles(() => ({
     bottom: 0,
   },
   form: {
-    padding: '5%',
+    paddingLeft: '5%',
+    paddingRight: '5%',
   },
   imgContainer: {
     height: '100%',
@@ -28,20 +29,18 @@ const useStyles = makeStyles(() => ({
     paddingTop: 20,
     textAlign: 'center',
   },
-  linkButton: {
-    backgroundColor: 'transparent',
-    border: 'none',
-    cursor: 'pointer',
-    textDecoration: 'underline',
-    margin: 0,
-    color: 'purple',
-    padding: 0,
-    '&:hover': {
-      textDecoration: 'none',
-    },
-    '&:focus': {
-      textDecoration: 'none',
-    },
+  link: {
+    color: theme.palette.secondary.dark,
+  },
+  divider: {
+    paddingTop: 20,
+    textAlign: 'center',
+    paddingLeft: 50,
+    paddingRight: 50,
+    display: 'flex',
+    flewFlow: 'row nowrap',
+    justifyContents: 'stretch',
+    alignItems: 'center',
   },
 }));
 

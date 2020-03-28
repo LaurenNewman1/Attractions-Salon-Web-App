@@ -200,16 +200,17 @@ const Requests = () => {
   }) : <Typography variant="subtitle1" className={classes.none}>No pending requests.</Typography>;
 
   return (
-    <Page width="md">
+    <Page maxWidth="md">
       <MuiPickersUtilsProvider utils={MomentUtils}>
-        <Typography
-          align="center"
-          variant="h4"
-          display="block"
-          gutterBottom
-        >
-          Requested Bookings
-        </Typography>
+        <div style={{ paddingTop: 5 }}>
+          <h1
+            align="center"
+            display="block"
+            gutterBottom
+          >
+            Requested Bookings
+          </h1>
+        </div>
         {loading ? <Loading /> : null}
         {requestCards}
         {deleting

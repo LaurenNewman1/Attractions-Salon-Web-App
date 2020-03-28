@@ -1,5 +1,5 @@
 import {
-  Grid, TextField, InputAdornment, Button, Typography,
+  Grid, TextField, InputAdornment, Button, Typography, Divider,
 } from '@material-ui/core';
 import React, { useState } from 'react';
 import { Email, Lock } from '@material-ui/icons';
@@ -31,7 +31,7 @@ const Login = ({ login, fromBookPage, resetPassword }) => {
     <>
       {'Can\'t Login?'}
       {' '}
-      <Link to="/login/reset">Reset Password</Link>
+      <Link to="/login/reset" className={classes.link}>Reset Password</Link>
     </>
   );
 
@@ -63,10 +63,12 @@ const Login = ({ login, fromBookPage, resetPassword }) => {
     if (fromBookPage) {
       return (
         <>
-          <div className={classes.buttons}>
+          <div className={classes.divider}>
+            <Divider variant="middle" style={{ flexGrow: 1 }} />
             <Typography variant="h5">
-              -------------OR-------------
+              OR
             </Typography>
+            <Divider variant="middle" style={{ flexGrow: 1 }} />
           </div>
           <div className={classes.buttons}>
             <Button
@@ -144,7 +146,7 @@ const Login = ({ login, fromBookPage, resetPassword }) => {
               <br />
               New to Attractions?
               {' '}
-              <Link to="/signUp">Create Account</Link>
+              <Link to="/signUp" className={classes.link}>Create Account</Link>
               {renderBookPage()}
             </div>
           </div>

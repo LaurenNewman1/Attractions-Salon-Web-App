@@ -44,6 +44,9 @@ const Appointment = new Schema({
       price: Number,
     },
   ],
+  payInStore: {
+    type: Boolean,
+  },
 });
 
 export default mongoose.model('Appointment', Appointment);

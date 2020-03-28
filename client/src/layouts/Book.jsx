@@ -22,11 +22,13 @@ const Book = ({ userData }) => {
     email: userData ? userData.email : '',
     phone_number: userData ? userData.phone_number : '',
     confirmed: false,
+    timeOrdered: new Date(Date.now()).toISOString(),
     time: new Date(Date.now()).toISOString(),
     service: '',
     addons: [],
     specialist: '',
     notes: '',
+    payInStore: false,
   });
   const classes = useStyles();
 
@@ -35,7 +37,6 @@ const Book = ({ userData }) => {
     argus.forEach((argu) => {
       const [fieldName, val] = argu;
       newFields[fieldName] = val;
-      console.log(newFields);
     });
     setBooking(newFields);
   };
@@ -57,8 +58,10 @@ const Book = ({ userData }) => {
         }
         break;
       case 2:
+        setPage((prev) => prev + 1);
         break;
       case 3:
+        setPage((prev) => prev + 1);
         break;
       default:
         break;

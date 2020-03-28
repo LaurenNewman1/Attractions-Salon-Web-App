@@ -19,7 +19,7 @@ const Review = ({ review }) => {
         <Grid container spacing={1}>
           <Grid item xs={8}>
             <Rating value={review.rating} readOnly icon={<FavoriteIcon color="primary" />} />
-            <Typography variant="body2">{review.review}</Typography>
+            <Typography variant="body2" className={classes.review}>{review.review}</Typography>
             <Typography variant="subtitle1" style={{ fontWeight: 'bold' }}>{review.reviewer}</Typography>
           </Grid>
           <Grid item xs={4} className={classes.profileImg}>
