@@ -8,7 +8,7 @@ import useStyles from '../css/DetailsStyles';
 import hairIllustration from '../images/hairIllustration.png';
 import eye from '../images/eye.png';
 import hand from '../images/hand.png';
-import loadServiceOptions from '../stores/DetailsStore';
+import Loading from '../components/Loading';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -21,7 +21,9 @@ const MenuProps = {
   },
 };
 
-const Details = ({ booking, updateBooking }) => {
+const Details = ({
+  booking, updateBooking, loading, specialists, services,
+}) => {
   const classes = useStyles();
   const theme = useTheme();
 
@@ -37,7 +39,7 @@ const Details = ({ booking, updateBooking }) => {
   const changeType = async (newType) => {
     setType(newType);
     updateBooking(['service', ''], ['addons', []], ['specialist', '']);
-    setServiceOptions(await loadServiceOptions(newType));
+    setServiceOptions(services.filter((s) => s.type === newType));
     setAddOnOptions([]);
   };
 
@@ -46,8 +48,11 @@ const Details = ({ booking, updateBooking }) => {
     setAddOnOptions(serviceOptions.find((s) => s._id === newService).addons);
   };
 
+  const getServiceDetails = () => serviceOptions.find((s) => s._id === booking.service);
+
   return (
     <>
+      {loading ? <Loading /> : null}
       <h2 className={classes.header}>How can we help you today?</h2>
       <form>
         <Grid container spacing={3} className={classes.grid}>
@@ -134,12 +139,19 @@ const Details = ({ booking, updateBooking }) => {
           <InputLabel>Preferred Specialist</InputLabel>
           <Select
             value={booking.specialist}
-            onChange={(event) => updateBooking(['specialist', event.target.value])}
-            MenuProps={MenuProps}
+            onChange={(e) => updateBooking(['specialist', e.target.value])}
           >
-            <MenuItem value="Test1">Specialist1</MenuItem>
-            <MenuItem value="Test2">Specialist2</MenuItem>
-            <MenuItem value="Test3">Specialist3</MenuItem>
+            {booking.service ? specialists.map((specialist) => {
+              if (specialist.specialties.find((s) => s === getServiceDetails().type
+                      || s === getServiceDetails().subtype)) {
+                return (
+                  <MenuItem key={specialist._id} value={specialist._id}>
+                    {specialist.name}
+                  </MenuItem>
+                );
+              }
+              return null;
+            }) : null}
           </Select>
         </FormControl>
         <TextField
@@ -168,6 +180,21 @@ Details.propTypes = {
     notes: PropTypes.string,
   }).isRequired,
   updateBooking: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired,
+  specialists: PropTypes.shape([{
+    name: PropTypes.string,
+    specialties: PropTypes.array,
+  }]).isRequired,
+  services: PropTypes.shape([{
+    name: PropTypes.string,
+    description: PropTypes.string,
+    price: PropTypes.number,
+    time: PropTypes.number,
+    banner: PropTypes.string,
+    type: PropTypes.string,
+    subtype: PropTypes.string,
+    addons: PropTypes.array,
+  }]).isRequired,
 };
 
 export default Details;
