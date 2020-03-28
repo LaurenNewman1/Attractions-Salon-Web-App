@@ -1,17 +1,18 @@
 /* eslint-disable max-len */
 import React, { useState } from 'react';
 import {
-  Button, TextField, Fab,
-  Dialog, DialogActions, DialogContent, DialogTitle,
+  Button, TextField, Typography, Fab,
+  Dialog, DialogActions, DialogContent, DialogTitle, IconButton, InputAdornment,
 } from '@material-ui/core';
 import {
-  Add,
+  AddCircle, Schedule, Add,
 } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import useStyles from '../css/EditServiceStyles';
+import Alert, { TYPE_ERROR } from './Alert';
 
 const NewUser = ({
-  onClickAdd, updateNewUser,
+  addUser, setAlert, onClickAdd, updateNewUser,
 }) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
@@ -94,7 +95,9 @@ const NewUser = ({
   );
 };
 NewUser.propTypes = {
+  addUser: PropTypes.func.isRequired,
   onClickAdd: PropTypes.func.isRequired,
+  setAlert: PropTypes.bool.isRequired,
   updateNewUser: PropTypes.func.isRequired,
 };
 export default NewUser;

@@ -71,7 +71,7 @@ const EditUser = ({
           : (
             <TextField
               onClick={(e) => handleClick(e)}
-              onChange={(e) => updateUser(userGroup, index, ['name', e.target.value])}
+              // onChange={(e) => updateUser(userGroup, index, ['name', e.target.value])}
               defaultValue={user.name}
               className={classes.heading}
               style={{ border: '5px' }}

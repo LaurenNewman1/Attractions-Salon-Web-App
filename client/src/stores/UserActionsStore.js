@@ -117,7 +117,7 @@ export default () => {
     setLoading(true);
     // eslint-disable-next-line no-unused-vars
     console.log(userGroup[index]._id);
-    const [success] = await requestUserUpdate(userGroup[index]._id, {
+    const [success, rev] = await requestUserUpdate(userGroup[index]._id, {
       name: userGroup[index].name,
       email: userGroup[index].email,
       phone_number: userGroup[index].phone_number,

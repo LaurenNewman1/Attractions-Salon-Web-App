@@ -1,9 +1,10 @@
-/* eslint-disable max-len */
 import React, { useState } from 'react';
 import {
   Typography,
+  TextField,
 } from '@material-ui/core';
 import {
+  ExpandMore, Add,
 } from '@material-ui/icons';
 import Page from '../../components/Page';
 import useStyles from '../../css/EditServiceStyles';
@@ -19,7 +20,7 @@ const Users = () => {
   const [open, setOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [dialog, setDialog] = useState(false);
-  // const [viewing, setViewing] = useState({});
+  const [viewing, setViewing] = useState({});
   const [alert, setAlert] = useState({
     open: false,
     type: '',
@@ -28,7 +29,7 @@ const Users = () => {
   const [userGroup, setUserGroup] = useState([]);
   const [userGroupName, setUserGroupName] = useState('');
 
-  const [users, users1, users2, loading, updateUsers,
+  const [users, users1, users2, newUser, loading, updateUsers,
     updateNewUser, deleteUser, addUser, saveUser] = useUsers();
 
   const setDelete = (userGName, group, _id) => {
@@ -39,9 +40,7 @@ const Users = () => {
   };
 
   const onClickAdd = async () => {
-    console.log(open);
     setDialog(false);
-    console.log(dialog);
     const success = await addUser();
     setAlert({
       open: true,
