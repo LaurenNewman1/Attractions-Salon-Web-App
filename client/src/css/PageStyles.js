@@ -7,6 +7,9 @@ const useStyles = makeStyles((theme) => ({
   grow: {
     flexGrow: 1,
   },
+  topPagePadding: {
+    paddingTop: '1em',
+  },
   logo: {
     fontFamily: 'cursive',
     fontWeight: 'bold',
