@@ -1,0 +1,96 @@
+[
+  {
+    "name": "Lea",
+    "email": "placeholder@email.com",
+    "phone_number": "placeholderPhone",
+    "password": "placeholderPass",
+    "role": 1,
+    "specialties": [
+      "nails/manicure",
+      "nails/pedicure",
+      "nails/full set",
+      "nails/fills"
+    ]
+  },
+  {
+    "name": "Shamira",
+    "email": "placeholder2@email.com",
+    "phone_number": "placeholderPhone2",
+    "password": "placeholderPass2",
+    "role": 1,
+    "specialties": [
+      "hair/styling",
+      "hair/extension"
+    ]
+  },
+  {
+    "name": "Brandi",
+    "email": "placeholder3@email.com",
+    "phone_number": "placeholderPhone3",
+    "password": "placeholderPass3",
+    "role": 2,
+    "specialties": [
+      "hair/cut",
+      "hair/dye",
+      "hair/treatment",
+      "hair/wash",
+      "wax"
+    ]
+  },
+  {
+    "name": "Emily",
+    "email": "placeholder4@email.com",
+    "phone_number": "placeholderPhone4",
+    "password": "placeholderPass4",
+    "role": 1,
+    "specialties": [
+      "hair/cut",
+      "hair/dye",
+      "hair/treatment",
+      "hair/wash",
+      "wax"
+    ]
+  },
+  {
+    "name": "Bonnie",
+    "email": "placeholder5@email.com",
+    "phone_number": "placeholderPhone5",
+    "password": "placeholderPass5",
+    "role": 1,
+    "specialties": [
+      "hair/cut",
+      "hair/dye",
+      "hair/treatment",
+      "hair/wash",
+      "wax"
+    ]
+  },
+  {
+    "name": "Connie",
+    "email": "placeholder6@email.com",
+    "phone_number": "placeholderPhone6",
+    "password": "placeholderPass6",
+    "role": 1,
+    "specialties": [
+      "hair/cut",
+      "hair/dye",
+      "hair/treatment",
+      "hair/wash",
+      "wax"
+    ]
+  },
+  {
+    "name": "Mary",
+    "email": "placeholder7@email.com",
+    "phone_number": "placeholderPhone7",
+    "password": "placeholderPass7",
+    "role": 1,
+    "specialties": [
+      "hair/cut",
+      "hair/dye",
+      "hair/treatment",
+      "hair/wash",
+      "wax"
+    ]
+  }
+]
