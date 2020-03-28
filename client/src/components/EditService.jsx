@@ -1,7 +1,7 @@
 
 import React from 'react';
 import {
-  ExpansionPanel,
+  ExpansionPanel, Table, TableBody, TableContainer, TableRow, TableCell, TableHead,
   ExpansionPanelSummary,
   ExpansionPanelDetails,
   Typography, TextField, Button, InputAdornment, DialogActions,
@@ -16,7 +16,9 @@ import PropTypes from 'prop-types';
 import AddOnTable from './AddOnTable';
 import useStyles from '../css/EditServiceStyles';
 
-const EditService = ({ service, deleteService, changeService }) => {
+const EditService = ({
+  index, service, deleteService, changeService, updateService, group, asdf,
+}) => {
   const classes = useStyles();
   //   const history = useHistory();
   const [clicked, setClicked] = React.useState(true);
@@ -29,7 +31,13 @@ const EditService = ({ service, deleteService, changeService }) => {
   const [description, setDescription] = React.useState(service.description);
   const [addons, setAddons] = React.useState(service.addons);
 
+  const onAddon = (i) => {
+    console.log(i);
+    addons.map((el, index1) => ((index1 === i) ? console.log(index1) : console.log('not found')));
+  };
+
   const renderSavedPage = () => {
+    updateService(group, index, ['addons', addons]);
     changeService(service._id, {
       name,
       type: type.toLowerCase(),
@@ -48,16 +56,28 @@ const EditService = ({ service, deleteService, changeService }) => {
   const handleClick = (e) => {
     e.stopPropagation();
   };
-
-  const updateAddonName = (e, index) => {
+  const updateAddonName = (e, i) => {
     console.log('name value', e);
-    addons[index].name = e;
+    addons[i].name = e;
   };
-  const updateAddonPrice = (e, index) => {
+  const updateAddonPrice = (e, i) => {
     console.log('price value', e);
-    addons[index].price = e;
+    addons[i].price = e;
   };
+  // const updateAddonName = (e, indexAdd) => {
+  //   console.log('name value', e);
+  //   // console.log(addons[indexAdd].name);
+  //   console.log('addon index', indexAdd);
+  //   updateService(index, ['addons', [{ name: e }]]);
+  // };
+  // const updateAddonPrice = (e, indexAdd) => {
+  //   console.log('price value', e);
+  // };
 
+  // const updateAddons = (index, name, price) => {
+  //   console.log('index', index, 'name', name, 'price', price);
+  //   updateService(index, )
+  // }
   return (
     <ExpansionPanel>
       <ExpansionPanelSummary
@@ -72,7 +92,7 @@ const EditService = ({ service, deleteService, changeService }) => {
           : (
             <TextField
               onClick={(e) => handleClick(e)}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => updateService(group, index, ['name', e.target.value])}
               defaultValue={service.name}
               className={classes.heading}
               style={{ border: '5px' }}
@@ -81,13 +101,13 @@ const EditService = ({ service, deleteService, changeService }) => {
       </ExpansionPanelSummary>
       <ExpansionPanelDetails>
         <form className={classes.textfield} autoComplete="off">
-          <TextField id="standard-basic" label="Type" defaultValue={service.type} onChange={(e) => setType(e.target.value)} />
-          <TextField id="standard-basic" label="SubType" defaultValue={service.subtype} onChange={(e) => setSubType(e.target.value)} />
+          <TextField id="standard-basic" label="Type" defaultValue={service.type} onChange={(e) => updateService(group, index, ['type', e.target.value])} />
+          <TextField id="standard-basic" label="SubType" defaultValue={service.subtype} onChange={(e) => updateService(group, index, ['subtype', e.target.value])} />
           <TextField
             id="standard-basic"
             label="Price"
             defaultValue={service.price}
-            onChange={(e) => setPrice(e.target.value)}
+            onChange={(e) => updateService(group, index, ['price', Number(e.target.value)])}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -100,7 +120,7 @@ const EditService = ({ service, deleteService, changeService }) => {
             id="standard-basic"
             label="Time"
             defaultValue={service.time}
-            onChange={(e) => setTime(e.target.value)}
+            onChange={(e) => updateService(group, index, ['time', Number(e.target.value)])}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -114,17 +134,58 @@ const EditService = ({ service, deleteService, changeService }) => {
               ),
             }}
           />
-          <TextField id="outlined-multiline-static" onChange={(e) => setDescription(e.target.value)} multiline style={{ width: '88%', paddingBottom: '20px' }} label="Description" defaultValue={service.description} />
+          <TextField id="outlined-multiline-static" onChange={(e) => updateService(group, index, ['description', e.target.value])} multiline style={{ width: '88%', paddingBottom: '20px' }} label="Description" defaultValue={service.description} />
           <div className={classes.tablediv}>
-            {!service.addons.length ? null
-              : service.addons.map((addon, index) => (
-                <AddOnTable className={classes.table} updateAddonName={updateAddonName} updateAddonPrice={updateAddonPrice} label="Addons" index={index} addon={addon} />
-              ))}
+            {/* <TableContainer>
+              <Table size="small" aria-label="a dense table"> */}
+            {/* <TableContainer>
+              {' '}
+              <TableHead>
+                <TableRow><h3 style={{ paddingLeft: '10px' }}>Addons</h3></TableRow>
+                <TableRow>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Price</TableCell>
+                </TableRow>
+              </TableHead>
+            </TableContainer> */}
+
+            {/* <TableBody>
+                  {!service.addons.length ? null
+                    : service.addons.map((addon, i) => (
+                      <TableRow key={service.addons.name}>
+                        <TableCell component="th" scope="row"> */}
+            {/* <TextField defaultValue={addon.name} onClick={() => onAddon(i)} onChange={(e) => updateService(index, ['addons', [{ name: e.target.value }]])} /> */}
+            {/* <TextField defaultValue={addon.name} onClick={() => onAddon(i)} onChange={(e) => updateAddonName(e.target.value, i)} />
+                        </TableCell> */}
+            {/* <TableCell><AttachMoney /></TableCell> */}
+            {/* <TableCell>
+                          <TextField
+                            InputProps={{
+                              startAdornment: (
+                                <InputAdornment position="start">
+                                  <AttachMoney />
+                                </InputAdornment>
+                              ),
+                            }}
+                            defaultValue={addon.price}
+                            onClick={() => onAddon(i)}
+                            onChange={(e) => updateAddonPrice(e.target.value, i)}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                </TableBody>
+              </Table>
+            </TableContainer> */}
+            {/* {!service.addons.length ? null
+              : service.addons.map((addon, i) => ( */}
+            <AddOnTable className={classes.table} service={service} updateAddonName={updateAddonName} updateAddonPrice={updateAddonPrice} label="Addons" addon={addons} />
+            {/* ))} */}
           </div>
         </form>
       </ExpansionPanelDetails>
       <DialogActions>
-        <Button variant="contained" color="grey" onClick={() => deleteService(service._id)}>
+        <Button variant="contained" color="grey" onClick={() => deleteService(asdf, group, index)}>
           Delete
         </Button>
         <div style={{ flex: '1 0 0' }} />
@@ -153,6 +214,11 @@ EditService.propTypes = {
   }).isRequired,
   deleteService: PropTypes.func.isRequired,
   changeService: PropTypes.func.isRequired,
+  updateService: PropTypes.func.isRequired,
+  index: PropTypes.string.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  group: PropTypes.array.isRequired,
+  asdf: PropTypes.string.isRequired,
 };
 
 
