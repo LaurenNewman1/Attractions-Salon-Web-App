@@ -1,22 +1,5 @@
 import { useState, useEffect } from 'react';
 
-// const MOCK_SPECIALISTS = [
-//   {
-//     _id: '5e7bcddd1143b6506625e3e2',
-//     name: 'Brandi',
-//     services: [
-//       '5e7bcddd1143b6506625e3e2',
-//     ],
-//   },
-//   {
-//     _id: '5e7bcddd1143b6506625e3f0',
-//     name: 'Emily',
-//     services: [
-//       '5e7bcddd1143b6506625e3e6',
-//     ],
-//   },
-// ];
-
 const fetchAllServices = async () => {
   const ret = await fetch('/api/services')
     .then((response) => response.json())

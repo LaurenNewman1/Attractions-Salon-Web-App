@@ -31,7 +31,7 @@ const Login = ({ login, fromBookPage, resetPassword }) => {
     <>
       {'Can\'t Login?'}
       {' '}
-      <Link to="/login/reset">Reset Password</Link>
+      <Link to="/login/reset" className={classes.link}>Reset Password</Link>
     </>
   );
 
@@ -146,7 +146,7 @@ const Login = ({ login, fromBookPage, resetPassword }) => {
               <br />
               New to Attractions?
               {' '}
-              <Link to="/signUp">Create Account</Link>
+              <Link to="/signUp" className={classes.link}>Create Account</Link>
               {renderBookPage()}
             </div>
           </div>

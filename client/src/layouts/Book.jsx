@@ -14,6 +14,7 @@ import Calendar from './Calendar';
 import NewPayment from './NewPayment';
 import ConfirmPayment from './ConfirmPayment';
 import ReviewBooking from './ReviewBooking';
+import useBooking from '../stores/BookStore';
 
 const Book = ({ userData }) => {
   const [page, setPage] = useState(0);
@@ -23,15 +24,16 @@ const Book = ({ userData }) => {
     email: userData ? userData.email : '',
     phone_number: userData ? userData.phone_number : '',
     confirmed: false,
+    timeOrdered: new Date(Date.now()).toISOString(),
     time: new Date(Date.now()).toISOString(),
     service: '',
     addons: [],
     specialist: '',
     notes: '',
-    payInStore: 'false',
+    payInStore: false,
   });
   const classes = useStyles();
-
+  const [loading, specialists, services] = useBooking();
   const [creditCard, setCreditCard] = useState({
     name: userData ? userData.name : '',
     cardNumber: '',
@@ -46,7 +48,6 @@ const Book = ({ userData }) => {
     argus.forEach((argu) => {
       const [fieldName, val] = argu;
       newFields[fieldName] = val;
-      console.log(newFields);
     });
     setBooking(newFields);
   };
@@ -61,7 +62,6 @@ const Book = ({ userData }) => {
     });
     setCreditCard(newFields);
   };
-  // The Calendar Page(#2) needs to go to the newPayment or confirmPayment depending on whether or not the credit card was inputted
 
   const validateNext = () => {
     switch (page) {
@@ -80,11 +80,9 @@ const Book = ({ userData }) => {
         }
         break;
       case 2:
-        // This is just temporary
         setPage((prev) => prev + 1);
         break;
       case 3:
-        // Temporary
         setPage((prev) => prev + 1);
         break;
         // case 4 is Temporary
@@ -104,6 +102,9 @@ const Book = ({ userData }) => {
           <Details
             booking={booking}
             updateBooking={(...argu) => updateBooking(...argu)}
+            loading={loading}
+            specialists={specialists}
+            services={services}
           />
         );
       case 1:

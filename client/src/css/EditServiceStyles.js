@@ -19,7 +19,6 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
   },
   pageHead: {
-    paddingTop: 20,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-around',

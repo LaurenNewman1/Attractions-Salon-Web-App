@@ -27,7 +27,7 @@ const AdminReviews = () => {
     text: '',
   });
 
-  const [reviews, newReview, loading, updateReviews,
+  const [reviews, loading, newReview, updateReviews,
     updateNewReview, deleteReview, addReview, saveReview] = useReviews();
 
   const onClickAdd = async () => {
@@ -98,19 +98,20 @@ const AdminReviews = () => {
   return (
     <Page maxWidth="md">
       {loading ? <Loading disableShrink /> : null}
-      <Typography
-        className={classes.header}
-        align="center"
-        variant="h4"
-        display="block"
-        gutterBottom
-      >
-        <div style={{ width: 40 }} />
-        Reviews
-        <Fab color="primary" size="small" onClick={() => setDialog(true)}>
-          <Add />
-        </Fab>
-      </Typography>
+      <div style={{ paddingTop: 5 }}>
+        <h1
+          className={classes.header}
+          align="center"
+          display="block"
+          gutterBottom
+        >
+          <div style={{ width: 40 }} />
+          Reviews
+          <Fab color="primary" size="small" onClick={() => setDialog(true)}>
+            <Add />
+          </Fab>
+        </h1>
+      </div>
       {!reviews || !reviews.length ? null
         : (reviews.map((review, index) => (
           <ExpansionPanel

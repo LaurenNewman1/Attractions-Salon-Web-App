@@ -2,7 +2,6 @@ import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({
   header: {
-    paddingTop: 20,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-around',
