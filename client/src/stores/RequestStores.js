@@ -1,21 +1,21 @@
 import { useState, useEffect } from 'react';
 
-const MOCK_SPECIALISTS = [
-  {
-    _id: '5e7bcddd1143b6506625e3e2',
-    name: 'Brandi',
-    services: [
-      '5e7bcddd1143b6506625e3e2',
-    ],
-  },
-  {
-    _id: '5e7bcddd1143b6506625e3f0',
-    name: 'Emily',
-    services: [
-      '5e7bcddd1143b6506625e3e6',
-    ],
-  },
-];
+// const MOCK_SPECIALISTS = [
+//   {
+//     _id: '5e7bcddd1143b6506625e3e2',
+//     name: 'Brandi',
+//     services: [
+//       '5e7bcddd1143b6506625e3e2',
+//     ],
+//   },
+//   {
+//     _id: '5e7bcddd1143b6506625e3f0',
+//     name: 'Emily',
+//     services: [
+//       '5e7bcddd1143b6506625e3e6',
+//     ],
+//   },
+// ];
 
 const fetchAllServices = async () => {
   const ret = await fetch('/api/services')
@@ -118,10 +118,11 @@ export default () => {
         .then((response) => response.json())
         .then((data) => data);
 
-      const allSpecialists = MOCK_SPECIALISTS;
+      const allSpecialists = await fetch('/api/users/roles/1')
+        .then((response) => response.json())
+        .then((data) => data);
+      console.log(allSpecialists);
       const allServices = await fetchAllServices();
-
-      console.log(bookRequestFetch);
 
       setRequests(bookRequestFetch);
       setServices(allServices);

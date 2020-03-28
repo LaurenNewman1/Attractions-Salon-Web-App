@@ -68,131 +68,136 @@ const Requests = () => {
     });
   };
 
-  const requestCards = requests.length ? requests.map((request, index) => (
-    <Card className={classes.card}>
-      <CardHeader
-        title={request.name}
-        subheader={`Requested ${moment(request.timeOrdered).fromNow()}`}
-        style={{ paddingBottom: 0 }}
-      />
-      <CardContent>
-        <Grid container spacing={6}>
-          <Grid item xs={12} sm={6}>
-            <Typography color="textSecondary" gutterBottom style={{ display: 'flex', alignItems: 'center ', marginTop: 10 }}>
-              <Phone color="primary" /> {request.phone_number}
-            </Typography>
-            <Typography color="textSecondary" gutterBottom style={{ display: 'flex', alignItems: 'center ', marginTop: 10 }}>
-              <Email color="primary" /> {request.email}
-            </Typography>
-            <DateTimePicker
-              style={{ width: '100%', marginTop: 10 }}
-              disablePast
-              label="Appointment Date and Time"
-              value={Date.parse(request.time)}
-              onChange={(date) => updateRequests(index, ['time', date.toISOString()])}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton>
-                      <Event />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-            <FormControl style={{ width: '100%', marginTop: 10 }}>
-              <InputLabel>Specialist</InputLabel>
-              <Select
-                value={request.specialist}
-                onChange={(e) => updateRequests(index, ['specialist', e.target.value])}
-              >
-                {specialists.map((specialist) => {
-                  if (specialist.services.find((s) => s === request.service)) {
-                    return (
-                      <MenuItem key={specialist._id} value={specialist._id}>
-                        {specialist.name}
-                      </MenuItem>
-                    );
-                  }
-                  return null;
-                })}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormControl style={{ width: '100%' }}>
-              <InputLabel>Service</InputLabel>
-              <Select
-                value={request.service}
-                onChange={(e) => updateRequests(index, ['service', e.target.value])}
-              >
-                {services.map((serv) => (
-                  <MenuItem key={serv._id} value={serv._id}>
-                    {serv.name}
-                    {' '}
-                    ($
-                    {serv.price}
-                    )
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <FormControl style={{ width: '100%', marginTop: 10 }}>
-              <InputLabel>Add-ons</InputLabel>
-              <Select
-                multiple
-                value={request.addons}
-                onChange={(e) => updateRequests(index, ['addons', e.target.value])}
-                input={<Input />}
-                renderValue={(selected) => (
-                  <div className={classes.chips}>
-                    {selected.map((value) => ( // Problems: cannot remove addons from customer
-                      <Chip
-                        key={value._id}
-                        label={value.name}
-                        className={classes.chip}
-                        color="secondary"
-                      />
-                    ))}
-                  </div>
-                )}
-                MenuProps={MenuProps}
-              >
-                {services.find((s) => s._id === request.service)
-                  ? services.find((s) => s._id === request.service).addons.map((add) => (
-                    <MenuItem key={add.name} value={add}>
-                      {add.name}
+  const requestCards = requests.length ? requests.map((request, index) => {
+    const serviceDetails = services.find((s) => s._id === request.service);
+
+    return (
+      <Card className={classes.card}>
+        <CardHeader
+          title={request.name}
+          subheader={`Requested ${moment(request.timeOrdered).fromNow()}`}
+          style={{ paddingBottom: 0 }}
+        />
+        <CardContent>
+          <Grid container spacing={6}>
+            <Grid item xs={12} sm={6}>
+              <Typography color="textSecondary" gutterBottom style={{ display: 'flex', alignItems: 'center ', marginTop: 10 }}>
+                <Phone color="primary" /> {request.phone_number}
+              </Typography>
+              <Typography color="textSecondary" gutterBottom style={{ display: 'flex', alignItems: 'center ', marginTop: 10 }}>
+                <Email color="primary" /> {request.email}
+              </Typography>
+              <DateTimePicker
+                style={{ width: '100%', marginTop: 10 }}
+                disablePast
+                label="Appointment Date and Time"
+                value={Date.parse(request.time)}
+                onChange={(date) => updateRequests(index, ['time', date.toISOString()])}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton>
+                        <Event />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              <FormControl style={{ width: '100%', marginTop: 10 }}>
+                <InputLabel>Specialist</InputLabel>
+                <Select
+                  value={request.specialist}
+                  onChange={(e) => updateRequests(index, ['specialist', e.target.value])}
+                >
+                  {specialists.map((specialist) => {
+                    if (specialist.specialties.find((s) => s === serviceDetails.type
+                      || s === serviceDetails.subtype)) {
+                      return (
+                        <MenuItem key={specialist._id} value={specialist._id}>
+                          {specialist.name}
+                        </MenuItem>
+                      );
+                    }
+                    return null;
+                  })}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <FormControl style={{ width: '100%' }}>
+                <InputLabel>Service</InputLabel>
+                <Select
+                  value={request.service}
+                  onChange={(e) => updateRequests(index, ['service', e.target.value])}
+                >
+                  {services.map((serv) => (
+                    <MenuItem key={serv._id} value={serv._id}>
+                      {serv.name}
                       {' '}
                       ($
-                      {add.price}
+                      {serv.price}
                       )
                     </MenuItem>
-                  )) : null}
-              </Select>
-            </FormControl>
-            <TextField
-              style={{ width: '100%', marginTop: 10 }}
-              label="Notes"
-              multiline
-              value={request.notes}
-              onChange={(e) => updateRequests(index, ['notes', e.target.value])}
-            />
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControl style={{ width: '100%', marginTop: 10 }}>
+                <InputLabel>Add-ons</InputLabel>
+                <Select
+                  multiple
+                  value={request.addons}
+                  onChange={(e) => updateRequests(index, ['addons', e.target.value])}
+                  input={<Input />}
+                  renderValue={(selected) => (
+                    <div className={classes.chips}>
+                      {selected.map((value) => ( // Problems: cannot remove addons from customer
+                        <Chip
+                          key={value._id}
+                          label={value.name}
+                          className={classes.chip}
+                          color="secondary"
+                        />
+                      ))}
+                    </div>
+                  )}
+                  MenuProps={MenuProps}
+                >
+                  {services.find((s) => s._id === request.service)
+                    ? services.find((s) => s._id === request.service).addons.map((add) => (
+                      <MenuItem key={add.name} value={add}>
+                        {add.name}
+                        {' '}
+                        ($
+                        {add.price}
+                        )
+                      </MenuItem>
+                    )) : null}
+                </Select>
+              </FormControl>
+              <TextField
+                style={{ width: '100%', marginTop: 10 }}
+                label="Notes"
+                multiline
+                value={request.notes}
+                onChange={(e) => updateRequests(index, ['notes', e.target.value])}
+              />
+            </Grid>
           </Grid>
-        </Grid>
-      </CardContent>
-      <CardActions>
-        <Button variant="contained" onClick={() => setDeleting(index)}>Delete</Button>
-        <Button
-          style={{ marginLeft: 'auto' }}
-          variant="contained"
-          color="primary"
-          onClick={() => validateConfirm(index)}
-        >
-          Confirm
-        </Button>
-      </CardActions>
-    </Card>
-  )) : <Typography variant="subtitle1" className={classes.none}>No pending requests.</Typography>;
+        </CardContent>
+        <CardActions>
+          <Button variant="contained" onClick={() => setDeleting(index)}>Delete</Button>
+          <Button
+            style={{ marginLeft: 'auto' }}
+            variant="contained"
+            color="primary"
+            onClick={() => validateConfirm(index)}
+          >
+            Confirm
+          </Button>
+        </CardActions>
+      </Card>
+    );
+  }) : <Typography variant="subtitle1" className={classes.none}>No pending requests.</Typography>;
 
   return (
     <Page width="md">
