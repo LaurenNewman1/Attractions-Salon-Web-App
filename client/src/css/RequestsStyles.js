@@ -12,6 +12,10 @@ const useStyles = makeStyles(() => ({
   card: {
     marginBottom: 20,
   },
+  none: {
+    width: '100%',
+    textAlign: 'center',
+  },
 }));
 
 export default useStyles;

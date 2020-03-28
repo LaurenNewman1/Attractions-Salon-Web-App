@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import moment from 'moment';
 import {
   Button, Typography, Card, CardActions, CardContent, IconButton,
@@ -15,6 +15,8 @@ import Page from '../../components/Page';
 import Loading from '../../components/Loading';
 import useStyles from '../../css/RequestsStyles';
 import useRequests from '../../stores/RequestStores';
+import Alert, { TYPE_SUCCESS, TYPE_ERROR } from '../../components/Alert';
+import Confirm from '../../components/Confirm';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -28,14 +30,43 @@ const MenuProps = {
 };
 
 const Requests = () => {
-  const [requests, services, specialists, loading, updateRequests] = useRequests();
+  const [requests, services, specialists, loading,
+    updateRequests, confirm, deleteRequest] = useRequests();
+  const [deleting, setDeleting] = useState(false);
+  const [alert, setAlert] = useState({
+    open: false,
+    type: '',
+    text: '',
+  });
   const classes = useStyles();
 
-  // const setAddon = (requestIndex, addonIndex) => {
-  //   const addonClone = [...addonCreate];
-  //   addonClone[requestIndex] = addonIndex;
-  //   setAddonCreate(addonClone);
-  // };
+  const validateConfirm = async (index) => {
+    const req = requests[index];
+    if (req.name.length && req.specialist.length && Date.parse(req.time) > Date.now()) {
+      const success = await confirm(index);
+      setAlert({
+        open: true,
+        type: success ? TYPE_SUCCESS : TYPE_ERROR,
+        text: success ? 'Appointment confirmed.' : 'Confirmation failed.',
+      });
+    } else {
+      setAlert({
+        open: true,
+        type: TYPE_ERROR,
+        text: 'Some entries are incomplete or invalid.',
+      });
+    }
+  };
+
+  const onClickDelete = async (index) => {
+    setDeleting(false);
+    const success = await deleteRequest(index);
+    setAlert({
+      open: true,
+      type: success ? TYPE_SUCCESS : TYPE_ERROR,
+      text: success ? 'Request deleted successfully.' : 'Deletion failed.',
+    });
+  };
 
   const requestCards = requests.length ? requests.map((request, index) => (
     <Card className={classes.card}>
@@ -150,11 +181,18 @@ const Requests = () => {
         </Grid>
       </CardContent>
       <CardActions>
-        <Button variant="contained">Delete</Button>
-        <Button style={{ marginLeft: 'auto' }} variant="contained" color="primary">Confirm</Button>
+        <Button variant="contained" onClick={() => setDeleting(index)}>Delete</Button>
+        <Button
+          style={{ marginLeft: 'auto' }}
+          variant="contained"
+          color="primary"
+          onClick={() => validateConfirm(index)}
+        >
+          Confirm
+        </Button>
       </CardActions>
     </Card>
-  )) : null;
+  )) : <Typography variant="subtitle1" className={classes.none}>No pending requests.</Typography>;
 
   return (
     <Page width="md">
@@ -167,7 +205,25 @@ const Requests = () => {
         >
           Requested Bookings
         </Typography>
-        {loading ? <Loading /> : requestCards}
+        {loading ? <Loading /> : null}
+        {requestCards}
+        {deleting
+          ? (
+            <Confirm
+              open={deleting !== false}
+              title={`Delete ${requests[deleting].name}'s request?`}
+              content="Clicking delete will permanently remove this request."
+              confirmText="Delete"
+              onConfirm={() => onClickDelete(deleting)}
+              onCancel={() => setDeleting(false)}
+            />
+          ) : null}
+        <Alert
+          open={alert.open}
+          type={alert.type}
+          text={alert.text}
+          onClose={() => setAlert({ open: false, type: '', text: '' })}
+        />
       </MuiPickersUtilsProvider>
     </Page>
   );
