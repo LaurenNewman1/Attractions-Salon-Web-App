@@ -30,6 +30,7 @@ const EditService = ({
   const [price, setPrice] = React.useState(service.price);
   const [description, setDescription] = React.useState(service.description);
   const [addons, setAddons] = React.useState(service.addons);
+  const [open, setOpen] = React.useState(false);
 
   const onAddon = (i) => {
     console.log(i);
@@ -51,6 +52,12 @@ const EditService = ({
 
   const handleOpen = () => {
     setClicked(!clicked);
+    setOpen(!open);
+  };
+
+  const handleCancel = () => {
+    setClicked(!clicked);
+    setOpen(false);
   };
 
   const handleClick = (e) => {
@@ -79,7 +86,7 @@ const EditService = ({
   //   updateService(index, )
   // }
   return (
-    <ExpansionPanel>
+    <ExpansionPanel expanded={open}>
       <ExpansionPanelSummary
         onClick={handleOpen}
         expandIcon={<ExpandMore />}
@@ -189,7 +196,7 @@ const EditService = ({
           Delete
         </Button>
         <div style={{ flex: '1 0 0' }} />
-        <Button>
+        <Button onClick={() => handleCancel()}>
           Cancel
         </Button>
         <Button variant="contained" color="primary" onClick={() => renderSavedPage()}>
