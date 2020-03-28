@@ -78,6 +78,35 @@ export const readType = async (req, res) => {
   }
 };
 
+export const getTypes = async (req, res) => {
+  try {
+    const data = await Service.find({}).exec();
+    const typeSet = new Set();
+    data.forEach((service) => {
+      let typeString = service.type;
+      if (service.subtype) {
+        typeString += `/${service.subtype}`;
+      }
+      typeSet.add(typeString);
+    });
+
+    const typeToSubType = {};
+    typeSet.forEach((setVal) => {
+      const [type, subtype] = setVal.split('/');
+      if (!typeToSubType[type]) {
+        typeToSubType[type] = [];
+      }
+      if (subtype) {
+        typeToSubType[type] = [...typeToSubType[type], subtype];
+      }
+    });
+
+    res.status(200).type('json').send(typeToSubType);
+  } catch (err) {
+    res.status(500).type('json').send(err);
+  }
+};
+
 export const readall = async (req, res) => {
   // Find All Services from Database and return
   try {
