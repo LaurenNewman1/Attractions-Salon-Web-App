@@ -28,6 +28,7 @@ const Book = ({ userData }) => {
     addons: [],
     specialist: '',
     notes: '',
+    payInStore: 'false',
   });
   const classes = useStyles();
 
@@ -65,13 +66,11 @@ const Book = ({ userData }) => {
   const validateNext = () => {
     switch (page) {
       case 0:
-        // This is temporary
-        // if (booking.service.length) {
-        //   setPage((prev) => prev + 1);
-        // } else {
-        //   setError(true);
-        // }
-        setPage((prev) => prev + 1);
+        if (booking.service.length) {
+          setPage((prev) => prev + 1);
+        } else {
+          setError(true);
+        }
         break;
       case 1:
         if (booking.name && booking.email) {
@@ -90,6 +89,7 @@ const Book = ({ userData }) => {
         break;
         // case 4 is Temporary
       case 4:
+        setPage((prev) => prev + 1);
         break;
       default:
         break;
@@ -117,18 +117,22 @@ const Book = ({ userData }) => {
         return (
           <NewPayment
             updateCreditCard={(...argu) => updateCreditCard(...argu)}
+            booking={booking}
+            updateBooking={(...argu) => updateBooking(...argu)}
           />
         );
       case 3:
         return (
           <ConfirmPayment
             booking={booking}
+            updateBooking={(...argu) => updateBooking(...argu)}
           />
         );
       case 4:
         return (
           <ReviewBooking
             booking={booking}
+            updateBooking={(...argu) => updateBooking(...argu)}
           />
         );
       default:

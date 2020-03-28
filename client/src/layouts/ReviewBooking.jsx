@@ -4,14 +4,14 @@ import {
   Button, IconButton, Icon, Typography, Divider, useTheme,
 } from '@material-ui/core';
 import { Edit as EditIcon } from '@material-ui/icons';
-import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import hairIllustration from '../images/hairIllustration.png';
+import useBooking from '../stores/BookingStore';
 import useStyles from '../css/ReviewStyles';
 
 
 const ReviewBooking = ({ booking }) => {
-  const history = useHistory();
+  const [sendRequest] = useBooking();
   const classes = useStyles();
   const [type, setType] = useState('');
   const theme = useTheme();
@@ -57,15 +57,16 @@ const ReviewBooking = ({ booking }) => {
         </div>
       );
     }
-    return (
-      <div>
-        <TextField style={{ paddingBottom: 10 }} defaultValue={booking.name} label="Name" value={textBoxValues.name} onChange={(e) => updateTextBoxValue('name', e.target.value)} />
-        <br />
-        <TextField style={{ paddingBottom: 10 }} defaultValue={booking.phone_number} label="Phone Number" value={textBoxValues.phone_number} onChange={(e) => updateTextBoxValue('phone_number', e.target.value)} />
-        <br />
-        <TextField defaultValue=".... .... .... 1234" label="Credit Card" />
-      </div>
-    );
+    return null;
+    // return (
+    //   <div>
+    //     <TextField style={{ paddingBottom: 10 }} defaultValue={booking.name} label="Name" value={textBoxValues.name} onChange={(e) => updateTextBoxValue('name', e.target.value)} />
+    //     <br />
+    //     <TextField style={{ paddingBottom: 10 }} defaultValue={booking.phone_number} label="Phone Number" value={textBoxValues.phone_number} onChange={(e) => updateTextBoxValue('phone_number', e.target.value)} />
+    //     <br />
+    //     <TextField defaultValue=".... .... .... 1234" label="Credit Card" />
+    //   </div>
+    // );
   };
 
   return (
@@ -181,7 +182,7 @@ const ReviewBooking = ({ booking }) => {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => history.push(`/confirmation/${id}`)}
+          onClick={() => sendRequest(booking)}
         >
           Request Appointment
         </Button>
