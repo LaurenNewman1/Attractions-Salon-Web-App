@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { startOfWeek, addDays, addHours } from 'date-fns';
 import { Paper, Grid, Chip } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import { ListAlt, Person } from '@material-ui/icons';
+import { ListAlt, Person, Notes } from '@material-ui/icons';
 import { ViewState } from '@devexpress/dx-react-scheduler';
 import {
   Scheduler,
@@ -33,6 +33,14 @@ const TooptipContent = withStyles(style, { name: 'Content' })(({
       </Grid>
       <Grid item xs={10}>
         <span>{appointmentData.specialist.name}</span>
+      </Grid>
+    </Grid>
+    <Grid container alignItems="center">
+      <Grid item xs={2} className={classes.textCenter}>
+        <Notes className={classes.icon} />
+      </Grid>
+      <Grid item xs={10}>
+        <span>{appointmentData.notes}</span>
       </Grid>
     </Grid>
     <Grid container alignItems="center">
@@ -68,6 +76,7 @@ const DashboardCalendar = ({
       specialist: a.specialist,
       service: a.service,
       addons: a.addons,
+      notes: a.notes,
     }
   ));
 
