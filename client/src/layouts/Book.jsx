@@ -12,6 +12,7 @@ import useStyles from '../css/BookStyles';
 import Details from './Details';
 import Calendar from './Calendar';
 import NewPayment from './NewPayment';
+import ConfirmPayment from './ConfirmPayment';
 import ReviewBooking from './ReviewBooking';
 
 const Book = ({ userData }) => {
@@ -32,6 +33,15 @@ const Book = ({ userData }) => {
   });
   const classes = useStyles();
 
+  const [creditCard, setCreditCard] = useState({
+    name: userData ? userData.name : '',
+    cardNumber: '',
+    expMonth: '',
+    expYear: '',
+    CVV: '',
+    zipCode: '',
+  });
+
   const updateBooking = (...argus) => {
     const newFields = { ...booking };
     argus.forEach((argu) => {
@@ -41,14 +51,28 @@ const Book = ({ userData }) => {
     setBooking(newFields);
   };
 
+
+  const updateCreditCard = (...argus) => {
+    const newFields = { ...creditCard };
+    argus.forEach((argu) => {
+      const [fieldName, val] = argu;
+      newFields[fieldName] = val;
+      console.log(newFields);
+    });
+    setCreditCard(newFields);
+  };
+  // The Calendar Page(#2) needs to go to the newPayment or confirmPayment depending on whether or not the credit card was inputted
+
   const validateNext = () => {
     switch (page) {
       case 0:
-        if (booking.service.length) {
-          setPage((prev) => prev + 1);
-        } else {
-          setError(true);
-        }
+        // This is temporary
+        // if (booking.service.length) {
+        //   setPage((prev) => prev + 1);
+        // } else {
+        //   setError(true);
+        // }
+        setPage((prev) => prev + 1);
         break;
       case 1:
         if (booking.name && booking.email) {
@@ -63,11 +87,15 @@ const Book = ({ userData }) => {
       case 3:
         setPage((prev) => prev + 1);
         break;
+        // case 4 is Temporary
+      case 4:
+        break;
       default:
         break;
     }
   };
 
+  // I changed this so that I could test NewPayment. new Payment and Calendar should be flipped
   const renderPage = () => {
     switch (page) {
       case 0:
@@ -85,9 +113,23 @@ const Book = ({ userData }) => {
           />
         );
       case 2:
-        return <NewPayment />;
+        return (
+          <NewPayment
+            updateCreditCard={(...argu) => updateCreditCard(...argu)}
+          />
+        );
       case 3:
-        return <ReviewBooking />;
+        return (
+          <ConfirmPayment
+            booking={booking}
+          />
+        );
+      case 4:
+        return (
+          <ReviewBooking
+            booking={booking}
+          />
+        );
       default:
         return null;
     }
@@ -103,12 +145,12 @@ const Book = ({ userData }) => {
           </div>
           <div className={classes.footer}>
             <MobileStepper
-              steps={4}
+              steps={5}
               variant="dots"
               className={classes.stepper}
               activeStep={page}
               nextButton={(
-                <Button size="small" onClick={() => validateNext()} disabled={page === 3}>
+                <Button size="small" onClick={() => validateNext()} disabled={page === 4}>
                   Next
                   <KeyboardArrowRight />
                 </Button>
