@@ -1,35 +1,26 @@
 import React from 'react';
+import { parseISO } from 'date-fns';
 import Page from '../../components/Page';
 import DashboardCalendar from '../../components/DashboardCalendar';
+import useRequests from '../../stores/RequestStores';
 
-const MOCK_APPOINTMENTS = [
-  {
-    name: 'Jane Doe',
-    email: 'test@gmail.com',
-    phone_number: '9413741788',
-    confirmed: false,
-    time: new Date(2020, 2, 25, 12),
-    services: [
-      {
-        name: 'Hair Dye',
-        addon: [
-          {
-            name: 'Hair Cut',
-          },
-        ],
-      },
-    ],
-  },
-];
-
-const Dashboard = () => (
-  <Page>
-    <div style={{ paddingTop: '32px' }}>
-      <DashboardCalendar
-        appointments={MOCK_APPOINTMENTS}
-      />
-    </div>
-  </Page>
-);
+const Dashboard = () => {
+  const [requests, services, specialists] = useRequests(false);
+  const formedAppointments = requests.map((r) => ({
+    ...r,
+    time: parseISO(r.time),
+    service: services.find((s) => s._id === r.service),
+    specialist: specialists.find((s) => s._id === r.specialist),
+  }));
+  return (
+    <Page>
+      <div style={{ paddingTop: '32px' }}>
+        <DashboardCalendar
+          appointments={formedAppointments}
+        />
+      </div>
+    </Page>
+  );
+};
 
 export default Dashboard;
