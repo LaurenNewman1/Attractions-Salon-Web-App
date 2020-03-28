@@ -10,13 +10,38 @@ import useStyles from '../css/LoginStyles';
 import loginImg from '../images/loginImg.jpg';
 
 
-const Login = ({ login, fromBookPage }) => {
+const Login = ({ login, fromBookPage, resetPassword }) => {
   const classes = useStyles();
   const history = useHistory();
+  const location = useLocation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorBody, setErrorBody] = useState({});
   const [hasError, setHasError] = useState(false);
+
+  // Resetting Password Feature, reuses the email state for the form.
+  const resettingPassword = location.pathname === '/login/reset';
+
+  const submitResetPassword = async () => {
+    await resetPassword(email);
+    history.push('/login');
+  };
+
+  const resetLink = (
+    <>
+      {'Can\'t Login?'}
+      {' '}
+      <Link to="/login/reset">Reset Password</Link>
+    </>
+  );
+
+  const goBackResetLink = (
+    <>
+      Looking to Login?
+      {' '}
+      <Link to="/login">Login</Link>
+    </>
+  );
 
   const attemptLogin = async () => {
     const [successful, error] = await login(email, password);
@@ -60,6 +85,8 @@ const Login = ({ login, fromBookPage }) => {
     return null;
   };
 
+  const pageTitle = resettingPassword ? 'Reset your Password' : 'Login';
+
   return (
     <Page>
       <Grid container className={classes.page}>
@@ -67,7 +94,7 @@ const Login = ({ login, fromBookPage }) => {
           <img src={loginImg} alt="" className={classes.modelImg} />
         </Grid>
         <Grid item xs={12} sm={6} className={classes.form}>
-          <h1 className={classes.login}>Login</h1>
+          <h1 className={classes.login}>{pageTitle}</h1>
           <div>
             <TextField
               fullWidth
@@ -85,30 +112,36 @@ const Login = ({ login, fromBookPage }) => {
                 ),
               }}
             />
-            <TextField
-              fullWidth
-              type="password"
-              className={classes.field}
-              error={hasError}
-              helperText={hasError ? errorHelpingText : 'Password'}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Lock />
-                  </InputAdornment>
-                ),
-              }}
-            />
+            {resettingPassword ? null
+              : (
+                <TextField
+                  fullWidth
+                  type="password"
+                  className={classes.field}
+                  error={hasError}
+                  helperText={hasError ? errorHelpingText : 'Password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Lock />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              )}
             <div className={classes.buttons}>
               <Button
                 variant="contained"
                 color="primary"
-                onClick={() => attemptLogin()}
+                onClick={() => (resettingPassword ? submitResetPassword() : attemptLogin())}
               >
-                Login
+                {resettingPassword ? 'Reset' : 'Login'}
               </Button>
+              <br />
+              <br />
+              {resettingPassword ? goBackResetLink : resetLink}
               <br />
               <br />
               New to Attractions?
@@ -126,6 +159,7 @@ const Login = ({ login, fromBookPage }) => {
 Login.propTypes = {
   login: PropTypes.func.isRequired,
   fromBookPage: PropTypes.bool.isRequired,
+  resetPassword: PropTypes.func.isRequired,
 };
 
 

@@ -34,6 +34,21 @@ const useStyles = makeStyles(() => ({
     justifyContents: 'stretch',
     alignItems: 'center',
   },
+  linkButton: {
+    backgroundColor: 'transparent',
+    border: 'none',
+    cursor: 'pointer',
+    textDecoration: 'underline',
+    margin: 0,
+    color: 'purple',
+    padding: 0,
+    '&:hover': {
+      textDecoration: 'none',
+    },
+    '&:focus': {
+      textDecoration: 'none',
+    },
+  },
 }));
 
 export default useStyles;

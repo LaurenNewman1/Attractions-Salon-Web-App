@@ -29,19 +29,10 @@ const EditService = ({ service, deleteService, changeService }) => {
   const [description, setDescription] = React.useState(service.description);
   const [addons, setAddons] = React.useState(service.addons);
 
-  // console.log(service.addons);
-  // const handleChange = (key, val) => {
-  //   setValues({
-  //     ...values,
-  //     [key]: val,
-  //   });
-  //   console.log(val);
-  // };
-
   const renderSavedPage = () => {
     changeService(service._id, {
       name,
-      type,
+      type: type.toLowerCase(),
       subtype,
       time,
       price,
@@ -49,6 +40,7 @@ const EditService = ({ service, deleteService, changeService }) => {
       addons,
     });
   };
+
   const handleOpen = () => {
     setClicked(!clicked);
   };
@@ -57,9 +49,6 @@ const EditService = ({ service, deleteService, changeService }) => {
     e.stopPropagation();
   };
 
-  const handleDelete = () => {
-    console.log(service);
-  };
   const updateAddonName = (e, index) => {
     console.log('name value', e);
     addons[index].name = e;
@@ -68,95 +57,85 @@ const EditService = ({ service, deleteService, changeService }) => {
     console.log('price value', e);
     addons[index].price = e;
   };
-  //   const handleClose = () => {
-  //       setClicked(false);
-  //   }
+
   return (
-    <div className={classes.root}>
-      <ExpansionPanel>
-        <ExpansionPanelSummary
-          onClick={handleOpen}
-          expandIcon={<ExpandMore />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
-        >
-          {clicked
-            ? (<Typography>{service.name}</Typography>
-            )
-            : (
-              <TextField
-                onClick={(e) => handleClick(e)}
-                onChange={(e) => setName(e.target.value)}
-                defaultValue={service.name}
-                className={classes.heading}
-                style={{ border: '5px' }}
-              />
-            ) }
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails>
-          <form className={classes.textfield} autoComplete="off">
-            <TextField id="standard-basic" label="Type" defaultValue={service.type} onChange={(e) => setType(e.target.value)} />
-            <TextField id="standard-basic" label="SubType" defaultValue={service.subtype} onChange={(e) => setSubType(e.target.value)} />
+    <ExpansionPanel>
+      <ExpansionPanelSummary
+        onClick={handleOpen}
+        expandIcon={<ExpandMore />}
+        aria-controls="panel1a-content"
+        id="panel1a-header"
+      >
+        {clicked
+          ? (<Typography>{service.name}</Typography>
+          )
+          : (
             <TextField
-              id="standard-basic"
-              label="Price"
-              defaultValue={service.price}
-              onChange={(e) => setPrice(e.target.value)}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <AttachMoney />
-                  </InputAdornment>
-                ),
-              }}
+              onClick={(e) => handleClick(e)}
+              onChange={(e) => setName(e.target.value)}
+              defaultValue={service.name}
+              className={classes.heading}
+              style={{ border: '5px' }}
             />
-            <TextField
-              id="standard-basic"
-              label="Time"
-              defaultValue={service.time}
-              onChange={(e) => setTime(e.target.value)}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Schedule />
-                  </InputAdornment>
-                ),
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <Typography>mins</Typography>
-                  </InputAdornment>
-                ),
-              }}
-            />
-            <TextField id="outlined-multiline-static" onChange={(e) => setDescription(e.target.value)} multiline style={{ width: '88%', paddingBottom: '20px' }} label="Description" defaultValue={service.description} />
-            <div className={classes.tablediv}>
-              {!service.addons.length ? null
-                : service.addons.map((addon, index) => (
-                  <AddOnTable className={classes.table} updateAddonName={updateAddonName} updateAddonPrice={updateAddonPrice} label="Addons" index={index} addon={addon} />
-                ))}
-            </div>
-          </form>
-        </ExpansionPanelDetails>
-        <DialogActions>
-          {/* <Button variant="contained" color="grey" onClick={() => deleteService()}>
-            Delete
-          </Button> */}
-          <Button variant="contained" color="grey" onClick={() => deleteService(service._id)}>
-            Delete
-          </Button>
-          <div style={{ flex: '1 0 0' }} />
-          <Button variant="contained" color="grey">
-            Cancel
-          </Button>
-          {/* <Button variant="contained" color="primary" onClick={() => changeService(service._id, service)}>
-            Save
-          </Button> */}
-          <Button variant="contained" color="primary" onClick={() => renderSavedPage()}>
-            Save
-          </Button>
-        </DialogActions>
-      </ExpansionPanel>
-    </div>
+          ) }
+      </ExpansionPanelSummary>
+      <ExpansionPanelDetails>
+        <form className={classes.textfield} autoComplete="off">
+          <TextField id="standard-basic" label="Type" defaultValue={service.type} onChange={(e) => setType(e.target.value)} />
+          <TextField id="standard-basic" label="SubType" defaultValue={service.subtype} onChange={(e) => setSubType(e.target.value)} />
+          <TextField
+            id="standard-basic"
+            label="Price"
+            defaultValue={service.price}
+            onChange={(e) => setPrice(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <AttachMoney />
+                </InputAdornment>
+              ),
+            }}
+          />
+          <TextField
+            id="standard-basic"
+            label="Time"
+            defaultValue={service.time}
+            onChange={(e) => setTime(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Schedule />
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Typography>mins</Typography>
+                </InputAdornment>
+              ),
+            }}
+          />
+          <TextField id="outlined-multiline-static" onChange={(e) => setDescription(e.target.value)} multiline style={{ width: '88%', paddingBottom: '20px' }} label="Description" defaultValue={service.description} />
+          <div className={classes.tablediv}>
+            {!service.addons.length ? null
+              : service.addons.map((addon, index) => (
+                <AddOnTable className={classes.table} updateAddonName={updateAddonName} updateAddonPrice={updateAddonPrice} label="Addons" index={index} addon={addon} />
+              ))}
+          </div>
+        </form>
+      </ExpansionPanelDetails>
+      <DialogActions>
+        <Button variant="contained" color="grey" onClick={() => deleteService(service._id)}>
+          Delete
+        </Button>
+        <div style={{ flex: '1 0 0' }} />
+        <Button>
+          Cancel
+        </Button>
+        <Button variant="contained" color="primary" onClick={() => renderSavedPage()}>
+          Save
+        </Button>
+      </DialogActions>
+    </ExpansionPanel>
   );
 };
 

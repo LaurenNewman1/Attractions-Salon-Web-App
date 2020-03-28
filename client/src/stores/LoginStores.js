@@ -35,6 +35,39 @@ const requestRegister = async (name, email, number, password) => {
   return [res.status === 200, await res.json()];
 };
 
+const requestResetPassword = async (email) => {
+  const res = await fetch('/api/login/reset', {
+    method: 'POST',
+    cache: 'no-cache',
+    credentials: 'same-origin', // include, *same-origin, omit
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    redirect: 'follow', // manual, *follow, error
+    referrerPolicy: 'no-referrer', // no-referrer, *client
+    body: JSON.stringify({ email }),
+  });
+
+  return res.status === 200;
+};
+
+const requestPasswordUpdate = async (token, password) => {
+  const res = await fetch(`/api/users/password/${token}`, {
+    method: 'POST',
+    cache: 'no-cache',
+    credentials: 'same-origin', // include, *same-origin, omit
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    redirect: 'follow', // manual, *follow, error
+    referrerPolicy: 'no-referrer', // no-referrer, *client
+    body: JSON.stringify({ password }),
+  });
+
+  return res.status === 200;
+};
+
+
 const requestLogout = async () => {
   const res = await fetch('/api/logout', {
     method: 'DELETE',
@@ -99,7 +132,6 @@ export default () => {
     return result;
   };
 
-
   const logout = async () => {
     if (await requestLogout()) { isLoggedIn(false); }
   };
@@ -123,5 +155,6 @@ export default () => {
     });
   }, [loggedIn]);
 
-  return [userData, loggedIn, login, register, logout, changeProfile];
+  return [userData, loggedIn, login, register, logout,
+    changeProfile, requestResetPassword, requestPasswordUpdate];
 };
