@@ -1,6 +1,7 @@
+/* eslint-disable max-len */
 import { useState, useEffect } from 'react';
 
-const requestNewService = async (name, type, subtype, price, time, description, banner, addons) => {
+const requestNewService = async (service) => {
   const res = await fetch('/api/services',
     {
       method: 'POST',
@@ -11,16 +12,14 @@ const requestNewService = async (name, type, subtype, price, time, description, 
       },
       redirect: 'follow', // manual, *follow, error
       referrerPolicy: 'no-referrer', // no-referrer, *client
-      body: JSON.stringify({
-        name, type, subtype, price, time, description, banner, addons,
-      }),
+      body: JSON.stringify(service),
     });
 
   return [res.status === 200, await res.json()];
 };
 
-const requestServiceChange = async (_id, params) => {
-  const res = await fetch(`/api/services/${_id}`, {
+const requestServiceChange = async (service) => {
+  const res = await fetch(`/api/services/${service._id}`, {
     method: 'PUT',
     cache: 'no-cache',
     credentials: 'same-origin', // include, *same-origin, omit
@@ -29,13 +28,13 @@ const requestServiceChange = async (_id, params) => {
     },
     redirect: 'follow', // manual, *follow, error
     referrerPolicy: 'no-referrer', // no-referrer, *client
-    body: JSON.stringify(params),
+    body: JSON.stringify(service),
   });
 
   return [res.status === 200, await res.json()];
 };
 
-const requestDelete = async (_id) => {
+const requestDelete = async ({ _id }) => {
   const res = await fetch(`/api/services/${_id}`, {
     method: 'DELETE',
     cache: 'no-cache',
@@ -47,173 +46,84 @@ const requestDelete = async (_id) => {
   return res.status === 200;
 };
 
+
+const assembleTypeKey = (type, subtype) => `${type}${subtype ? `/${subtype}` : ''}`;
+const keyToTypes = (key) => key.split('/');
+
+/*
+  Service State Object
+  {
+    serviceTypeSubType: ArrayOfServicesOfThatType[]
+  }
+*/
+
 export default () => {
-  const [services, setService] = useState([]);
-  const [services2, setService2] = useState([]);
-  const [services3, setService3] = useState([]);
-  const [services4, setService4] = useState([]);
-  const [services5, setService5] = useState([]);
-  const [services6, setService6] = useState([]);
-  const [services7, setService7] = useState([]);
-  const [services8, setService8] = useState([]);
-  const [services9, setService9] = useState([]);
-  const [services10, setService10] = useState([]);
-  const [services11, setService11] = useState([]);
+  const [services, setService] = useState({});
+  const [init, setInit] = useState(true);
+
   const [loading, setLoading] = useState(true);
-  const [newService, setNewService] = useState({
-    name: '',
-    type: '',
-    subtype: '',
-    time: '',
-    price: '',
-    description: '',
-    banner: '',
-    addons: [{
-      name: '',
-      price: '',
-    }],
-  });
 
-  const updateNewService = (...argus) => {
-    const newFields = { ...newService };
-    argus.forEach((argu) => {
-      const [fieldName, val] = argu;
-      if (fieldName === ('time') || fieldName === ('price')) {
-        const num = Number(val);
-        newFields[fieldName] = num;
-      } else {
-        newFields[fieldName] = val;
-      }
-    });
-    setNewService(newFields);
-  };
-
-  const deleteService = async (asdf, group, _id) => {
-    setLoading(true);
-    const success = await requestDelete(_id);
+  const deleteService = async (service) => {
+    const success = await requestDelete(service);
     if (success) {
-      const allServices = [...group];
-      allServices.splice(group.findIndex((r) => r._id === _id), 1);
-      if (asdf === 'services') {
-        setService(allServices);
-      } else if (asdf === 'services2') {
-        setService2(allServices);
-      } else if (asdf === 'services3') {
-        setService3(allServices);
-      } else if (asdf === 'services4') {
-        setService4(allServices);
-      } else if (asdf === 'services5') {
-        setService5(allServices);
-      } else if (asdf === 'services6') {
-        setService6(allServices);
-      } else if (asdf === 'services7') {
-        setService7(allServices);
-      } else if (asdf === 'services8') {
-        setService8(allServices);
-      } else if (asdf === 'services9') {
-        setService9(allServices);
-      } else if (asdf === 'services10') {
-        setService10(allServices);
-      } else if (asdf === 'services11') {
-        setService11(allServices);
-      }
+      const updatedServices = { ...services };
+      const { _id, type, subtype } = service;
+      const filteredType = updatedServices[assembleTypeKey(type, subtype)].filter((s) => s._id !== _id);
+      updatedServices[assembleTypeKey(type, subtype)] = filteredType;
+      setService(updatedServices);
     }
-    updateNewService(['name', ''], ['type', ''], ['subtype', ''], ['time', ''], ['price', ''], ['description', ''], ['banner', ''], ['addons', []]);
-    setLoading(false);
     return success;
   };
 
-  const addService = async () => {
-    setLoading(true);
-    const [success, rev] = await requestNewService(newService.name, newService.type,
-      newService.subtype, newService.time,
-      newService.price, newService.description, newService.banner, newService.addon);
-
+  const addService = async (service) => {
+    const [success] = await requestNewService(service);
+    console.log('add review', success);
     if (success) {
-      const allServices = [...services];
-      allServices.push(rev);
-      if (newService.subtype === 'cut') {
-        setService(allServices);
-      } else if (newService.subtype === 'dye') {
-        setService2(allServices);
-      } else if (newService.subtype === 'treatment') {
-        setService3(allServices);
-      } else if (newService.subtype === 'wash') {
-        setService4(allServices);
-      } else if (newService.subtype === 'styling') {
-        setService5(allServices);
-      } else if (newService.subtype === 'extension') {
-        setService6(allServices);
-      } else if (newService.subtype === 'full set') {
-        setService7(allServices);
-      } else if (newService.subtype === 'fills') {
-        setService8(allServices);
-      } else if (newService.subtype === 'manicure') {
-        setService9(allServices);
-      } else if (newService.subtype === 'pedicure') {
-        setService10(allServices);
-      } else if (newService.subtype === '') {
-        setService11(allServices);
-      }
+      const updatedService = { ...services };
+      const { type, subtype } = service;
+      updatedService[assembleTypeKey(type, subtype)].push(service);
+      setService(updatedService);
     }
-    setLoading(false);
     return success;
   };
 
-  const saveService = async (group, index) => {
-    setLoading(true);
-    const [success, rev] = await requestServiceChange(group[index]._id, {
-      name: group[index].name,
-      type: group[index].type,
-      subtype: group[index].subtype,
-      time: group[index].time,
-      price: group[index].price,
-      description: group[index].description,
-      banner: group[index].banner,
-      addons: group[index].addons,
-    });
-    setLoading(false);
-    return success;
+  const modifyService = (service) => {
+    const updatedServices = { ...services };
+    const { _id, type, subtype } = service;
+    const key = assembleTypeKey(type, subtype);
+    console.log(service);
+    const serviceIndex = services[key].findIndex((s) => s._id === _id);
+    updatedServices[key][serviceIndex] = service;
+    setService(updatedServices);
   };
 
-  const updateServices = (group, index, ...argus) => {
-    const allServices = [...group];
-    const newFields = allServices[index];
-    argus.forEach((argu) => {
-      const [fieldName, val] = argu;
-      newFields[fieldName] = val;
-    });
-    allServices[index] = newFields;
-    setService(allServices);
+  const updateService = async (service) => {
+    // eslint-disable-next-line no-unused-vars
+    const [success, rev] = await requestServiceChange(service);
+    return success;
   };
 
   useEffect(() => {
-    const callServices = async () => {
-      const fetchServicesByType = async (type, subtype) => fetch(`/api/services/types/${type}/${subtype}`)
-        .then((response) => response.json())
-        .then((data) => data);
-
-      setService(await fetchServicesByType('hair', 'cut'));
-      setService2(await fetchServicesByType('hair', 'dye'));
-      setService3(await fetchServicesByType('hair', 'treatment'));
-      setService4(await fetchServicesByType('hair', 'wash'));
-      setService5(await fetchServicesByType('hair', 'styling'));
-      setService6(await fetchServicesByType('hair', 'extension'));
-      setService7(await fetchServicesByType('nails', 'full set'));
-      setService8(await fetchServicesByType('nails', 'fills'));
-      setService9(await fetchServicesByType('nails', 'manicure'));
-      setService10(await fetchServicesByType('nails', 'pedicure'));
-      setService11(await fetchServicesByType('wax', ''));
+    const callReviews = async () => {
+      const res = await fetch('/api/services');
+      const allServices = await res.json();
+      const mappedServices = {};
+      allServices.forEach((service) => {
+        const key = assembleTypeKey(service.type, service.subtype);
+        if (!mappedServices[key]) {
+          mappedServices[key] = [];
+        }
+        mappedServices[key].push(service);
+      });
+      setService(mappedServices);
       setLoading(false);
     };
 
-    if (loading) {
-      callServices();
+    if (init) {
+      callReviews();
+      setInit(false);
     }
   }, []);
 
-  return [services, services2, services3, services4, services5,
-    services6, services7, services8, services9, services10, services11,
-    newService, loading, updateServices,
-    updateNewService, deleteService, addService, saveService];
+  return [services, loading, addService, modifyService, updateService, deleteService, keyToTypes, assembleTypeKey];
 };

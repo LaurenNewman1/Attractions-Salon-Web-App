@@ -20,14 +20,11 @@ const AddOnTable = ({
   const [addonName, setAddonName] = useState(addon.name);
   const [addonPrice, setAddonPrice] = useState(addon.price);
 
-  const handleChangeName = async (e, i) => {
-    console.log(e);
-    await setAddonName(e);
-    updateAddonName(addonName, 0);
+  const handleChangeName = (e, i) => {
+    updateAddonName(e, i);
   };
 
   const handleChangePrice = (e, i) => {
-    console.log(e);
     updateAddonPrice(e, i);
   };
 
@@ -43,30 +40,30 @@ const AddOnTable = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {/* {!addon.length ? null
-              : addon.map((add, i) => ( */}
-            <TableRow key={addon.name}>
-              <TableCell component="th" scope="row">
-                <TextField
-                  value={addonName}
-                  onChange={(e) => handleChangeName(e.target.value)}
-                />
-              </TableCell>
-              <TableCell>
-                <TextField
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <AttachMoney />
-                      </InputAdornment>
-                    ),
-                  }}
-                  value={addon.price}
-                  onChange={(e) => setAddonPrice(Number(e.target.value))}
-                />
-              </TableCell>
-            </TableRow>
-            {/* ))} */}
+            {!addon.length ? null
+              : addon.map((addons, i) => (
+                <TableRow key={i}>
+                  <TableCell component="th" scope="row">
+                    <TextField
+                      value={addons.name}
+                      onChange={(e) => handleChangeName(e.target.value, i)}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <TextField
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <AttachMoney />
+                          </InputAdornment>
+                        ),
+                      }}
+                      value={addons.price}
+                      onChange={(e) => handleChangePrice(Number(e.target.value), i)}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>
