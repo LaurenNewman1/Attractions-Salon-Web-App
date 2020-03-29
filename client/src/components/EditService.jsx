@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   ExpansionPanel, Grid, Fab, Dialog, DialogTitle, DialogContent,
   ExpansionPanelSummary,
@@ -16,10 +16,31 @@ import AddOnTable from './AddOnTable';
 import useStyles from '../css/EditServiceStyles';
 
 const EditService = ({
-  index, service, deleteService, cancelChanges, changeService,
-  updateService, group, asdf, open,
+  index, service, deleteService, changeService,
+  updateService, group, asdf,
 }) => {
   const classes = useStyles();
+
+  // const [name, setName] = React.useState(service.name);
+  // const [type, setType] = React.useState(service.type);
+  // const [subtype, setSubType] = React.useState(service.subtype);
+  // const [time, setTime] = React.useState(service.time);
+  // const [price, setPrice] = React.useState(service.price);
+  // const [description, setDescription] = React.useState(service.description);
+  const [addons, setAddons] = React.useState(service.addons);
+  const [openAddon, setOpenAddon] = React.useState(false);
+  const [newAddonName, setNewAddonName] = React.useState('');
+  const [newAddonPrice, setNewAddonPrice] = React.useState(1);
+  const [viewing, setViewing] = React.useState();
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpenAddon(true);
+  };
+
+  const handleClose = () => {
+    setOpenAddon(false);
+  };
 
   const [localService, setLocalService] = useState(service);
 
@@ -28,15 +49,15 @@ const EditService = ({
   };
 
   const updateAddonName = (e, i) => {
-    const newService = { ...service };
-    newService.addons[i].name = e;
-    updateService(newService);
+    // const newService = { ...service };
+    localService.addons[i].name = e;
+    updateService(localService);
   };
 
   const updateAddonPrice = (e, i) => {
-    const newService = { ...service };
-    newService.addons[i].price = e;
-    updateService(newService);
+    // const newService = { ...service };
+    localService.addons[i].price = e;
+    updateService(localService);
   };
 
   const updateServiceArg = (name, val) => {
@@ -46,27 +67,41 @@ const EditService = ({
   };
 
   const commitService = () => {
+    updateService(localService);
     changeService(localService);
   };
 
+  const newService = { ...service };
+  const newAddon = (e) => {
+    e.preventDefault();
+    setOpenAddon(false);
+    const newAddonNameV = newAddonName;
+    const newAddonPriceV = newAddonPrice;
+    const nAddon = { name: newAddonNameV, price: newAddonPriceV };
+    updateServiceArg('addons', [...localService.addons, nAddon]);
+    updateService(localService);
+    changeService(localService);
+    console.log(localService);
+  };
   const cancelChanges = () => {
-    console.log('viewing name', baseState.name);
-    updateService(group, index, ['name', viewing.name]);
+    console.log('viewing name', newService.name);
+    updateServiceArg(['name', newService.name]);
+    setLocalService(newService);
+    console.log('new service name', newService.name);
+    updateService(newService);
     setOpen(false);
   };
   useEffect(() => {
-    setViewing(service);
+    setLocalService(newService);
     console.log('viewing', viewing);
-  }, []);
+  }, [open]);
   const handleClickOpenPanel = () => {
-    if (open === false) {
-      console.log('viewing', viewing);
-      setOpen(!open);
-    } else {
-      cancelChanges();
-      setOpen(!open);
-    }
-
+    console.log('viewing', viewing);
+    setOpen(!open);
+    // } else {
+    //   // cancelChanges();
+    //   setOpen(!open);
+    // }
   };
   // const cancelChanges = (i) => {
   //   updateService(group, i, ['name', viewing.name]);
@@ -104,7 +139,7 @@ const EditService = ({
   // };
 
   return (
-    <ExpansionPanel>
+    <ExpansionPanel expanded={open} onChange={handleClickOpenPanel}>
       <ExpansionPanelSummary expandIcon={<ExpandMore />}>
         {!open
           ? (<Typography>{service.name}</Typography>
@@ -220,23 +255,13 @@ const EditService = ({
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {!addons.length ? null
-                      : addons.map((currentAddon) => (
-                        <TableRow key={currentAddon._id}>
+                    {!localService.addons.length ? null
+                      : localService.addons.map((add, i) => (
+                        <TableRow key={i}>
                           <TableCell component="th" scope="row">
                             <TextField
-                              value={currentAddon.name}
-                              onChange={(e) => {
-                                const addonname = e.target.value;
-                                setAddons([...addons].map((object) => {
-                                  if (object._id === currentAddon._id) {
-                                    return {
-                                      ...object,
-                                      name: addonname,
-                                    };
-                                  } return object;
-                                }));
-                              }}
+                              value={add.name}
+                              onChange={(e) => updateAddonName(e.target.value, i)}
                             />
                           </TableCell>
                           <TableCell>
@@ -248,19 +273,8 @@ const EditService = ({
                                   </InputAdornment>
                                 ),
                               }}
-                              value={currentAddon.price}
-                              onChange={(e) => {
-                                const addonprice = e.target.value;
-                                setAddons([...addons].map((object) => {
-                                  if (object._id === currentAddon._id) {
-                                    return {
-                                      ...object,
-                                      price: addonprice,
-                                    };
-                                  } return object;
-                                }));
-                              }}
-                              // onChange={(e) => setAddonPrice(Number(e.target.value))}
+                              value={add.price}
+                              onChange={(e) => updateAddonPrice(Number(e.target.value), i)}
                             />
                           </TableCell>
                         </TableRow>
@@ -270,11 +284,6 @@ const EditService = ({
               </TableContainer>
             </div>
 
-            <AddOnTable
-              updateAddonName={(e, i) => updateAddonName(e, i)}
-              updateAddonPrice={(e, i) => updateAddonPrice(e, i)}
-              addon={localService.addons}
-            />
           </Grid>
         </Grid>
       </ExpansionPanelDetails>
