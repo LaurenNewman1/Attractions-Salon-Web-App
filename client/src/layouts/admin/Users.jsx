@@ -50,6 +50,7 @@ const Users = () => {
   };
 
   const onClickDelete = async (_id) => {
+    console.log(confirmDelete);
     setConfirmDelete(false);
     setOpen(false);
     const success = await deleteUser(userGroupName, userGroup, _id);
@@ -116,7 +117,7 @@ const Users = () => {
         gutterBottom
       >
         <div style={{ width: 40 }} />
-        Services
+        Users
         <NewUser onClickAdd={onClickAdd} setAlert={setAlert} updateNewUser={updateNewUser} />
       </Typography>
 
@@ -131,6 +132,7 @@ const Users = () => {
             updateUser={updateUsers}
             userGroup={users}
             userGroupName="0"
+            openValue={open}
           />
         ))}
 

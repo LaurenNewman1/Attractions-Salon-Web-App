@@ -72,16 +72,19 @@ export default () => {
   };
 
   const deleteUser = async (userGroupName, userGroup, _id) => {
+    console.log(userGroupName);
     setLoading(true);
     const success = await requestDelete(_id);
     if (success) {
+      console.log(userGroup);
       const allUsers = [...userGroup];
       allUsers.splice(users.findIndex((r) => r._id === _id), 1);
-      if (userGroupName === 0) {
+      if (userGroupName === '0') {
         setUsers(allUsers);
-      } else if (userGroupName === 1) {
+        console.log(users);
+      } else if (userGroupName === '1') {
         setUsers1(allUsers);
-      } else if (userGroupName === 2) {
+      } else if (userGroupName === '2') {
         setUsers2(allUsers);
       }
     }

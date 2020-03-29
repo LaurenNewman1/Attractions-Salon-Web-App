@@ -16,7 +16,7 @@ import PropTypes from 'prop-types';
 import useStyles from '../css/EditServiceStyles';
 
 const EditUser = ({
-  index, user, deleteUser, changeService, updateUser, userGroup, userGroupName,
+  index, user, deleteUser, changeService, updateUser, userGroup, userGroupName, openValue,
 }) => {
   const classes = useStyles();
   //   const history = useHistory();
@@ -71,7 +71,7 @@ const EditUser = ({
           : (
             <TextField
               onClick={(e) => handleClick(e)}
-              // onChange={(e) => updateUser(userGroup, index, ['name', e.target.value])}
+              onChange={(e) => updateUser(userGroup, index, ['name', e.target.value])}
               defaultValue={user.name}
               className={classes.heading}
               style={{ border: '5px' }}
@@ -118,6 +118,7 @@ EditUser.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   userGroup: PropTypes.array.isRequired,
   userGroupName: PropTypes.string.isRequired,
+  openValue: PropTypes.bool.isRequired,
 };
 
 
