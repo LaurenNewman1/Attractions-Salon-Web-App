@@ -29,12 +29,12 @@ const NewService = ({
 
   const addAddon = async () => {
     setOpen(false);
-    updateNewService(['addons', [
-      {
-        name: addonName,
-        price: addonPrice,
-      },
-    ]]);
+    // updateNewService(['addons', [
+    //   {
+    //     name: addonName,
+    //     price: addonPrice,
+    //   },
+    // ]]);
     onClickAdd();
     return addons;
   };
@@ -50,7 +50,7 @@ const NewService = ({
           <form className={classes.textfield}>
             <TextField onChange={(e) => updateNewService(['name', e.target.value])} label="Name" required />
             <TextField onChange={(e) => updateNewService(['type', e.target.value])} label="Type" required />
-            <TextField onChange={(e) => updateNewService(['subtype', e.target.value])} label="subtype" />
+            <TextField onChange={(e) => updateNewService(['subtype', e.target.value])} label="Subtype" />
             <TextField onChange={(e) => updateNewService(['price', e.target.value])} label="Price" />
             <TextField
               label="Time"
@@ -70,11 +70,10 @@ const NewService = ({
               }}
             />
             <TextField onChange={(e) => updateNewService(['banner', e.target.value])} label="Banner" />
-            <TextField onChange={(e) => setAddonName(e.target.value)} label="Addon Name" />
-            <TextField onChange={(e) => setAddonPrice(e.target.value)} label="Addon Price" />
+            {/* <TextField onChange={(e) => setAddonName(e.target.value)} label="Addon Name" />
+            <TextField onChange={(e) => setAddonPrice(e.target.value)} label="Addon Price" /> */}
             <TextField
               required
-              onClick={addAddon}
               onChange={(e) => updateNewService(['description', e.target.value])}
               multiline
               style={{ width: '88%' }}

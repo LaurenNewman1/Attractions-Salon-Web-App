@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Table, TableBody, TableCell, TableContainer, TableHead,
   TableRow, Paper, TextField, InputAdornment,
@@ -14,13 +14,16 @@ import PropTypes from 'prop-types';
 import useStyles from '../css/EditServiceStyles';
 
 const AddOnTable = ({
-  addon, updateAddonName, updateAddonPrice,
+  addon, index, updateAddonName, updateAddonPrice,
 }) => {
   const classes = useStyles();
+  const [addonName, setAddonName] = useState(addon.name);
+  const [addonPrice, setAddonPrice] = useState(addon.price);
 
-  const handleChangeName = (e, i) => {
+  const handleChangeName = async (e, i) => {
     console.log(e);
-    updateAddonName(e, i);
+    await setAddonName(e);
+    updateAddonName(addonName, 0);
   };
 
   const handleChangePrice = (e, i) => {
@@ -40,30 +43,30 @@ const AddOnTable = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {!addon.length ? null
-              : addon.map((addons, i) => (
-                <TableRow key={addons.name}>
-                  <TableCell component="th" scope="row">
-                    <TextField
-                      value={addons.name}
-                      onChange={(e) => handleChangeName(e.target.value, i)}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <TextField
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <AttachMoney />
-                          </InputAdornment>
-                        ),
-                      }}
-                      value={addons.price}
-                      onChange={(e) => handleChangePrice(Number(e.target.value), i)}
-                    />
-                  </TableCell>
-                </TableRow>
-              ))}
+            {/* {!addon.length ? null
+              : addon.map((add, i) => ( */}
+            <TableRow key={addon.name}>
+              <TableCell component="th" scope="row">
+                <TextField
+                  value={addonName}
+                  onChange={(e) => handleChangeName(e.target.value)}
+                />
+              </TableCell>
+              <TableCell>
+                <TextField
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <AttachMoney />
+                      </InputAdornment>
+                    ),
+                  }}
+                  value={addon.price}
+                  onChange={(e) => setAddonPrice(Number(e.target.value))}
+                />
+              </TableCell>
+            </TableRow>
+            {/* ))} */}
           </TableBody>
         </Table>
       </TableContainer>

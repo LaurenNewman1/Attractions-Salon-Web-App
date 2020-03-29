@@ -1,13 +1,15 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
-  ExpansionPanel, Grid,
+  ExpansionPanel, Grid, Fab, Dialog, DialogTitle, DialogContent,
   ExpansionPanelSummary,
   ExpansionPanelDetails,
   Typography, TextField, Button, InputAdornment, DialogActions,
+  Table, TableBody, TableCell, TableContainer, TableHead,
+  TableRow, Paper,
 } from '@material-ui/core';
 import {
-  ExpandMore, AttachMoney, Schedule,
+  ExpandMore, AttachMoney, Schedule, Add,
 } from '@material-ui/icons';
 // import {
 //   useHistory,
@@ -17,8 +19,8 @@ import AddOnTable from './AddOnTable';
 import useStyles from '../css/EditServiceStyles';
 
 const EditService = ({
-  index, service, deleteService, cancelChanges, changeService,
-  updateService, group, asdf, open, setOpen,
+  index, service, deleteService, changeService,
+  updateService, group, asdf,
 }) => {
   const classes = useStyles();
   const [name, setName] = React.useState(service.name);
@@ -28,6 +30,30 @@ const EditService = ({
   const [price, setPrice] = React.useState(service.price);
   const [description, setDescription] = React.useState(service.description);
   const [addons, setAddons] = React.useState(service.addons);
+  const [openAddon, setOpenAddon] = React.useState(false);
+  const [newAddonName, setNewAddonName] = React.useState('');
+  const [newAddonPrice, setNewAddonPrice] = React.useState(1);
+  const [viewing, setViewing] = React.useState();
+  const [open, setOpen] = React.useState(false);
+
+  const baseState = viewing;
+
+  const handleClickOpen = () => {
+    setOpenAddon(true);
+  };
+
+  const handleClose = () => {
+    setOpenAddon(false);
+  };
+
+  const newAddon = (e) => {
+    e.preventDefault();
+    setOpenAddon(false);
+    const newAddonNameV = newAddonName;
+    const newAddonPriceV = newAddonPrice;
+    const nAddon = { name: newAddonNameV, price: newAddonPriceV };
+    setAddons([...addons, nAddon]);
+  };
 
   const renderSavedPage = () => {
     updateService(group, index, ['addons', addons]);
@@ -54,10 +80,64 @@ const EditService = ({
     addons[i].price = e;
   };
 
+  const cancelChanges = () => {
+    console.log('viewing name', baseState.name);
+    updateService(group, index, ['name', viewing.name]);
+    setOpen(false);
+  };
+  useEffect(() => {
+    setViewing(service);
+    console.log('viewing', viewing);
+  }, []);
+  const handleClickOpenPanel = () => {
+    if (open === false) {
+      console.log('viewing', viewing);
+      setOpen(!open);
+    } else {
+      cancelChanges();
+      setOpen(!open);
+    }
+
+  };
+  // const cancelChanges = (i) => {
+  //   updateService(group, i, ['name', viewing.name]);
+  //   setOpen(false);
+  // };
+
+  // const expandChange = (panel) => (event, isExpanded) => {
+  //   // cancel any previously closed ones
+  //   // if (open !== false) {
+  //   //   cancelChanges(panel);
+  //   // }
+  //   // save history on newly opened ones
+  //   if (isExpanded) {
+  //     setViewing({ service });
+  //     console.log('viewing', viewing);
+  //   } else { // cancel if closing
+  //     cancelChanges(panel);
+  //   }
+  //   setOpen(isExpanded ? panel : false);
+  // };
+  // const expandChange = () => (event, isExpanded) => {
+  //   // cancel any previously closed ones
+  //   if (open !== false) {
+  //     cancelChanges(open);
+  //   }
+  //   // save history on newly opened ones
+  //   if (isExpanded) {
+  //     setViewing({ service });
+  //     console.log('viewing', viewing);
+  //   } else { // cancel if closing
+  //     cancelChanges(p, panel);
+  //   }
+  //   console.log('viewing', viewing);
+  //   setOpen(isExpanded ? panel : false);
+  // };
+
   return (
-    <ExpansionPanel expanded={open === index} onChange={setOpen(index)}>
+    <ExpansionPanel expanded={open} onClick={() => handleClickOpenPanel()}>
       <ExpansionPanelSummary expandIcon={<ExpandMore />}>
-        {open !== index
+        {!open
           ? (<Typography>{service.name}</Typography>
           )
           : (
@@ -133,11 +213,94 @@ const EditService = ({
             />
           </Grid>
           <Grid item xs={12} className={classes.tablediv}>
-            <AddOnTable
-              updateAddonName={updateAddonName}
-              updateAddonPrice={updateAddonPrice}
-              addon={addons}
-            />
+
+            <div className={classes.table}>
+              <TableContainer component={Paper}>
+                <Table size="small" aria-label="a dense table">
+                  <TableHead>
+                    <TableRow>
+                      <h3 style={{ paddingLeft: '10px' }}>
+                        Addons
+                        <Fab style={{ marginLeft: 10 }} color="primary" size="small" onClick={handleClickOpen}>
+                          <Add />
+                        </Fab>
+                      </h3>
+
+                      <Dialog open={openAddon} onClose={handleClose}>
+                        <DialogTitle>New Service</DialogTitle>
+                        <DialogContent>
+                          <form className={classes.textfield}>
+                            <TextField onChange={(e) => setNewAddonName(e.target.value)} label="Addon Name" />
+                            <TextField onChange={(e) => setNewAddonPrice(e.target.value)} label="Addon Price" />
+                          </form>
+                        </DialogContent>
+                        <DialogActions>
+                          <Button onClick={handleClose}>
+                            Cancel
+                          </Button>
+                          <Button onClick={(e) => newAddon(e)} color="primary" variant="contained">
+                            Save
+                          </Button>
+                        </DialogActions>
+                      </Dialog>
+
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Name</TableCell>
+                      <TableCell>Price</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {!addons.length ? null
+                      : addons.map((currentAddon) => (
+                        <TableRow key={currentAddon._id}>
+                          <TableCell component="th" scope="row">
+                            <TextField
+                              value={currentAddon.name}
+                              onChange={(e) => {
+                                const addonname = e.target.value;
+                                setAddons([...addons].map((object) => {
+                                  if (object._id === currentAddon._id) {
+                                    return {
+                                      ...object,
+                                      name: addonname,
+                                    };
+                                  } return object;
+                                }));
+                              }}
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <TextField
+                              InputProps={{
+                                startAdornment: (
+                                  <InputAdornment position="start">
+                                    <AttachMoney />
+                                  </InputAdornment>
+                                ),
+                              }}
+                              value={currentAddon.price}
+                              onChange={(e) => {
+                                const addonprice = e.target.value;
+                                setAddons([...addons].map((object) => {
+                                  if (object._id === currentAddon._id) {
+                                    return {
+                                      ...object,
+                                      price: addonprice,
+                                    };
+                                  } return object;
+                                }));
+                              }}
+                              // onChange={(e) => setAddonPrice(Number(e.target.value))}
+                            />
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </div>
+
           </Grid>
         </Grid>
       </ExpansionPanelDetails>
@@ -170,15 +333,15 @@ EditService.propTypes = {
     addons: PropTypes.array,
   }).isRequired,
   deleteService: PropTypes.func.isRequired,
-  cancelChanges: PropTypes.func.isRequired,
+  // cancelChanges: PropTypes.func.isRequired,
   changeService: PropTypes.func.isRequired,
   updateService: PropTypes.func.isRequired,
   index: PropTypes.string.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   group: PropTypes.array.isRequired,
   asdf: PropTypes.string.isRequired,
-  open: PropTypes.bool.isRequired,
-  setOpen: PropTypes.func.isRequired,
+  // open: PropTypes.bool.isRequired,
+  // setOpen: PropTypes.func.isRequired,
 };
 
 

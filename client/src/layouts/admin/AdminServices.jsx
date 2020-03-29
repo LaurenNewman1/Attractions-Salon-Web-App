@@ -29,8 +29,8 @@ const adminServices = () => {
     type: '',
     text: '',
   });
-  const [groupName, setGroupName] = useState([]);
-  const [asdf, setasdf] = useState('');
+  const [serviceGroup, setServiceGroup] = useState([]);
+  const [serviceGroupName, setServiceGroupName] = useState('');
 
   const onClickAdd = async () => {
     setOpen(false);
@@ -42,9 +42,9 @@ const adminServices = () => {
     });
   };
 
-  const setDelete = (asd, group, _id) => {
-    setGroupName(group);
-    setasdf(asd);
+  const setDelete = (serviceGName, serviceG, _id) => {
+    setServiceGroup(serviceG);
+    setServiceGroupName(serviceGName);
     console.log(_id);
     setConfirmDelete(_id);
   };
@@ -52,8 +52,8 @@ const adminServices = () => {
   const onClickDelete = async (_id) => {
     setConfirmDelete(false);
     setOpen(false);
-    console.log(groupName);
-    const success = await deleteService(asdf, groupName, _id);
+    // console.log(groupName);
+    const success = await deleteService(serviceGroupName, serviceGroup, _id);
     setAlert({
       open: true,
       type: success ? TYPE_SUCCESS : TYPE_ERROR,
@@ -71,23 +71,25 @@ const adminServices = () => {
     setOpen(false);
   };
 
-  const cancelChanges = () => {
-    setOpen(false);
-  };
+  // const cancelChanges = (group, index) => {
+  //   updateServices(group, index, ['name', 'potatos']);
+  //   setOpen(false);
+  // };
 
-  const expandChange = (panel) => (event, isExpanded) => {
-    // cancel any previously closed ones
-    if (open !== false) {
-      cancelChanges(open);
-    }
-    // save history on newly opened ones
-    if (isExpanded) {
-      setViewing({ ...services[panel] });
-    } else { // cancel if closing
-      cancelChanges(panel);
-    }
-    setOpen(isExpanded ? panel : false);
-  };
+  // const expandChange = (group, panel) => (event, isExpanded) => {
+  //   // cancel any previously closed ones
+  //   if (open !== false) {
+  //     cancelChanges(open);
+  //   }
+  //   // save history on newly opened ones
+  //   if (isExpanded) {
+  //     setViewing({ ...services[panel] });
+  //   } else { // cancel if closing
+  //     cancelChanges(group, panel);
+  //   }
+  //   console.log('viewing', viewing);
+  //   setOpen(isExpanded ? panel : false);
+  // };
 
   return (
     <Page maxWidth="md">
@@ -113,8 +115,8 @@ const adminServices = () => {
             service={service}
             index={index}
             open={open}
-            setOpen={(panel) => expandChange(panel)}
-            cancelChanges={() => cancelChanges()}
+            // setOpen={(group, panel) => expandChange(group, panel)}
+            // cancelChanges={() => cancelChanges()}
             deleteService={setDelete}
             changeService={() => onClickSave(services, index)}
             updateService={updateServices}
@@ -123,7 +125,7 @@ const adminServices = () => {
           />
         ))}
 
-      <Typography variant="h5" className={classes.header}>Hair Dyes</Typography>
+      {/* <Typography variant="h5" className={classes.header}>Hair Dyes</Typography>
       {!services2.length ? null
         : services2.map((service, index) => (
           <EditService
@@ -281,7 +283,7 @@ const adminServices = () => {
             group={services11}
             asdf="services11"
           />
-        ))}
+        ))} */}
 
       {confirmDelete
         ? (
