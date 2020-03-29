@@ -27,7 +27,7 @@ const EditService = ({ service, deleteService, changeService }) => {
   const [time, setTime] = React.useState(service.time);
   const [price, setPrice] = React.useState(service.price);
   const [description, setDescription] = React.useState(service.description);
-  const [addons, setAddons] = React.useState(service.addons);
+  const [addons] = React.useState(service.addons);
 
   const renderSavedPage = () => {
     changeService(service._id, {
