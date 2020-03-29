@@ -65,15 +65,7 @@ const Profile = ({ userData, logout, changeProfile }) => {
         </>
       );
     }
-    // return (
-    //   <Button
-    //     variant="contained"
-    //     color="primary"
-    //     onClick={() => setEditMode(true)}
-    //   >
-    //     Edit
-    //   </Button>
-    // );
+    return null;
   };
 
   const renderTextFields = () => {
@@ -129,13 +121,13 @@ const Profile = ({ userData, logout, changeProfile }) => {
       </div>
       <div>
         <Grid container spacing={8} className={classes.container}>
-          <Grid item xs={12} md={6} className={classes.leftContainer}>
+          <Grid item xs={6} md={6} className={classes.leftContainer}>
             <div>
               <AccountCircle style={{ fontSize: 120 }} />
               <Typography variant="h6" gutterBottom style={{ textAlign: 'center' }}>{name}</Typography>
             </div>
           </Grid>
-          <Grid item xs={12} md={6}>
+          <Grid item xs={6} md={6}>
             {renderTextFields()}
           </Grid>
           <Grid item xs={12} className={classes.logout}>

@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 import useStyles from '../css/PageStyles';
 import logo from '../images/logo.png';
 
-const NavBar = ({ loggedIn, setFromBookPage }) => {
+const NavBar = ({ loggedIn, userData, setFromBookPage }) => {
   const history = useHistory();
   const classes = useStyles();
 
@@ -41,28 +41,54 @@ const NavBar = ({ loggedIn, setFromBookPage }) => {
     }
   };
 
-  return (
+  const userButtons = (
     <>
-      <AppBar position="fixed">
-        <Toolbar>
-          <Button onClick={() => history.push('/')} aria-label="logo">
-            <img src={logo} alt="logo" style={{ width: '150px' }} />
-          </Button>
-          <div className={classes.grow} />
-          <Button onClick={() => handleBook()}>Book</Button>
-          <Button onClick={() => history.push('/services')}>Services</Button>
-          <Button onClick={() => history.push('/contact')}>Contact</Button>
-          {userLogin}
-        </Toolbar>
-      </AppBar>
-      <div className={classes.toolbar} />
+      <Button onClick={() => history.push('/')} aria-label="logo">
+        <img src={logo} alt="logo" style={{ width: '150px' }} />
+      </Button>
+      <div className={classes.grow} />
+      <Button onClick={() => handleBook()}>Book</Button>
+      <Button onClick={() => history.push('/services')}>Services</Button>
+      <Button onClick={() => history.push('/contact')}>Contact</Button>
+      {userLogin}
     </>
+  );
+
+  const adminButtons = (
+    <>
+      <Button onClick={() => history.push('/admin/dashboard')}>Dashboard</Button>
+      <div className={classes.grow} />
+      <Button onClick={() => history.push('/admin/requests')}>Requests</Button>
+      <Button onClick={() => history.push('/admin/users')}>Users</Button>
+      <Button onClick={() => history.push('/admin/services')}>Services</Button>
+      <Button onClick={() => history.push('/admin/reviews')}>Reviews</Button>
+      {userLogin}
+    </>
+  );
+  console.log(userData.role);
+  return (
+    <AppBar position="static">
+      <Toolbar>
+        {userData && userData.role === 2 ? adminButtons : userButtons}
+      </Toolbar>
+    </AppBar>
   );
 };
 
 NavBar.propTypes = {
   loggedIn: PropTypes.bool.isRequired,
+  userData: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    role: PropTypes.number.isRequired,
+    email: PropTypes.string.isRequired,
+    phone_number: PropTypes.string.isRequired,
+    password: PropTypes.string.isRequired,
+  }),
   setFromBookPage: PropTypes.func.isRequired,
+};
+
+NavBar.defaultProps = {
+  userData: null,
 };
 
 

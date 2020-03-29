@@ -4,11 +4,6 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
-  page: {
-    height: 'calc(100vh - 64px)',
-    display: 'flex',
-    alignItems: 'center',
-  },
   header: {
     textAlign: 'center',
     width: '100%',
@@ -31,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
   },
   leftContainer: {
     backgroundColor: theme.palette.background.dark,
-    height: '100%',
+    minHeight: '100%',
     display: 'flex',
     justifyContent: 'center',
     padding: 10,
@@ -59,6 +54,10 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'space-between',
     marginTop: 5,
+  },
+  review: {
+    height: 80,
+    overflow: 'hidden',
   },
 }));
 

@@ -12,15 +12,30 @@ import Services from './layouts/Services';
 import Contact from './layouts/Contact';
 import Login from './layouts/Login';
 import Profile from './layouts/Profile';
+import ResetPassword from './layouts/ResetPassword';
 import NavBar from './components/NavBar';
 import SignUp from './layouts/SignUp';
 import Confirmation from './layouts/Confirmation';
+import Requests from './layouts/admin/Requests';
+import AdminServices from './layouts/admin/AdminServices';
 import useLogin from './stores/LoginStores';
+import Dashboard from './layouts/admin/Dashboard';
+import Users from './layouts/admin/Users';
+import AdminReviews from './layouts/admin/AdminReviews';
+import { addService, deleteService, changeService } from './stores/ServiceActionsStore';
 
 const App = () => {
-  const [userData, loggedIn, login, register, logout, changeProfile] = useLogin();
+  const [
+    userData,
+    loggedIn,
+    login,
+    register,
+    logout,
+    changeProfile,
+    requestResetPassword,
+    requestPasswordUpdate,
+  ] = useLogin();
   const [fromBookPage, setFromBookPage] = useState(false);
-
   console.log(`Logged In: ${loggedIn}`);
   console.log(`Book Variable: ${fromBookPage} `);
 
@@ -51,16 +66,48 @@ const App = () => {
     >
       <ThemeProvider theme={theme}>
         <Router>
-          <NavBar loggedIn={loggedIn} logout={() => logout()} fromBookPage={fromBookPage} setFromBookPage={setFromBookPage} />
+          <NavBar
+            loggedIn={loggedIn}
+            logout={() => logout()}
+            userData={userData}
+            fromBookPage={fromBookPage}
+            setFromBookPage={setFromBookPage}
+          />
           <Switch>
             <Route exact path="/" component={() => <Home loggedIn={loggedIn} setFromBookPage={setFromBookPage} />} />
             <Route path="/book" component={() => <Book userData={userData} />} />
             <Route path="/services" component={Services} />
             <Route path="/contact" component={Contact} />
-            <Route path="/login" component={() => <Login login={login} fromBookPage={fromBookPage} />} />
+            <Route path="/login" component={() => <Login login={login} fromBookPage={fromBookPage} resetPassword={requestResetPassword} />} />
+            <Route path="/resetpassword/:token" component={() => <ResetPassword attemptReset={requestPasswordUpdate} />} />
             <Route path="/signUp" component={() => <SignUp register={register} />} />
-            <Route path="/profile" component={() => <Profile userData={userData} logout={() => logout()} changeProfile={changeProfile} />} />
+            <Route
+              path="/profile"
+              component={() => (
+                <Profile
+                  userData={userData}
+                  logout={() => logout()}
+                  changeProfile={changeProfile}
+                />
+              )}
+            />
             <Route path="/confirmation/:id" component={Confirmation} />
+
+            {/* Admin */}
+            <Route path="/admin/dashboard" component={Dashboard} />
+            <Route path="/admin/requests" component={Requests} />
+            <Route path="/admin/users" component={Users} />
+            <Route path="/admin/reviews" component={AdminReviews} />
+            <Route
+              path="/admin/services"
+              component={() => (
+                <AdminServices
+                  addService={addService}
+                  deleteService={deleteService}
+                  changeService={changeService}
+                />
+              )}
+            />
           </Switch>
         </Router>
       </ThemeProvider>
