@@ -59,7 +59,7 @@ export default () => {
     email: '',
     phone_number: '',
     password: '',
-    role: Number,
+    role: '',
   });
 
   const updateNewUser = (...argus) => {
@@ -71,20 +71,22 @@ export default () => {
     setNewUser(newFields);
   };
 
-  const deleteUser = async (userGroupName, userGroup, _id) => {
-    console.log(userGroupName);
+  const deleteUser = async (userGroupName, _id) => {
     setLoading(true);
     const success = await requestDelete(_id);
     if (success) {
-      console.log(userGroup);
-      const allUsers = [...userGroup];
-      allUsers.splice(users.findIndex((r) => r._id === _id), 1);
+      let allUsers;
       if (userGroupName === '0') {
+        allUsers = [...users];
+        allUsers.splice(users.findIndex((r) => r._id === _id), 1);
         setUsers(allUsers);
-        console.log(users);
       } else if (userGroupName === '1') {
+        allUsers = [...users1];
+        allUsers.splice(users1.findIndex((r) => r._id === _id), 1);
         setUsers1(allUsers);
-      } else if (userGroupName === '2') {
+      } else {
+        allUsers = [...users2];
+        allUsers.splice(users2.findIndex((r) => r._id === _id), 1);
         setUsers2(allUsers);
       }
     }
@@ -116,31 +118,68 @@ export default () => {
     return success;
   };
 
-  const saveUser = async (userGroup, index) => {
+  const saveUser = async (id, original) => {
     setLoading(true);
-    // eslint-disable-next-line no-unused-vars
-    console.log(userGroup[index]._id);
-    const [success, rev] = await requestUserUpdate(userGroup[index]._id, {
-      name: userGroup[index].name,
-      email: userGroup[index].email,
-      phone_number: userGroup[index].phone_number,
-      password: userGroup[index].password,
-      role: userGroup[index].role,
-    });
+    const user = users.find((u) => u._id === id)
+      || users1.find((u) => u._id === id) || users2.find((u) => u._id === id);
+    const { password, ...restOfUser } = user;
+    const [success] = await requestUserUpdate(id, restOfUser);
+    // Rearrange lists
+    console.log(user.role, original.role);
+    if (success && user.role !== original.role) {
+      switch (user.role) {
+        case 0:
+          users.push(user);
+          break;
+        case 1:
+          users1.push(user);
+          break;
+        case 2:
+          users2.push(user);
+          break;
+        default:
+          break;
+      }
+      switch (original.role) {
+        case 0:
+          users.splice(users.find((u) => u._id === user._id), 1);
+          break;
+        case 1:
+          users1.splice(users1.find((u) => u._id === user._id), 1);
+          break;
+        case 2:
+          users2.splice(users2.find((u) => u._id === user._id), 1);
+          break;
+        default:
+          break;
+      }
+    }
     setLoading(false);
     return success;
   };
 
-  const updateUsers = (userGroup, index, ...argus) => {
-    const allUsers = [...userGroup];
+  const updateUsers = (userGroupName, index, ...argus) => {
+    let allUsers;
+    if (userGroupName === '0') {
+      allUsers = [...users];
+    } else if (userGroupName === '1') {
+      allUsers = [...users1];
+    } else {
+      allUsers = [...users2];
+    }
     const newFields = allUsers[index];
     argus.forEach((argu) => {
       const [fieldName, val] = argu;
-      console.log('val', val);
       newFields[fieldName] = val;
     });
     allUsers[index] = newFields;
-    setUsers(allUsers);
+    if (userGroupName === '0') {
+      setUsers(allUsers);
+    } else if (userGroupName === '1') {
+      setUsers1(allUsers);
+    } else {
+      setUsers2(allUsers);
+    }
   };
 
   useEffect(() => {
@@ -149,9 +188,9 @@ export default () => {
         .then((response) => response.json())
         .then((data) => data);
 
-      setUsers(await usersRequestFetch('0'));
-      setUsers1(await usersRequestFetch('1'));
       setUsers2(await usersRequestFetch('2'));
+      setUsers1(await usersRequestFetch('1'));
+      setUsers(await usersRequestFetch('0'));
       setLoading(false);
     };
 

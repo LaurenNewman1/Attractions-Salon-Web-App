@@ -1,11 +1,7 @@
 import React, { useState } from 'react';
 import {
   Typography,
-  TextField,
 } from '@material-ui/core';
-import {
-  ExpandMore, Add,
-} from '@material-ui/icons';
 import Page from '../../components/Page';
 import useStyles from '../../css/EditServiceStyles';
 import useUsers from '../../stores/UserActionsStore';
@@ -17,9 +13,11 @@ import Alert, { TYPE_SUCCESS, TYPE_ERROR } from '../../components/Alert';
 
 const Users = () => {
   const classes = useStyles();
-  const [open, setOpen] = useState(false);
-  const [confirmDelete, setConfirmDelete] = useState(false);
-  const [dialog, setDialog] = useState(false);
+  const [open, setOpen] = useState({
+    i: -1,
+    list: '',
+  });
+  const [confirmDelete, setConfirmDelete] = useState(-1);
   const [viewing, setViewing] = useState({});
   const [alert, setAlert] = useState({
     open: false,
@@ -29,18 +27,17 @@ const Users = () => {
   const [userGroup, setUserGroup] = useState([]);
   const [userGroupName, setUserGroupName] = useState('');
 
-  const [users, users1, users2, newUser, loading, updateUsers,
+  const [users, users1, users2,, loading, updateUsers,
     updateNewUser, deleteUser, addUser, saveUser] = useUsers();
 
-  const setDelete = (userGName, group, _id) => {
+  const setDelete = (userGName, group, index) => {
+    console.log(userGName, group, index);
     setUserGroup(group);
     setUserGroupName(userGName);
-    console.log(_id);
-    setConfirmDelete(_id);
+    setConfirmDelete(index);
   };
 
   const onClickAdd = async () => {
-    setDialog(false);
     const success = await addUser();
     setAlert({
       open: true,
@@ -50,10 +47,10 @@ const Users = () => {
   };
 
   const onClickDelete = async (_id) => {
-    console.log(confirmDelete);
-    setConfirmDelete(false);
-    setOpen(false);
-    const success = await deleteUser(userGroupName, userGroup, _id);
+    console.log(_id);
+    setConfirmDelete(-1);
+    setOpen({ i: -1, list: '' });
+    const success = await deleteUser(userGroupName, _id);
     setAlert({
       open: true,
       type: success ? TYPE_SUCCESS : TYPE_ERROR,
@@ -61,117 +58,123 @@ const Users = () => {
     });
   };
 
-  const onClickSave = async (group, index) => {
-    const success = await saveUser(group, index);
+  const onClickSave = async (id) => {
+    const success = await saveUser(id, viewing);
     setAlert({
       open: true,
       type: success ? TYPE_SUCCESS : TYPE_ERROR,
       text: success ? 'User saved successfully.' : 'Save failed.',
     });
-    setOpen(false);
+    setOpen({ i: -1, list: '' });
   };
 
-  // const cancelChanges = (index) => {
-  //   updateUsers(index, ['name', viewing.name], ['email', viewing.email], ['phone_number', viewing.phone_number], ['password', viewing.password], ['role', viewing.role]);
-  //   setOpen(false);
-  // };
+  const cancelChanges = (index, groupName) => {
+    updateUsers(groupName, index, ['name', viewing.name], ['email', viewing.email],
+      ['phone_number', viewing.phone_number], ['password', viewing.password], ['role', Number(viewing.role)]);
+    setOpen({ i: -1, list: '' });
+  };
 
-  // const expandChange = (panel) => (event, isExpanded) => {
-  //   // cancel any previously closed ones
-  //   if (open !== false) {
-  //     cancelChanges(open);
-  //   }
-  //   // save history on newly opened ones
-  //   if (isExpanded) {
-  //     setViewing({ ...users[panel] });
-  //   } else { // cancel if closing
-  //     cancelChanges(panel);
-  //   }
-  //   setOpen(isExpanded ? panel : false);
-  // };
-
-  // const renderName = (name, panel) => {
-  //   if (open === panel) {
-  //     return (
-  //       <TextField
-  //         value={name}
-  //         onClick={(event) => event.stopPropagation()}
-  //         onChange={(event) => updateUsers(panel, ['reviewer', event.target.value])}
-  //       />
-  //     );
-  //   }
-
-  //   return (
-  //     <Typography>{name}</Typography>
-  //   );
-  // };
+  const expandChange = (panel, list) => (event, isExpanded) => {
+    // cancel any previously closed ones
+    if (open.i > -1 && open.list.length) {
+      cancelChanges(open.i, list);
+    }
+    // save history on newly opened ones
+    if (isExpanded) {
+      switch (list) {
+        case '0':
+          setViewing({ ...users[panel] });
+          break;
+        case '1':
+          setViewing({ ...users1[panel] });
+          break;
+        case '2':
+          setViewing({ ...users2[panel] });
+          break;
+        default:
+          break;
+      }
+    } else { // cancel if closing
+      cancelChanges(open.i, list);
+    }
+    setOpen(isExpanded ? { i: panel, list } : { i: -1, list: '' });
+  };
 
   return (
     <Page maxWidth="md">
       {loading ? <Loading /> : null}
-      <Typography
-        className={classes.pageHead}
-        align="center"
-        variant="h4"
-        display="block"
-        gutterBottom
-      >
-        <div style={{ width: 40 }} />
-        Users
-        <NewUser onClickAdd={onClickAdd} setAlert={setAlert} updateNewUser={updateNewUser} />
-      </Typography>
-
-      <Typography variant="h5" className={classes.header}>Clients</Typography>
-      {!users.length ? null
-        : users.map((user, index) => (
-          <EditUser
-            user={user}
-            index={index}
-            deleteUser={setDelete}
-            changeService={() => onClickSave(users, index)}
-            updateUser={updateUsers}
-            userGroup={users}
-            userGroupName="0"
-            openValue={open}
-          />
-        ))}
-
-      <Typography variant="h5" className={classes.header}>Staff</Typography>
-      {!users1.length ? null
-        : users1.map((user, index) => (
-          <EditUser
-            user={user}
-            index={index}
-            deleteUser={setDelete}
-            changeService={() => onClickSave(users, index)}
-            updateUser={updateUsers}
-            userGroup={users}
-            userGroupName="0"
-          />
-        ))}
-
-      <Typography variant="h5" className={classes.header}>Admins</Typography>
+      <div style={{ paddingTop: 5 }}>
+        <h1
+          className={classes.pageHead}
+          align="center"
+          display="block"
+          gutterBottom
+        >
+          <div style={{ width: 40 }} />
+          Users
+          <NewUser onClickAdd={onClickAdd} setAlert={setAlert} updateNewUser={updateNewUser} />
+        </h1>
+      </div>
+      <Typography variant="h4" className={classes.header}>Admins</Typography>
       {!users2.length ? null
         : users2.map((user, index) => (
           <EditUser
+            key={user._id}
             user={user}
             index={index}
             deleteUser={setDelete}
-            changeService={() => onClickSave(users, index)}
+            saveUser={(id) => onClickSave(id)}
+            updateUser={updateUsers}
+            userGroup={users2}
+            userGroupName="2"
+            open={open}
+            expandChange={(panel, list) => expandChange(panel, list)}
+            cancelChanges={(panel, list) => cancelChanges(panel, list)}
+          />
+        ))}
+      <Typography variant="h4" className={classes.header}>Staff</Typography>
+      {!users1.length ? null
+        : users1.map((user, index) => (
+          <EditUser
+            key={user._id}
+            user={user}
+            index={index}
+            deleteUser={setDelete}
+            saveUser={(id) => onClickSave(id)}
+            updateUser={updateUsers}
+            userGroup={users1}
+            userGroupName="1"
+            open={open}
+            expandChange={(panel, list) => expandChange(panel, list)}
+            cancelChanges={(panel, list) => cancelChanges(panel, list)}
+          />
+        ))}
+      <Typography variant="h4" className={classes.header}>Clients</Typography>
+      {!users.length ? null
+        : users.map((user, index) => (
+          <EditUser
+            key={user._id}
+            user={user}
+            index={index}
+            deleteUser={setDelete}
+            saveUser={(id) => onClickSave(id)}
             updateUser={updateUsers}
             userGroup={users}
             userGroupName="0"
+            open={open}
+            expandChange={(panel, list) => expandChange(panel, list)}
+            cancelChanges={(panel, list) => cancelChanges(panel, list)}
           />
         ))}
-
-      {confirmDelete
+      {confirmDelete !== -1
         ? (
           <Confirm
-            open={confirmDelete !== false}
-            content="Clicking delete will permanently remove this review."
+            open={confirmDelete !== -1}
+            title={`Delete ${userGroup[confirmDelete].name}'s account?`}
+            content="Clicking delete will permanently remove this user."
             confirmText="Delete"
             onConfirm={() => onClickDelete(userGroup[confirmDelete]._id)}
-            onCancel={() => setConfirmDelete(false)}
+            onCancel={() => setConfirmDelete(-1)}
           />
         ) : null}
       <Alert
