@@ -1,112 +1,44 @@
 /* eslint-disable max-len */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
-  Typography, Button, TextField, Fab, InputAdornment,
-  Dialog, DialogActions, DialogContent, DialogTitle,
+  Typography,
 } from '@material-ui/core';
-import {
-  Add, Schedule, AttachMoney,
-} from '@material-ui/icons';
-import PropTypes from 'prop-types';
 import Alert, { TYPE_SUCCESS, TYPE_ERROR } from '../../components/Alert';
 import Page from '../../components/Page';
 import Loading from '../../components/Loading';
 import useStyles from '../../css/EditServiceStyles';
 import EditService from '../../components/EditService';
 import NewService from '../../components/NewService';
-import fetchServicesByType from '../../stores/ServicesStore';
 import useServices from '../../stores/ServiceActionsStore';
 import Confirm from '../../components/Confirm';
 
-const adminServices = ({ addService, deleteService, changeService }) => {
+const adminServices = () => {
   const classes = useStyles();
 
   const [confirmDelete, setConfirmDelete] = useState(false);
-  // const [fullSets, setFullSets] = useState([]);
-  // const [fills, setFills] = useState([]);
-  // const [manicures, setManicures] = useState([]);
-  // const [pedicures, setPedicures] = useState([]);
-  // const [wax, setWax] = useState([]);
-  // const [cuts, setCuts] = useState([]);
-  // const [dyes, setDyes] = useState([]);
-  // const [treatments, setTreatments] = useState([]);
-  // const [washes, setWashes] = useState([]);
-  // const [stylings, setStylings] = useState([]);
-  // const [extensions, setExtensions] = useState([]);
-  // const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  // const [dialog, setDialog] = useState(false);
-
+  const [viewing, setViewing] = useState({});
   const [services, services2, services3, services4,
     services5, services6, services7, services8, services9,
-    services10, services11, newService, loading, updateReviews,
-    updateNewReview, deleteReview, addReview, saveReview] = useServices();
-  // const [name, setName] = useState('');
-  // const [type, setType] = useState('');
-  // const [subtype, setSubType] = useState('');
-  // const [price, setPrice] = useState('');
-  // const [time, setTime] = useState('');
-  // const [description, setDescription] = useState('');
-  // const [banner, setBanner] = useState('');
-  // const [addonPrice, setAddonPrice] = useState('');
-  // const [addonName, setAddonName] = useState('');
-  // const [addons, setAddons] = useState([]);
+    services10, services11,, loading, updateServices,
+    updateNewService, deleteService, addService, saveService] = useServices();
 
   const [alert, setAlert] = useState({
     open: false,
     type: '',
     text: '',
   });
-
-  // const handleClickOpen = () => {
-  //   setOpen(true);
-  // };
-
-  // const handleClose = () => {
-  //   setOpen(false);
-  // };
-
-
-  // const renderSavedPage = async (_id, params) => {
-  //   const successful = await changeService(_id, params);
-  //   if (successful) {
-  //     window.location.reload(false);
-  //   }
-  //   window.location.reload(false);
-  // };
-  // const attemptDelete = async (_id) => {
-  //   const successful = await deleteService(_id);
-  //   if (successful) {
-  //     window.location.reload(false);
-  //   }
-  // };
-
-
-  // const attemptRegister = async () => {
-  //   const lowerType = type.toLowerCase();
-  //   addAddon();
-  //   if (!name.length || !type.length || !description.length) {
-  //     setAlert({ open: true, type: TYPE_ERROR, text: 'Please complete required fields.' });
-  //   } else if (lowerType !== 'hair' && lowerType !== 'nails' && lowerType !== 'wax') {
-  //     setAlert({ open: true, type: TYPE_ERROR, text: 'Valid types are hair, nails, or wax.' });
-  //   } else {
-  //     handleClose();
-  //     await addService(name, lowerType, subtype, price,
-  //       time, description, banner, addons);
-  //   }
-  // };
-
-
   const [groupName, setGroupName] = useState([]);
   const [asdf, setasdf] = useState('');
+
   const onClickAdd = async () => {
     setOpen(false);
-    const success = await addReview();
+    const success = await addService();
     setAlert({
       open: true,
       type: success ? TYPE_SUCCESS : TYPE_ERROR,
-      text: success ? 'Review added successfully.' : 'Failed to add review.',
+      text: success ? 'Service added successfully.' : 'Failed to add review.',
     });
   };
 
@@ -121,27 +53,45 @@ const adminServices = ({ addService, deleteService, changeService }) => {
     setConfirmDelete(false);
     setOpen(false);
     console.log(groupName);
-    const success = await deleteReview(asdf, groupName, _id);
+    const success = await deleteService(asdf, groupName, _id);
     setAlert({
       open: true,
       type: success ? TYPE_SUCCESS : TYPE_ERROR,
-      text: success ? 'Review deleted successfully.' : 'Deletion failed.',
+      text: success ? 'Service deleted successfully.' : 'Deletion failed.',
     });
   };
 
   const onClickSave = async (group, index) => {
-    const success = await saveReview(group, index);
+    const success = await saveService(group, index);
     setAlert({
       open: true,
       type: success ? TYPE_SUCCESS : TYPE_ERROR,
-      text: success ? 'Review saved successfully.' : 'Save failed.',
+      text: success ? 'Service saved successfully.' : 'Save failed.',
     });
     setOpen(false);
   };
 
+  const cancelChanges = () => {
+    setOpen(false);
+  };
+
+  const expandChange = (panel) => (event, isExpanded) => {
+    // cancel any previously closed ones
+    if (open !== false) {
+      cancelChanges(open);
+    }
+    // save history on newly opened ones
+    if (isExpanded) {
+      setViewing({ ...services[panel] });
+    } else { // cancel if closing
+      cancelChanges(panel);
+    }
+    setOpen(isExpanded ? panel : false);
+  };
+
   return (
     <Page maxWidth="md">
-      {loading ? <Loading /> : null}
+      {loading ? <Loading disableShrink /> : null}
       <Typography
         className={classes.pageHead}
         align="center"
@@ -151,7 +101,10 @@ const adminServices = ({ addService, deleteService, changeService }) => {
       >
         <div style={{ width: 40 }} />
         Services
-        <NewService onClickAdd={onClickAdd} addService={addService} setAlert={setAlert} updateNewService={updateNewReview} />
+        <NewService
+          onClickAdd={onClickAdd}
+          updateNewService={updateNewService}
+        />
       </Typography>
       <Typography variant="h5" className={classes.header}>Hair Cuts</Typography>
       {!services.length ? null
@@ -159,9 +112,12 @@ const adminServices = ({ addService, deleteService, changeService }) => {
           <EditService
             service={service}
             index={index}
+            open={open}
+            setOpen={(panel) => expandChange(panel)}
+            cancelChanges={() => cancelChanges()}
             deleteService={setDelete}
             changeService={() => onClickSave(services, index)}
-            updateService={updateReviews}
+            updateService={updateServices}
             group={services}
             asdf="services"
           />
@@ -173,10 +129,11 @@ const adminServices = ({ addService, deleteService, changeService }) => {
           <EditService
             service={service}
             index={index}
-            // deleteService={() => setConfirmDelete(index)}
+            open={open}
+            setOpen={(panel) => expandChange(panel)}
             deleteService={setDelete}
             changeService={() => onClickSave(services2, index)}
-            updateService={updateReviews}
+            updateService={updateServices}
             group={services2}
             asdf="services2"
           />
@@ -188,9 +145,11 @@ const adminServices = ({ addService, deleteService, changeService }) => {
           <EditService
             service={service}
             index={index}
+            open={open}
+            setOpen={(panel) => expandChange(panel)}
             deleteService={setDelete}
             changeService={() => onClickSave(services2, index)}
-            updateService={updateReviews}
+            updateService={updateServices}
             group={services3}
             asdf="services3"
           />
@@ -202,9 +161,11 @@ const adminServices = ({ addService, deleteService, changeService }) => {
           <EditService
             service={service}
             index={index}
+            open={open}
+            setOpen={(panel) => expandChange(panel)}
             deleteService={setDelete}
             changeService={() => onClickSave(services2, index)}
-            updateService={updateReviews}
+            updateService={updateServices}
             group={services4}
             asdf="services4"
           />
@@ -216,9 +177,11 @@ const adminServices = ({ addService, deleteService, changeService }) => {
           <EditService
             service={service}
             index={index}
+            open={open}
+            setOpen={(panel) => expandChange(panel)}
             deleteService={setDelete}
             changeService={() => onClickSave(services2, index)}
-            updateService={updateReviews}
+            updateService={updateServices}
             group={services5}
             asdf="services5"
           />
@@ -230,9 +193,11 @@ const adminServices = ({ addService, deleteService, changeService }) => {
           <EditService
             service={service}
             index={index}
+            open={open}
+            setOpen={(panel) => expandChange(panel)}
             deleteService={setDelete}
             changeService={() => onClickSave(services2, index)}
-            updateService={updateReviews}
+            updateService={updateServices}
             group={services6}
             asdf="services6"
           />
@@ -244,9 +209,11 @@ const adminServices = ({ addService, deleteService, changeService }) => {
           <EditService
             service={service}
             index={index}
+            open={open}
+            setOpen={(panel) => expandChange(panel)}
             deleteService={setDelete}
             changeService={() => onClickSave(services2, index)}
-            updateService={updateReviews}
+            updateService={updateServices}
             group={services7}
             asdf="services7"
           />
@@ -258,9 +225,11 @@ const adminServices = ({ addService, deleteService, changeService }) => {
           <EditService
             service={service}
             index={index}
+            open={open}
+            setOpen={(panel) => expandChange(panel)}
             deleteService={setDelete}
             changeService={() => onClickSave(services2, index)}
-            updateService={updateReviews}
+            updateService={updateServices}
             group={services8}
             asdf="services8"
           />
@@ -272,9 +241,11 @@ const adminServices = ({ addService, deleteService, changeService }) => {
           <EditService
             service={service}
             index={index}
+            open={open}
+            setOpen={(panel) => expandChange(panel)}
             deleteService={setDelete}
             changeService={() => onClickSave(services2, index)}
-            updateService={updateReviews}
+            updateService={updateServices}
             group={services9}
             asdf="services9"
           />
@@ -286,9 +257,11 @@ const adminServices = ({ addService, deleteService, changeService }) => {
           <EditService
             service={service}
             index={index}
+            open={open}
+            setOpen={(panel) => expandChange(panel)}
             deleteService={setDelete}
             changeService={() => onClickSave(services2, index)}
-            updateService={updateReviews}
+            updateService={updateServices}
             group={services10}
             asdf="services10"
           />
@@ -300,9 +273,11 @@ const adminServices = ({ addService, deleteService, changeService }) => {
           <EditService
             service={service}
             index={index}
+            open={open}
+            setOpen={(panel) => expandChange(panel)}
             deleteService={setDelete}
             changeService={() => onClickSave(services2, index)}
-            updateService={updateReviews}
+            updateService={updateServices}
             group={services11}
             asdf="services11"
           />
@@ -326,13 +301,6 @@ const adminServices = ({ addService, deleteService, changeService }) => {
       />
     </Page>
   );
-};
-
-
-adminServices.propTypes = {
-  addService: PropTypes.func.isRequired,
-  deleteService: PropTypes.func.isRequired,
-  changeService: PropTypes.func.isRequired,
 };
 
 export default adminServices;

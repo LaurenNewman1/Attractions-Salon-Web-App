@@ -14,43 +14,20 @@ import PropTypes from 'prop-types';
 import useStyles from '../css/EditServiceStyles';
 
 const AddOnTable = ({
-  addon, index, updateService, updateAddonName, updateAddonPrice, service,
+  addon, updateAddonName, updateAddonPrice,
 }) => {
   const classes = useStyles();
-  // const [price, setPrice] = React.useState(addon.price);
-  // const [name, setName] = React.useState(addon.name);
-  // const handleClick = (addons, index) => {
 
-  //   console.log(addons.name);
-  //   console.log(index);
-  // };
   const handleChangeName = (e, i) => {
     console.log(e);
     updateAddonName(e, i);
   };
+
   const handleChangePrice = (e, i) => {
     console.log(e);
     updateAddonPrice(e, i);
   };
-  // const updateServiceA = (e, indexAdd) => {
-  //   console.log('name value', e);
-  //   console.log('addon', addon);
-  //   // console.log(addons[indexAdd].name);
-  //   console.log('addon index', index);
-  //   updateService(index, ['addons', [{ name: e }]]);
-  // };
-  const handleClick = () => {
-    // console.log(addon.name);
-    console.log(index);
-  };
-  // const handleChangeName = (e) => {
-  //   console.log(e);
-  //   updateAddonName(e, index);
-  // };
-  // const handleChangePrice = (e) => {
-  //   console.log(e);
-  //   updateAddonPrice(e, index);
-  // };
+
   return (
     <div className={classes.table}>
       <TableContainer component={Paper}>
@@ -67,9 +44,11 @@ const AddOnTable = ({
               : addon.map((addons, i) => (
                 <TableRow key={addons.name}>
                   <TableCell component="th" scope="row">
-                    <TextField defaultValue={addons.name} onClick={() => handleClick()} onChange={(e) => handleChangeName(e.target.value, i)} />
+                    <TextField
+                      value={addons.name}
+                      onChange={(e) => handleChangeName(e.target.value, i)}
+                    />
                   </TableCell>
-                  {/* <TableCell><AttachMoney /></TableCell> */}
                   <TableCell>
                     <TextField
                       InputProps={{
@@ -79,8 +58,7 @@ const AddOnTable = ({
                           </InputAdornment>
                         ),
                       }}
-                      defaultValue={addons.price}
-                      onClick={() => handleClick()}
+                      value={addons.price}
                       onChange={(e) => handleChangePrice(Number(e.target.value), i)}
                     />
                   </TableCell>
@@ -94,15 +72,8 @@ const AddOnTable = ({
 };
 
 AddOnTable.propTypes = {
-  // addon: PropTypes.shape({
-  //   name: PropTypes.string.isRequired,
-  //   price: PropTypes.number,
-  //   length: PropTypes.number,
-  // }).isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   addon: PropTypes.array.isRequired,
-  index: PropTypes.string.isRequired,
-  updateService: PropTypes.func.isRequired,
   updateAddonPrice: PropTypes.func.isRequired,
   updateAddonName: PropTypes.func.isRequired,
 };

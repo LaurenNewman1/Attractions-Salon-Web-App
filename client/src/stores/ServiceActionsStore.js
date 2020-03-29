@@ -1,7 +1,6 @@
-/* eslint-disable max-len */
 import { useState, useEffect } from 'react';
 
-const requestRegister = async (name, type, subtype, price, time, description, banner, addons) => {
+const requestNewService = async (name, type, subtype, price, time, description, banner, addons) => {
   const res = await fetch('/api/services',
     {
       method: 'POST',
@@ -48,31 +47,6 @@ const requestDelete = async (_id) => {
   return res.status === 200;
 };
 
-// export default () => {
-//   const [serviceData, setServiceData] = useState({});
-export const changeService = async (_id, params) => {
-  const result = await requestServiceChange(_id, params);
-
-  if (result[0] === true) {
-    // it worked
-    // setServiceData({
-    //   serviceData,
-    //   ...params,
-    // });
-    console.log('id', _id);
-    console.log('params', params);
-  }
-};
-//     return result;
-//   };
-
-// eslint-disable-next-line max-len
-export const deleteService = async (_id) => requestDelete(_id);
-// eslint-disable-next-line max-len
-// export const addService = async (name, type, subtype, price, time, description, banner, addons) => requestRegister(name, type, subtype, price, time, description, banner, addons);
-//   return [changeService, deleteService, addService];
-// };
-
 export default () => {
   const [services, setService] = useState([]);
   const [services2, setService2] = useState([]);
@@ -85,22 +59,18 @@ export default () => {
   const [services9, setService9] = useState([]);
   const [services10, setService10] = useState([]);
   const [services11, setService11] = useState([]);
-
   const [loading, setLoading] = useState(true);
   const [newService, setNewService] = useState({
-    // reviewer: '',
-    // rating: 5,
-    // review: '',
     name: '',
     type: '',
     subtype: '',
-    time: Number,
-    price: Number,
+    time: '',
+    price: '',
     description: '',
     banner: '',
     addons: [{
       name: '',
-      price: Number,
+      price: '',
     }],
   });
 
@@ -108,20 +78,17 @@ export default () => {
     const newFields = { ...newService };
     argus.forEach((argu) => {
       const [fieldName, val] = argu;
-      // console.log(fieldName, val);
       if (fieldName === ('time') || fieldName === ('price')) {
         const num = Number(val);
-        // console.log(typeof (num));
         newFields[fieldName] = num;
       } else {
         newFields[fieldName] = val;
-        // console.log(typeof (val));
       }
     });
     setNewService(newFields);
   };
 
-  const deleteReview = async (asdf, group, _id) => {
+  const deleteService = async (asdf, group, _id) => {
     setLoading(true);
     const success = await requestDelete(_id);
     if (success) {
@@ -156,47 +123,45 @@ export default () => {
     return success;
   };
 
-  const addReview = async () => {
+  const addService = async () => {
     setLoading(true);
-    // eslint-disable-next-line max-len
-    const [success, rev] = await requestRegister(newService.name, newService.type, newService.subtype, newService.time,
+    const [success, rev] = await requestNewService(newService.name, newService.type,
+      newService.subtype, newService.time,
       newService.price, newService.description, newService.banner, newService.addon);
-    console.log('add review', success);
+
     if (success) {
-      const allReviews = [...services];
-      allReviews.push(rev);
+      const allServices = [...services];
+      allServices.push(rev);
       if (newService.subtype === 'cut') {
-        setService(allReviews);
+        setService(allServices);
       } else if (newService.subtype === 'dye') {
-        setService2(allReviews);
+        setService2(allServices);
       } else if (newService.subtype === 'treatment') {
-        setService3(allReviews);
+        setService3(allServices);
       } else if (newService.subtype === 'wash') {
-        setService4(allReviews);
+        setService4(allServices);
       } else if (newService.subtype === 'styling') {
-        setService5(allReviews);
+        setService5(allServices);
       } else if (newService.subtype === 'extension') {
-        setService6(allReviews);
+        setService6(allServices);
       } else if (newService.subtype === 'full set') {
-        setService7(allReviews);
+        setService7(allServices);
       } else if (newService.subtype === 'fills') {
-        setService8(allReviews);
+        setService8(allServices);
       } else if (newService.subtype === 'manicure') {
-        setService9(allReviews);
+        setService9(allServices);
       } else if (newService.subtype === 'pedicure') {
-        setService10(allReviews);
+        setService10(allServices);
       } else if (newService.subtype === '') {
-        setService11(allReviews);
+        setService11(allServices);
       }
     }
-    // updateNewService(['name', 'test'], ['type', ''], ['subtype', ''], ['time', ''], ['price', ''], ['description', ''], ['banner', ''], ['addons', []]);
     setLoading(false);
     return success;
   };
 
-  const saveReview = async (group, index) => {
+  const saveService = async (group, index) => {
     setLoading(true);
-    // eslint-disable-next-line no-unused-vars
     const [success, rev] = await requestServiceChange(group[index]._id, {
       name: group[index].name,
       type: group[index].type,
@@ -211,7 +176,7 @@ export default () => {
     return success;
   };
 
-  const updateReviews = (group, index, ...argus) => {
+  const updateServices = (group, index, ...argus) => {
     const allServices = [...group];
     const newFields = allServices[index];
     argus.forEach((argu) => {
@@ -223,7 +188,7 @@ export default () => {
   };
 
   useEffect(() => {
-    const callReviews = async () => {
+    const callServices = async () => {
       const fetchServicesByType = async (type, subtype) => fetch(`/api/services/types/${type}/${subtype}`)
         .then((response) => response.json())
         .then((data) => data);
@@ -243,12 +208,12 @@ export default () => {
     };
 
     if (loading) {
-      callReviews();
+      callServices();
     }
   }, []);
 
   return [services, services2, services3, services4, services5,
     services6, services7, services8, services9, services10, services11,
-    newService, loading, updateReviews,
-    updateNewService, deleteReview, addReview, saveReview];
+    newService, loading, updateServices,
+    updateNewService, deleteService, addService, saveService];
 };
