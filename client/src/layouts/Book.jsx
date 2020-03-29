@@ -134,6 +134,8 @@ const Book = ({ userData }) => {
           <ReviewBooking
             booking={booking}
             updateBooking={(...argu) => updateBooking(...argu)}
+            specialists={specialists}
+            services={services}
           />
         );
       default:

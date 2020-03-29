@@ -13,7 +13,6 @@ import loginImg from '../images/loginImg.jpg';
 const Login = ({ login, fromBookPage, resetPassword }) => {
   const classes = useStyles();
   const history = useHistory();
-  const location = useLocation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorBody, setErrorBody] = useState({});
