@@ -188,7 +188,7 @@ const adminServices = ({ addService, deleteService, changeService }) => {
           <EditService
             service={service}
             index={index}
-            deleteService={() => setConfirmDelete(index)}
+            deleteService={setDelete}
             changeService={() => onClickSave(services2, index)}
             updateService={updateReviews}
             group={services3}
@@ -202,7 +202,7 @@ const adminServices = ({ addService, deleteService, changeService }) => {
           <EditService
             service={service}
             index={index}
-            deleteService={() => setConfirmDelete(index)}
+            deleteService={setDelete}
             changeService={() => onClickSave(services2, index)}
             updateService={updateReviews}
             group={services4}
@@ -216,7 +216,7 @@ const adminServices = ({ addService, deleteService, changeService }) => {
           <EditService
             service={service}
             index={index}
-            deleteService={() => setConfirmDelete(index)}
+            deleteService={setDelete}
             changeService={() => onClickSave(services2, index)}
             updateService={updateReviews}
             group={services5}
@@ -230,7 +230,7 @@ const adminServices = ({ addService, deleteService, changeService }) => {
           <EditService
             service={service}
             index={index}
-            deleteService={() => setConfirmDelete(index)}
+            deleteService={setDelete}
             changeService={() => onClickSave(services2, index)}
             updateService={updateReviews}
             group={services6}
@@ -244,7 +244,7 @@ const adminServices = ({ addService, deleteService, changeService }) => {
           <EditService
             service={service}
             index={index}
-            deleteService={() => setConfirmDelete(index)}
+            deleteService={setDelete}
             changeService={() => onClickSave(services2, index)}
             updateService={updateReviews}
             group={services7}
@@ -258,7 +258,7 @@ const adminServices = ({ addService, deleteService, changeService }) => {
           <EditService
             service={service}
             index={index}
-            deleteService={() => setConfirmDelete(index)}
+            deleteService={setDelete}
             changeService={() => onClickSave(services2, index)}
             updateService={updateReviews}
             group={services8}
@@ -272,7 +272,7 @@ const adminServices = ({ addService, deleteService, changeService }) => {
           <EditService
             service={service}
             index={index}
-            deleteService={() => setConfirmDelete(index)}
+            deleteService={setDelete}
             changeService={() => onClickSave(services2, index)}
             updateService={updateReviews}
             group={services9}
@@ -286,7 +286,7 @@ const adminServices = ({ addService, deleteService, changeService }) => {
           <EditService
             service={service}
             index={index}
-            deleteService={() => setConfirmDelete(index)}
+            deleteService={setDelete}
             changeService={() => onClickSave(services2, index)}
             updateService={updateReviews}
             group={services10}
@@ -300,7 +300,7 @@ const adminServices = ({ addService, deleteService, changeService }) => {
           <EditService
             service={service}
             index={index}
-            deleteService={() => setConfirmDelete(index)}
+            deleteService={setDelete}
             changeService={() => onClickSave(services2, index)}
             updateService={updateReviews}
             group={services11}
