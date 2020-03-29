@@ -19,12 +19,10 @@ const AddOnTable = ({
   const classes = useStyles();
 
   const handleChangeName = (e, i) => {
-    console.log(e);
     updateAddonName(e, i);
   };
 
   const handleChangePrice = (e, i) => {
-    console.log(e);
     updateAddonPrice(e, i);
   };
 
@@ -42,7 +40,7 @@ const AddOnTable = ({
           <TableBody>
             {!addon.length ? null
               : addon.map((addons, i) => (
-                <TableRow key={addons.name}>
+                <TableRow key={i}>
                   <TableCell component="th" scope="row">
                     <TextField
                       value={addons.name}

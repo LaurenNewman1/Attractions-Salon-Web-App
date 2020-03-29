@@ -86,7 +86,7 @@ const App = () => {
             <Route path="/admin/requests" component={Requests} />
             <Route path="/admin/users" component={Users} />
             <Route path="/admin/reviews" component={AdminReviews} />
-            <Route path="/admin/services" component={() => <AdminServices />} />
+            <Route path="/admin/services" component={AdminServices} />
           </Switch>
         </Router>
       </ThemeProvider>
