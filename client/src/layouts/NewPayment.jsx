@@ -9,11 +9,12 @@ import useStyles from '../css/NewPaymentStyles';
 
 // You need to do payLater and take a look at the update functions as well as expiration date
 
-const NewPayment = ({ updateCreditCard }) => {
+const NewPayment = ({ updateCreditCard, updateBooking }) => {
   const classes = useStyles();
-  const [checked, setChecked] = React.useState(false);
-  const [payLater, setPayLater] = useState(false);
-
+  const [checked, setChecked] = useState(false);
+  const updatePayInStore = (booleanValue) => {
+    updateBooking(['payInStore', booleanValue]);
+  };
 
   const handleChange = (event) => {
     setChecked(event.target.checked);
@@ -111,7 +112,7 @@ const NewPayment = ({ updateCreditCard }) => {
           <Button
             variant="contained"
             color="primary"
-            onClick={() => setPayLater(true)}
+            onClick={() => updatePayInStore(true)}
           >
             Pay In Store
           </Button>
@@ -132,6 +133,7 @@ NewPayment.propTypes = {
     zipCode: PropTypes.string,
   }).isRequired,
   updateCreditCard: PropTypes.func.isRequired,
+  updateBooking: PropTypes.func.isRequired,
 };
 
 export default NewPayment;

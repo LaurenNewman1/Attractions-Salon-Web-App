@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import {
   Button, Grid, Typography, Divider, Paper,
@@ -6,9 +6,12 @@ import {
 import useStyles from '../css/ConfirmPayment';
 import creditCardCircles from '../images/masterCardCircles.png';
 
-const ConfirmPayment = ({ booking }) => {
+const ConfirmPayment = ({ booking, updateBooking }) => {
   const classes = useStyles();
-  const [payLater, setPayLater] = useState(false);
+  const updatePayInStore = (booleanValue) => {
+    updateBooking(['payInStore', booleanValue]);
+  };
+
 
   // The link needs to be changed to something that works, rn it does not work. it needs to go to the new Credit Card Page
   // Maybe do something like book and change the page based off of some variable(state) being true
@@ -73,7 +76,7 @@ const ConfirmPayment = ({ booking }) => {
           <Button
             variant="contained"
             color="primary"
-            onClick={() => setPayLater(true)}
+            onClick={() => updatePayInStore(true)}
             // You need to figure this one out too
           >
             Pay In Store
@@ -97,15 +100,7 @@ ConfirmPayment.propTypes = {
     specialist: PropTypes.string,
     notes: PropTypes.string,
   }).isRequired,
-  creditCard: PropTypes.shape({
-    name: PropTypes.string,
-    cardNumber: PropTypes.string,
-    expMonth: PropTypes.string,
-    expYear: PropTypes.string,
-    CVV: PropTypes.string,
-    zipCode: PropTypes.string,
-  }).isRequired,
-
+  updateBooking: PropTypes.func.isRequired,
 };
 
 export default ConfirmPayment;
