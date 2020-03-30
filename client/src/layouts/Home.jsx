@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Grid, Typography, Button,
+  Grid, Typography, Button, Hidden,
 } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -45,9 +45,11 @@ const Home = ({ loggedIn, setFromBookPage }) => {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={12} sm={6} align="center" className={classes.rightContainer}>
-              <img src={coverModel} alt="" className={classes.modelImg} />
-            </Grid>
+            <Hidden xsDown>
+              <Grid item xs={12} sm={6} align="center" className={classes.rightContainer}>
+                <img src={coverModel} alt="" className={classes.modelImg} />
+              </Grid>
+            </Hidden>
           </Grid>
         </Grid>
       </Grid>

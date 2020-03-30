@@ -1,5 +1,5 @@
 import {
-  Grid, TextField, InputAdornment, Button, Typography, Divider,
+  Grid, TextField, InputAdornment, Button, Typography, Divider, Hidden,
 } from '@material-ui/core';
 import React, { useState } from 'react';
 import { Email, Lock } from '@material-ui/icons';
@@ -89,9 +89,11 @@ const Login = ({ login, fromBookPage, resetPassword }) => {
   return (
     <Page>
       <Grid container className={classes.page}>
-        <Grid item xs={12} sm={6} className={classes.imgContainer}>
-          <img src={loginImg} alt="" className={classes.modelImg} />
-        </Grid>
+        <Hidden xsDown>
+          <Grid item xs={12} sm={6} className={classes.imgContainer}>
+            <img src={loginImg} alt="" className={classes.modelImg} />
+          </Grid>
+        </Hidden>
         <Grid item xs={12} sm={6} className={classes.form}>
           <h1 className={classes.login}>{pageTitle}</h1>
           <div>
