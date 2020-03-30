@@ -32,7 +32,6 @@ const adminServices = () => {
 
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [open, setOpen] = useState(false);
-  const [viewing, setViewing] = useState({});
   const [
     services,
     loading,
@@ -40,9 +39,8 @@ const adminServices = () => {
     modifyService,
     updateService,
     deleteService,
+    deleteAddon,
   ] = useServices();
-
-
   const [alert, setAlert] = useState({
     open: false,
     type: '',
@@ -60,6 +58,15 @@ const adminServices = () => {
     });
   };
 
+  const onDeleteAddon = async (service, addonIndex) => {
+    const success = await deleteAddon(service, addonIndex);
+    setAlert({
+      open: true,
+      type: success ? TYPE_SUCCESS : TYPE_ERROR,
+      text: success ? 'Addon deleted.' : 'Failed to delete addon.',
+    });
+  };
+
   const clearDelete = () => {
     setDeleteCandidate({});
     setConfirmDelete(false);
@@ -72,9 +79,9 @@ const adminServices = () => {
 
   const enactDelete = async () => {
     setConfirmDelete(false);
-    setOpen(false);
     const success = await deleteService(deleteCandidate);
     setDeleteCandidate({});
+    setOpen(false);
     setAlert({
       open: true,
       type: success ? TYPE_SUCCESS : TYPE_ERROR,
@@ -95,27 +102,27 @@ const adminServices = () => {
   const serviceSection = (types) => types.map((key) => {
     const categoryServices = services[key];
     return (
-      <>
-        <Typography variant="h5" className={classes.header}>{serviceCategoryLUT[key]}</Typography>
-        {!categoryServices.length ? null
-          : categoryServices.map((service, index) => (
-            <EditService
-              service={service}
-              index={index}
-              open={open}
-              deleteService={() => setDelete(service)}
-              changeService={(committedService) => onClickSave(committedService)}
-              updateService={(committedService) => modifyService(committedService)}
-              group={services}
-              asdf="services"
-            />
-          ))}
-      </>
+      !categoryServices || !categoryServices.length ? null
+        : (
+          <>
+            <Typography variant="h5" className={classes.header}>{serviceCategoryLUT[key]}</Typography>
+            {categoryServices.map((service, index) => (
+              <EditService
+                service={service}
+                index={index}
+                open={open}
+                deleteService={() => setDelete(service)}
+                deleteAddon={(serv, addonIndex) => onDeleteAddon(serv, addonIndex)}
+                changeService={(committedService) => onClickSave(committedService)}
+                updateService={(committedService) => modifyService(committedService)}
+                group={services}
+                asdf="services"
+              />
+            ))}
+          </>
+        )
     );
   });
-
-
-  const allCategories = !loading ? serviceSection(Object.keys(serviceCategoryLUT)) : null;
 
   return (
     <Page maxWidth="md">
@@ -133,9 +140,7 @@ const adminServices = () => {
           onClickAdd={(service) => onClickAdd(service)}
         />
       </Typography>
-
-      {loading ? null : allCategories}
-
+      {serviceSection(Object.keys(serviceCategoryLUT))}
       {confirmDelete
         ? (
           <Confirm

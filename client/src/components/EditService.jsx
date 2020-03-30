@@ -2,22 +2,23 @@
 
 import React, { useEffect, useState } from 'react';
 import {
-  ExpansionPanel, Grid, Fab, Dialog, DialogTitle, DialogContent,
+  ExpansionPanel, Grid, Dialog, DialogTitle, DialogContent,
   ExpansionPanelSummary,
   ExpansionPanelDetails,
   Typography, TextField, Button, InputAdornment, DialogActions,
   Table, TableBody, TableCell, TableContainer, TableHead,
-  TableRow, Paper,
+  TableRow, Paper, IconButton,
 } from '@material-ui/core';
 import {
-  ExpandMore, AttachMoney, Schedule, Add,
+  ExpandMore, AttachMoney, Schedule, Add, Delete,
 } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import useStyles from '../css/EditServiceStyles';
+import Confirm from './Confirm';
 
 const EditService = ({
   index, service, deleteService, changeService,
-  updateService, group, asdf,
+  updateService, group, asdf, deleteAddon,
 }) => {
   const classes = useStyles();
   const [openAddon, setOpenAddon] = React.useState(false);
@@ -25,28 +26,22 @@ const EditService = ({
   const [newAddonPrice, setNewAddonPrice] = React.useState(1);
   const [open, setOpen] = React.useState(false);
   const [localService, setLocalService] = useState(service);
+  const [delAddonWindow, setDelAddonWindow] = useState({
+    open: false,
+    addonIndex: -1,
+  });
 
-
-  const handleClickOpen = () => {
-    setOpenAddon(true);
-  };
-
-  const handleClose = () => {
-    setOpenAddon(false);
-  };
-
-  const handleClick = (e) => {
-    e.stopPropagation();
+  const onClickDeleteAddon = () => {
+    deleteAddon(service, delAddonWindow.addonIndex);
+    setDelAddonWindow({ open: false, addonIndex: -1 });
   };
 
   const updateAddonName = (e, i) => {
-    // const newService = { ...service };
     localService.addons[i].name = e;
     updateService(localService);
   };
 
   const updateAddonPrice = (e, i) => {
-    // const newService = { ...service };
     localService.addons[i].price = e;
     updateService(localService);
   };
@@ -72,29 +67,27 @@ const EditService = ({
     const nAddon = { name: newAddonNameV, price: newAddonPriceV };
     updateServiceArg('addons', [...localService.addons, nAddon]);
     updateService(localService);
-    // changeService(localService);
   };
+
   const cancelChanges = () => {
     setLocalService(newService);
     updateService(newService);
     setOpen(false);
   };
+
   useEffect(() => {
     setLocalService(newService);
   }, [open]);
-  const handleClickOpenPanel = () => {
-    setOpen(!open);
-  };
 
   return (
-    <ExpansionPanel expanded={open} onChange={handleClickOpenPanel}>
+    <ExpansionPanel expanded={open} onChange={() => setOpen(!open)}>
       <ExpansionPanelSummary expandIcon={<ExpandMore />}>
         {!open
           ? (<Typography>{service.name}</Typography>
           )
           : (
             <TextField
-              onClick={(e) => handleClick(e)}
+              onClick={(e) => e.stopPropagation()}
               onChange={(e) => updateServiceArg('name', e.target.value)}
               value={localService.name}
               className={classes.heading}
@@ -165,41 +158,47 @@ const EditService = ({
             />
           </Grid>
           <Grid item xs={12} className={classes.tablediv}>
-
             <div className={classes.table}>
               <TableContainer component={Paper}>
                 <Table size="small" aria-label="a dense table">
                   <TableHead>
                     <TableRow>
-                      <h3 style={{ paddingLeft: '10px' }}>
+                      <h3 style={{ paddingLeft: 10, display: 'flex', alignItems: 'center' }}>
                         Addons
-                        <Fab style={{ marginLeft: 10 }} color="primary" size="small" onClick={handleClickOpen}>
-                          <Add />
-                        </Fab>
+                        <IconButton color="primary" onClick={() => setOpenAddon(true)}>
+                          <Add size="large" />
+                        </IconButton>
                       </h3>
-
-                      <Dialog open={openAddon} onClose={handleClose}>
+                      <Dialog open={openAddon} onClose={() => setOpenAddon(false)}>
                         <DialogTitle>New Addon</DialogTitle>
                         <DialogContent>
                           <form className={classes.textfield}>
-                            <TextField onChange={(e) => setNewAddonName(e.target.value)} label="Addon Name" />
-                            <TextField onChange={(e) => setNewAddonPrice(e.target.value)} label="Addon Price" />
+                            <TextField onChange={(e) => setNewAddonName(e.target.value)} label="Name" />
+                            <TextField
+                              onChange={(e) => setNewAddonPrice(e.target.value)}
+                              label="Price"
+                              InputProps={{
+                                startAdornment: (
+                                  <InputAdornment position="start">
+                                    <AttachMoney />
+                                  </InputAdornment>
+                                ),
+                              }}
+                            />
                           </form>
                         </DialogContent>
                         <DialogActions>
-                          <Button onClick={handleClose}>
-                            Cancel
-                          </Button>
+                          <Button onClick={() => setOpenAddon(false)}>Cancel</Button>
                           <Button onClick={(e) => newAddon(e)} color="primary" variant="contained">
                             Add
                           </Button>
                         </DialogActions>
                       </Dialog>
-
                     </TableRow>
                     <TableRow>
                       <TableCell>Name</TableCell>
                       <TableCell>Price</TableCell>
+                      <TableCell />
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -225,6 +224,14 @@ const EditService = ({
                               onChange={(e) => updateAddonPrice(Number(e.target.value), i)}
                             />
                           </TableCell>
+                          <TableCell>
+                            <IconButton onClick={() => setDelAddonWindow({
+                              open: true, addonIndex: i,
+                            })}
+                            >
+                              <Delete />
+                            </IconButton>
+                          </TableCell>
                         </TableRow>
                       ))}
                   </TableBody>
@@ -240,13 +247,20 @@ const EditService = ({
           Delete
         </Button>
         <div style={{ flex: '1 0 0' }} />
-        <Button onClick={() => cancelChanges()}>
-          Cancel
-        </Button>
-        <Button variant="contained" color="primary" onClick={() => commitService()}>
-          Save
-        </Button>
+        <Button onClick={() => cancelChanges()}>Cancel</Button>
+        <Button variant="contained" color="primary" onClick={() => commitService()}>Save</Button>
       </DialogActions>
+      {delAddonWindow.open
+        ? (
+          <Confirm
+            open={delAddonWindow.open}
+            title={`Delete the ${service.addons[delAddonWindow.addonIndex].name} addon?`}
+            content="Clicking delete will permanently remove this addon."
+            confirmText="Delete"
+            onConfirm={() => onClickDeleteAddon()}
+            onCancel={() => setDelAddonWindow({ open: false, addonIndex: -1 })}
+          />
+        ) : null}
     </ExpansionPanel>
   );
 };
@@ -264,15 +278,13 @@ EditService.propTypes = {
     addons: PropTypes.array,
   }).isRequired,
   deleteService: PropTypes.func.isRequired,
-  // cancelChanges: PropTypes.func.isRequired,
+  deleteAddon: PropTypes.func.isRequired,
   changeService: PropTypes.func.isRequired,
   updateService: PropTypes.func.isRequired,
   index: PropTypes.string.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   group: PropTypes.array.isRequired,
   asdf: PropTypes.string.isRequired,
-  // open: PropTypes.bool.isRequired,
-  // setOpen: PropTypes.func.isRequired,
 };
 
 

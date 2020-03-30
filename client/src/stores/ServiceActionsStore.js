@@ -48,34 +48,42 @@ const requestDelete = async ({ _id }) => {
 
 
 const assembleTypeKey = (type, subtype) => `${type}${subtype ? `/${subtype}` : ''}`;
-const keyToTypes = (key) => key.split('/');
-
-/*
-  Service State Object
-  {
-    serviceTypeSubType: ArrayOfServicesOfThatType[]
-  }
-*/
 
 export default () => {
   const [services, setService] = useState({});
   const [init, setInit] = useState(true);
-
   const [loading, setLoading] = useState(true);
 
   const deleteService = async (service) => {
+    setLoading(true);
     const success = await requestDelete(service);
     if (success) {
       const updatedServices = { ...services };
       const { _id, type, subtype } = service;
-      const filteredType = updatedServices[assembleTypeKey(type, subtype)].filter((s) => s._id !== _id);
-      updatedServices[assembleTypeKey(type, subtype)] = filteredType;
+      const index = updatedServices[assembleTypeKey(type, subtype)].findIndex((s) => s._id === _id);
+      updatedServices[assembleTypeKey(type, subtype)].splice(index, 1);
       setService(updatedServices);
     }
+    setLoading(false);
+    return success;
+  };
+
+  const deleteAddon = async (service, addonIndex) => {
+    setLoading(true);
+    const allServices = { ...services };
+    const { _id, type, subtype } = service;
+    allServices[assembleTypeKey(type, subtype)].find((s) => s._id === _id).addons.splice(addonIndex, 1);
+    const revisedService = allServices[assembleTypeKey(type, subtype)].find((s) => s._id === _id);
+    const [success] = await requestServiceChange(revisedService);
+    if (success) {
+      setService(allServices);
+    }
+    setLoading(false);
     return success;
   };
 
   const addService = async (service) => {
+    setLoading(true);
     const [success, ser] = await requestNewService(service);
     if (success) {
       const updatedService = { ...services };
@@ -83,6 +91,7 @@ export default () => {
       updatedService[assembleTypeKey(type, subtype)].push(ser);
       setService(updatedService);
     }
+    setLoading(false);
     return success;
   };
 
@@ -96,8 +105,10 @@ export default () => {
   };
 
   const updateService = async (service) => {
+    setLoading(true);
     // eslint-disable-next-line no-unused-vars
     const [success, rev] = await requestServiceChange(service);
+    setLoading(false);
     return success;
   };
 
@@ -123,5 +134,6 @@ export default () => {
     }
   }, [services]);
 
-  return [services, loading, addService, modifyService, updateService, deleteService, keyToTypes, assembleTypeKey];
+  return [services, loading, addService, modifyService, updateService,
+    deleteService, deleteAddon];
 };
