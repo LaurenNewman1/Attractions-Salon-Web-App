@@ -22,7 +22,7 @@ const Home = ({ loggedIn, setFromBookPage }) => {
   };
 
   return (
-    <Page>
+    <Page maxWidth={false}>
       <Grid className={classes.page}>
         <Grid item xs={12} className={classes.blackBox}>
           <Grid container className={classes.page}>

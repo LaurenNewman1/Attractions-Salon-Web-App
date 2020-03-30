@@ -87,7 +87,7 @@ const Login = ({ login, fromBookPage, resetPassword }) => {
   const pageTitle = resettingPassword ? 'Reset your Password' : 'Login';
 
   return (
-    <Page>
+    <Page maxWidth={false}>
       <Grid container className={classes.page}>
         <Hidden xsDown>
           <Grid item xs={12} sm={6} className={classes.imgContainer}>
