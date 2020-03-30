@@ -34,7 +34,6 @@ const ReviewBooking = ({ booking, specialists, services }) => {
     }
   };
 
-  // This is where you will be updating all the stuff on the backend
   const renderTextFields = () => {
     if (!editMode) {
       return (

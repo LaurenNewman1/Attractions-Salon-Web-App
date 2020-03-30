@@ -46,6 +46,15 @@ const Calendar = ({ booking, updateBooking, loading }) => {
             onChange={(event) => updateBooking(['email', event.target.value])}
           />
         </Grid>
+        <Grid item xs={12}>
+          <TextField
+            required
+            label="Phone Number"
+            className={classes.textfield}
+            value={booking.phone_number}
+            onChange={(event) => updateBooking(['phone_number', event.target.value])}
+          />
+        </Grid>
         <Grid item xs={12} sm={6}>
           <DatePicker
             className={classes.textfield}

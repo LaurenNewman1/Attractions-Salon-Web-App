@@ -49,6 +49,7 @@ const Book = ({ userData }) => {
       const [fieldName, val] = argu;
       newFields[fieldName] = val;
     });
+    console.log(`Try: ${newFields.name} AND ${newFields.email} AND ${newFields.payInStore} AND ${newFields.phone_number}`);
     setBooking(newFields);
   };
 
