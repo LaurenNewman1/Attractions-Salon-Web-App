@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react';
 
 const fetchAllServices = async () => {
-  const ret = await fetch('/api/services')
-    .then((response) => response.json())
-    .then((data) => data);
-  return ret;
+  const ret = await fetch('/api/services');
+  return ret.json();
 };
 
 const requestApptUpdate = async (id, params) => {
@@ -35,7 +33,7 @@ const requestDelete = async (_id) => {
   return res.status === 200;
 };
 
-export default () => {
+export default (unconformed = true) => {
   const [requests, setRequests] = useState([]);
   const [services, setServices] = useState([]);
   const [specialists, setSpecialists] = useState([]);
@@ -97,7 +95,8 @@ export default () => {
 
   useEffect(() => {
     const callRequests = async () => {
-      const bookRequestFetch = await fetch('/api/appointments/status/false')
+      const requestURL = unconformed ? '/api/appointments/status/false' : '/api/appointments/status/true';
+      const bookRequestFetch = await fetch(requestURL)
         .then((response) => response.json())
         .then((data) => data);
 
