@@ -74,7 +74,7 @@ const Book = ({ userData }) => {
         }
         break;
       case 1:
-        if (booking.name && booking.email) {
+        if (booking.name && booking.email && booking.phone_number) {
           setPage((prev) => prev + 1);
         } else {
           setError(true);
