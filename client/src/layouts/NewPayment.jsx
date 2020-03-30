@@ -1,85 +1,74 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  TextField, Button, Grid, FormControl,
-  InputLabel, Select, MenuItem, FormControlLabel,
+  TextField, Button, Grid, FormControlLabel,
   Checkbox, Typography, Divider,
 } from '@material-ui/core';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+} from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
 import useStyles from '../css/NewPaymentStyles';
+import Loading from '../components/Loading';
 
 // You need to do payLater and take a look at the update functions as well as expiration date
 
-const NewPayment = ({ updateCreditCard }) => {
+const NewPayment = ({
+  booking, updateBooking, updateCreditCard, loading, nextPage,
+}) => {
   const classes = useStyles();
-  const [checked, setChecked] = React.useState(false);
-  const [payLater, setPayLater] = useState(false);
+  const [checked, setChecked] = useState(false);
 
-
-  const handleChange = (event) => {
+  const rememberCard = (event) => {
     setChecked(event.target.checked);
   };
 
+  const payInStore = () => {
+    updateBooking(['payInStore', !booking.payInStore]);
+    nextPage();
+  };
 
   return (
-    <>
-      <h1 className={classes.login}>Enter Payment Info</h1>
-      <div>
-        <TextField
-          fullWidth
-          type="Name"
-          label="Name on Card"
-          onChange={(event) => updateCreditCard(['name', event.target.value])}
-        />
-        <TextField
-          fullWidth
-          type="Card Number"
-          label="Card Number"
-          onChange={(event) => updateCreditCard(['cardNumber', event.target.value])}
-
-        />
-        <Grid container spacing={3}>
-          <Grid container spacing={1}>
-            <FormControl className={classes.textfield}>
-              <InputLabel>MM</InputLabel>
-              <Select>
-                <MenuItem value="January">01</MenuItem>
-                <MenuItem value="February">02</MenuItem>
-                <MenuItem value="March">03</MenuItem>
-                <MenuItem value="April">04</MenuItem>
-                <MenuItem value="May">05</MenuItem>
-                <MenuItem value="June">06</MenuItem>
-                <MenuItem value="July">07</MenuItem>
-                <MenuItem value="August">08</MenuItem>
-                <MenuItem value="September">09</MenuItem>
-                <MenuItem value="October">10</MenuItem>
-                <MenuItem value="November">11</MenuItem>
-                <MenuItem value="December">12</MenuItem>
-              </Select>
-            </FormControl>
-            <FormControl className={classes.textfield2}>
-              <InputLabel>YY</InputLabel>
-              <Select>
-                <MenuItem value="2020">20</MenuItem>
-                <MenuItem value="2021">21</MenuItem>
-                <MenuItem value="2022">22</MenuItem>
-                <MenuItem value="2023">23</MenuItem>
-                <MenuItem value="2024">24</MenuItem>
-                <MenuItem value="2025">25</MenuItem>
-                <MenuItem value="2025">26</MenuItem>
-              </Select>
-            </FormControl>
-            <Grid item xs={6} className={classes.CVV}>
-              <TextField
-                fullWidth
-                type="CVV"
-                label="CVV"
-                onChange={(event) => updateCreditCard(['CVV', event.target.value])}
-
-              />
-            </Grid>
-          </Grid>
+    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+      {loading ? <Loading /> : null}
+      <h2 className={classes.header}>Enter Payment Info</h2>
+      <Grid container spacing={1} style={{ display: 'flex', alignItems: 'center' }}>
+        <Grid item xs={12}>
+          <TextField
+            fullWidth
+            type="Name"
+            label="Name on Card"
+            onChange={(event) => updateCreditCard(['name', event.target.value])}
+          />
         </Grid>
-        <div className={classes.zipCode}>
+        <Grid item xs={12}>
+          <TextField
+            fullWidth
+            type="Card Number"
+            label="Card Number"
+            onChange={(event) => updateCreditCard(['cardNumber', event.target.value])}
+          />
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <KeyboardDatePicker
+            fullWidth
+            style={{ paddingBottom: 6 }}
+            margin="normal"
+            label="Date"
+            format="MM/dd/yyyy"
+            onChange={(date) => updateCreditCard(['exp', date])}
+          />
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <TextField
+            fullWidth
+            type="CVV"
+            label="CVV"
+            onChange={(event) => updateCreditCard(['CVV', event.target.value])}
+          />
+        </Grid>
+        <Grid item xs={12} sm={4}>
           <TextField
             fullWidth
             type="Zip Code"
@@ -87,38 +76,37 @@ const NewPayment = ({ updateCreditCard }) => {
             onChange={(event) => updateCreditCard(['zipCode', event.target.value])}
 
           />
-        </div>
-        <div className={classes.checkBox}>
+        </Grid>
+        <Grid item xs={12} className={classes.center}>
           <FormControlLabel
             control={(
               <Checkbox
                 checked={checked}
-                onChange={handleChange}
+                onChange={rememberCard}
                 name="Remember this Card"
               />
 )}
             label="Remember this Card"
           />
-        </div>
-        <div className={classes.divider}>
+        </Grid>
+        <Grid item xs={12} className={classes.divider}>
           <Divider variant="middle" style={{ flexGrow: 1 }} />
           <Typography variant="h5">
             OR
           </Typography>
           <Divider variant="middle" style={{ flexGrow: 1 }} />
-        </div>
-        <div className={classes.checkBox}>
+        </Grid>
+        <Grid xs={12} className={classes.button}>
           <Button
             variant="contained"
             color="primary"
-            onClick={() => setPayLater(true)}
+            onClick={() => payInStore()}
           >
             Pay In Store
           </Button>
-        </div>
-      </div>
-
-    </>
+        </Grid>
+      </Grid>
+    </MuiPickersUtilsProvider>
   );
 };
 
@@ -126,12 +114,27 @@ NewPayment.propTypes = {
   creditCard: PropTypes.shape({
     name: PropTypes.string,
     cardNumber: PropTypes.string,
-    expMonth: PropTypes.string,
-    expYear: PropTypes.string,
+    exp: PropTypes.string,
     CVV: PropTypes.string,
     zipCode: PropTypes.string,
   }).isRequired,
   updateCreditCard: PropTypes.func.isRequired,
+  updateBooking: PropTypes.func.isRequired,
+  booking: PropTypes.shape({
+    name: PropTypes.string,
+    email: PropTypes.string,
+    phone_number: PropTypes.string,
+    confirmed: PropTypes.bool,
+    timeOrdered: PropTypes.string,
+    time: PropTypes.string,
+    service: PropTypes.string,
+    addons: PropTypes.array,
+    specialist: PropTypes.string,
+    notes: PropTypes.string,
+    payInStore: PropTypes.bool,
+  }).isRequired,
+  loading: PropTypes.bool.isRequired,
+  nextPage: PropTypes.func.isRequired,
 };
 
 export default NewPayment;
