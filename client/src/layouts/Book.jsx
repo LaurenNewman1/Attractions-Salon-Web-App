@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  MobileStepper, Button, Container, Snackbar,
+  MobileStepper, Button, Snackbar,
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import {
@@ -101,7 +101,7 @@ const Book = ({ userData }) => {
         return (
           <Details
             booking={booking}
-            updateBooking={(...argu) => updateBooking(...argu)}
+            updateBooking={(...argus) => updateBooking(...argus)}
             loading={loading}
             specialists={specialists}
             services={services}
@@ -111,22 +111,26 @@ const Book = ({ userData }) => {
         return (
           <Calendar
             booking={booking}
-            updateBooking={(...argu) => updateBooking(...argu)}
+            updateBooking={(...argus) => updateBooking(...argus)}
+            loading={loading}
           />
         );
       case 2:
         return (
           <NewPayment
-            updateCreditCard={(...argu) => updateCreditCard(...argu)}
+            updateCreditCard={(...argus) => updateCreditCard(...argus)}
+            loading={loading}
+            nextPage={() => validateNext()}
             booking={booking}
-            updateBooking={(...argu) => updateBooking(...argu)}
+            updateBooking={(...argus) => updateBooking(...argus)}
           />
         );
       case 3:
         return (
           <ConfirmPayment
             booking={booking}
-            updateBooking={(...argu) => updateBooking(...argu)}
+            nextPage={() => validateNext()}
+            updateBooking={(...argus) => updateBooking(...argus)}
           />
         );
       case 4:
@@ -144,35 +148,33 @@ const Book = ({ userData }) => {
   };
 
   return (
-    <Page>
-      <Container maxWidth="sm">
-        <div className={classes.page}>
-          <div>
-            {renderPage()}
-            <div className={classes.toolbar} />
-          </div>
-          <div className={classes.footer}>
-            <MobileStepper
-              steps={5}
-              variant="dots"
-              className={classes.stepper}
-              activeStep={page}
-              nextButton={(
-                <Button size="small" onClick={() => validateNext()} disabled={page === 4}>
-                  Next
-                  <KeyboardArrowRight />
-                </Button>
-            )}
-              backButton={(
-                <Button size="small" onClick={() => setPage((prev) => prev - 1)} disabled={page === 0}>
-                  <KeyboardArrowLeft />
-                  Back
-                </Button>
-            )}
-            />
-          </div>
+    <Page maxWidth="sm">
+      <div className={classes.page}>
+        <div>
+          {renderPage()}
+          <div className={classes.toolbar} />
         </div>
-      </Container>
+        <div className={classes.footer}>
+          <MobileStepper
+            steps={5}
+            variant="dots"
+            className={classes.stepper}
+            activeStep={page}
+            nextButton={(
+              <Button size="small" onClick={() => validateNext()} disabled={page === 4}>
+                Next
+                <KeyboardArrowRight />
+              </Button>
+          )}
+            backButton={(
+              <Button size="small" onClick={() => setPage((prev) => prev - 1)} disabled={page === 0}>
+                <KeyboardArrowLeft />
+                Back
+              </Button>
+          )}
+          />
+        </div>
+      </div>
       <Snackbar
         open={error}
         autoHideDuration={2000}
