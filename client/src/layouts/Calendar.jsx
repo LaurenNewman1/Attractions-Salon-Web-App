@@ -22,7 +22,7 @@ const Calendar = ({ booking, updateBooking, loading }) => {
   const changeDateTime = (dateTime) => {
     updateBooking(['time', dateTime.toISOString()]);
   };
-  console.log(booking.time);
+
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       {loading ? <Loading /> : null}

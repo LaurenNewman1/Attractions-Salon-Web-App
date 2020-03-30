@@ -28,7 +28,6 @@ const Details = ({
   const theme = useTheme();
   const [serviceOptions, setServiceOptions] = useState([]);
   const [addOnOptions, setAddOnOptions] = useState([]);
-  const getServiceDetails = async () => serviceOptions.find((s) => s._id === booking.service) || '';
   const [type, setType] = useState(services.find((s) => s._id === booking.service)
     ? services.find((s) => s._id === booking.service).type : '');
 
@@ -52,6 +51,8 @@ const Details = ({
     updateBooking(['service', newService], ['addons', []], ['specialist', '']);
     setAddOnOptions(serviceOptions.find((s) => s._id === newService).addons);
   };
+
+  const getServiceDetails = () => serviceOptions.find((s) => s._id === booking.service) || '';
 
   return (
     <>

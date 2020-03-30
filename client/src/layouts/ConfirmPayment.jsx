@@ -5,8 +5,11 @@ import {
 } from '@material-ui/core';
 import useStyles from '../css/ConfirmPaymentStyles';
 import creditCardCircles from '../images/masterCardCircles.png';
+import Loading from '../components/Loading';
 
-const ConfirmPayment = ({ booking, updateBooking, nextPage }) => {
+const ConfirmPayment = ({
+  booking, loading, updateBooking, nextPage,
+}) => {
   const classes = useStyles();
 
   const payInStore = () => {
@@ -20,6 +23,7 @@ const ConfirmPayment = ({ booking, updateBooking, nextPage }) => {
 
   return (
     <div className={classes.page}>
+      {loading ? <Loading /> : null}
       <h2 className={classes.header}>Confirm Payment Method</h2>
       <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
         <Paper className={classes.paper}>
@@ -92,6 +96,7 @@ ConfirmPayment.propTypes = {
   }).isRequired,
   updateBooking: PropTypes.func.isRequired,
   nextPage: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired,
 };
 
 export default ConfirmPayment;
