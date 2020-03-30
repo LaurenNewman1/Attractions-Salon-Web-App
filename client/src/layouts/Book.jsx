@@ -33,7 +33,7 @@ const Book = ({ userData }) => {
     payInStore: false,
   });
   const classes = useStyles();
-  const [loading, specialists, services] = useBooking();
+  const [loading, specialists, services, sendRequest] = useBooking();
   const [creditCard, setCreditCard] = useState({
     name: userData ? userData.name : '',
     cardNumber: '',
@@ -129,6 +129,7 @@ const Book = ({ userData }) => {
         return (
           <ConfirmPayment
             booking={booking}
+            loading={loading}
             nextPage={() => validateNext()}
             updateBooking={(...argus) => updateBooking(...argus)}
           />
@@ -140,6 +141,8 @@ const Book = ({ userData }) => {
             updateBooking={(...argu) => updateBooking(...argu)}
             specialists={specialists}
             services={services}
+            loading={loading}
+            sendRequest={(book) => sendRequest(book)}
           />
         );
       default:

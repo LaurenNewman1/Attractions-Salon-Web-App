@@ -29,8 +29,9 @@ export default () => {
   const [loading, setLoading] = useState(true);
 
   const sendRequest = async (booking) => {
-    console.log('Dhruv');
+    setLoading(true);
     const [success, res] = await requestBook(booking);
+    setLoading(false);
     return [success, res];
   };
 
