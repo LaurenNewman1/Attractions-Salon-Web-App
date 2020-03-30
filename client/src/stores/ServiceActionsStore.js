@@ -76,12 +76,11 @@ export default () => {
   };
 
   const addService = async (service) => {
-    const [success] = await requestNewService(service);
-    console.log('add review', success);
+    const [success, ser] = await requestNewService(service);
     if (success) {
       const updatedService = { ...services };
       const { type, subtype } = service;
-      updatedService[assembleTypeKey(type, subtype)].push(service);
+      updatedService[assembleTypeKey(type, subtype)].push(ser);
       setService(updatedService);
     }
     return success;
@@ -91,7 +90,6 @@ export default () => {
     const updatedServices = { ...services };
     const { _id, type, subtype } = service;
     const key = assembleTypeKey(type, subtype);
-    console.log(service);
     const serviceIndex = services[key].findIndex((s) => s._id === _id);
     updatedServices[key][serviceIndex] = service;
     setService(updatedServices);
@@ -104,7 +102,7 @@ export default () => {
   };
 
   useEffect(() => {
-    const callReviews = async () => {
+    const callServices = async () => {
       const res = await fetch('/api/services');
       const allServices = await res.json();
       const mappedServices = {};
@@ -120,10 +118,10 @@ export default () => {
     };
 
     if (init) {
-      callReviews();
+      callServices();
       setInit(false);
     }
-  }, []);
+  }, [services]);
 
   return [services, loading, addService, modifyService, updateService, deleteService, keyToTypes, assembleTypeKey];
 };

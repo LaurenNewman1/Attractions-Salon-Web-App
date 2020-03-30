@@ -14,18 +14,18 @@ import useServices from '../../stores/ServiceActionsStore';
 import Confirm from '../../components/Confirm';
 
 const serviceCategoryLUT = {
-  "hair/cut": "Hair Cuts",
-  "hair/dye": "Hair Dyes",
-  "hair/treatment": "Hair Treatment",
-  "hair/wash": "Hair Wash/Dry",
-  "hair/styling": "Hair Styling",
-  "hair/extension": "Hair Extensions",
-  "nails/full set": "Full Sets",
-  "nails/fills": "Fills",
-  "nails/manicure": "Manicures",
-  "nails/pedicure": "Pedicures",
-  "wax": "Wax",
-}
+  'hair/cut': 'Hair Cuts',
+  'hair/dye': 'Hair Dyes',
+  'hair/treatment': 'Hair Treatment',
+  'hair/wash': 'Hair Wash/Dry',
+  'hair/styling': 'Hair Styling',
+  'hair/extension': 'Hair Extensions',
+  'nails/full set': 'Full Sets',
+  'nails/fills': 'Fills',
+  'nails/manicure': 'Manicures',
+  'nails/pedicure': 'Pedicures',
+  wax: 'Wax',
+};
 
 const adminServices = () => {
   const classes = useStyles();
@@ -56,7 +56,7 @@ const adminServices = () => {
     setAlert({
       open: true,
       type: success ? TYPE_SUCCESS : TYPE_ERROR,
-      text: success ? 'Service added successfully.' : 'Failed to add review.',
+      text: success ? 'Service added successfully.' : 'Failed to add service.',
     });
   };
 
@@ -114,7 +114,6 @@ const adminServices = () => {
     );
   });
 
-  console.log(services);
 
   const allCategories = !loading ? serviceSection(Object.keys(serviceCategoryLUT)) : null;
 
@@ -141,7 +140,7 @@ const adminServices = () => {
         ? (
           <Confirm
             open={confirmDelete}
-            content="Clicking delete will permanently remove this review."
+            content="Clicking delete will permanently remove this service."
             confirmText="Delete"
             onConfirm={() => enactDelete()}
             onCancel={() => clearDelete()}

@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 
 import React, { useEffect, useState } from 'react';
 import {
@@ -12,7 +13,6 @@ import {
   ExpandMore, AttachMoney, Schedule, Add,
 } from '@material-ui/icons';
 import PropTypes from 'prop-types';
-import AddOnTable from './AddOnTable';
 import useStyles from '../css/EditServiceStyles';
 
 const EditService = ({
@@ -20,19 +20,12 @@ const EditService = ({
   updateService, group, asdf,
 }) => {
   const classes = useStyles();
-
-  // const [name, setName] = React.useState(service.name);
-  // const [type, setType] = React.useState(service.type);
-  // const [subtype, setSubType] = React.useState(service.subtype);
-  // const [time, setTime] = React.useState(service.time);
-  // const [price, setPrice] = React.useState(service.price);
-  // const [description, setDescription] = React.useState(service.description);
-  const [addons, setAddons] = React.useState(service.addons);
   const [openAddon, setOpenAddon] = React.useState(false);
   const [newAddonName, setNewAddonName] = React.useState('');
   const [newAddonPrice, setNewAddonPrice] = React.useState(1);
-  const [viewing, setViewing] = React.useState();
   const [open, setOpen] = React.useState(false);
+  const [localService, setLocalService] = useState(service);
+
 
   const handleClickOpen = () => {
     setOpenAddon(true);
@@ -41,8 +34,6 @@ const EditService = ({
   const handleClose = () => {
     setOpenAddon(false);
   };
-
-  const [localService, setLocalService] = useState(service);
 
   const handleClick = (e) => {
     e.stopPropagation();
@@ -69,6 +60,7 @@ const EditService = ({
   const commitService = () => {
     updateService(localService);
     changeService(localService);
+    setOpen(false);
   };
 
   const newService = { ...service };
@@ -80,63 +72,19 @@ const EditService = ({
     const nAddon = { name: newAddonNameV, price: newAddonPriceV };
     updateServiceArg('addons', [...localService.addons, nAddon]);
     updateService(localService);
-    changeService(localService);
-    console.log(localService);
+    // changeService(localService);
   };
   const cancelChanges = () => {
-    console.log('viewing name', newService.name);
-    updateServiceArg(['name', newService.name]);
     setLocalService(newService);
-    console.log('new service name', newService.name);
     updateService(newService);
     setOpen(false);
   };
   useEffect(() => {
     setLocalService(newService);
-    console.log('viewing', viewing);
   }, [open]);
   const handleClickOpenPanel = () => {
-    console.log('viewing', viewing);
     setOpen(!open);
-    // } else {
-    //   // cancelChanges();
-    //   setOpen(!open);
-    // }
   };
-  // const cancelChanges = (i) => {
-  //   updateService(group, i, ['name', viewing.name]);
-  //   setOpen(false);
-  // };
-
-  // const expandChange = (panel) => (event, isExpanded) => {
-  //   // cancel any previously closed ones
-  //   // if (open !== false) {
-  //   //   cancelChanges(panel);
-  //   // }
-  //   // save history on newly opened ones
-  //   if (isExpanded) {
-  //     setViewing({ service });
-  //     console.log('viewing', viewing);
-  //   } else { // cancel if closing
-  //     cancelChanges(panel);
-  //   }
-  //   setOpen(isExpanded ? panel : false);
-  // };
-  // const expandChange = () => (event, isExpanded) => {
-  //   // cancel any previously closed ones
-  //   if (open !== false) {
-  //     cancelChanges(open);
-  //   }
-  //   // save history on newly opened ones
-  //   if (isExpanded) {
-  //     setViewing({ service });
-  //     console.log('viewing', viewing);
-  //   } else { // cancel if closing
-  //     cancelChanges(p, panel);
-  //   }
-  //   console.log('viewing', viewing);
-  //   setOpen(isExpanded ? panel : false);
-  // };
 
   return (
     <ExpansionPanel expanded={open} onChange={handleClickOpenPanel}>
@@ -231,7 +179,7 @@ const EditService = ({
                       </h3>
 
                       <Dialog open={openAddon} onClose={handleClose}>
-                        <DialogTitle>New Service</DialogTitle>
+                        <DialogTitle>New Addon</DialogTitle>
                         <DialogContent>
                           <form className={classes.textfield}>
                             <TextField onChange={(e) => setNewAddonName(e.target.value)} label="Addon Name" />
@@ -243,7 +191,7 @@ const EditService = ({
                             Cancel
                           </Button>
                           <Button onClick={(e) => newAddon(e)} color="primary" variant="contained">
-                            Save
+                            Add
                           </Button>
                         </DialogActions>
                       </Dialog>
@@ -288,7 +236,7 @@ const EditService = ({
         </Grid>
       </ExpansionPanelDetails>
       <DialogActions>
-        <Button variant="contained" color="grey" onClick={() => deleteService(asdf, group, index)}>
+        <Button variant="contained" color="grey" onClick={async () => { await deleteService(asdf, group, index); setOpen(false); }}>
           Delete
         </Button>
         <div style={{ flex: '1 0 0' }} />

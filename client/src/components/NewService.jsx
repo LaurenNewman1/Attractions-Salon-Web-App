@@ -25,9 +25,6 @@ const NewService = ({
   onClickAdd,
 }) => {
   const classes = useStyles();
-  const [addonPrice, setAddonPrice] = useState('');
-  const [addonName, setAddonName] = useState('');
-  const [addons, setAddons] = useState([]);
   const [open, setOpen] = useState(false);
   const [newService, setNewService] = useState(EMPTY_SERVICE);
 
@@ -45,27 +42,11 @@ const NewService = ({
     setOpen(true);
   };
 
-  const saveNewService = () => {
-    console.log(newService);
-    onClickAdd(newService);
+  const saveNewService = async () => {
+    await onClickAdd(newService);
     setOpen(false);
     setNewService(EMPTY_SERVICE);
   };
-
-  const addAddon = async () => {
-    setOpen(false);
-    updateNewService(['addons', [
-      {
-        name: addonName,
-        price: addonPrice,
-      },
-    ]]);
-    // Shouldn't be calling this here...
-    //onClickAdd();
-    return addons;
-  };
-
-  console.log(newService);
 
   return (
     <>
@@ -98,8 +79,6 @@ const NewService = ({
               }}
             />
             <TextField onChange={(e) => updateNewService(['banner', e.target.value])} label="Banner" />
-            {/* <TextField onChange={(e) => setAddonName(e.target.value)} label="Addon Name" />
-            <TextField onChange={(e) => setAddonPrice(e.target.value)} label="Addon Price" /> */}
             <TextField
               required
               onChange={(e) => updateNewService(['description', e.target.value])}
