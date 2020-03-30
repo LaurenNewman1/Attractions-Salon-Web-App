@@ -1,187 +1,133 @@
-import React, { useState } from 'react';
+import React from 'react';
+import moment from 'moment';
 import {
-  TextField, Card, CardMedia, Grid, CardActionArea,
-  Button, IconButton, Icon, Typography, Divider, useTheme,
+  Card, CardMedia, Grid, CardActionArea,
+  Button, Typography, Divider,
 } from '@material-ui/core';
-import { Edit as EditIcon } from '@material-ui/icons';
-import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 import hairIllustration from '../images/hairIllustration.png';
+import eye from '../images/eye.png';
+import hand from '../images/hand.png';
 import useStyles from '../css/ReviewStyles';
+import Loading from '../components/Loading';
 
 
-const ReviewBooking = ({ booking }) => {
-  const history = useHistory();
+const ReviewBooking = ({
+  booking, specialists, services, loading, sendRequest,
+}) => {
   const classes = useStyles();
-  const [type, setType] = useState('');
-  const theme = useTheme();
-  const [editMode, setEditMode] = useState(false);
-
-  const changeType = (newType) => {
-    setType(newType);
-  };
+  const history = useHistory();
 
 
-  // This is where you will be updating all the stuff on the backend
-  const renderTextFields = () => {
-    if (!editMode) {
-      return (
-        <div className={classes.information}>
-          <div className={classes.spacing}>
-            <Typography variant="h6" gutterBottom>
-              Name:
-            </Typography>
-            <div className={classes.middleSpace} />
-            <Typography variant="h6" gutterBottom>
-              {booking.name}
-            </Typography>
-          </div>
-          <div className={classes.spacing}>
-            <Typography variant="h6" gutterBottom>
-              Phone:
-            </Typography>
-            <div className={classes.middleSpace} />
-            <Typography variant="h6" gutterBottom>
-              {booking.phone_number}
-            </Typography>
-          </div>
-          <div className={classes.spacing}>
-            <Typography variant="h6" gutterBottom>
-              Card:
-            </Typography>
-            <div className={classes.middleSpace} />
-            <Typography variant="h6" gutterBottom>
-              .... .... .... 1234
-            </Typography>
-          </div>
-        </div>
-      );
+  const updateBookingRequest = async () => {
+    const { specialist, ...restOfBooking } = booking;
+    const requestBooking = !booking.specialist ? restOfBooking : booking;
+    const [success, res] = await sendRequest(requestBooking);
+    if (success) {
+      history.push(`/confirmation/${res._id}`);
     }
-    return (
-      <div>
-        <TextField style={{ paddingBottom: 10 }} defaultValue={booking.name} label="Name" value={textBoxValues.name} onChange={(e) => updateTextBoxValue('name', e.target.value)} />
-        <br />
-        <TextField style={{ paddingBottom: 10 }} defaultValue={booking.phone_number} label="Phone Number" value={textBoxValues.phone_number} onChange={(e) => updateTextBoxValue('phone_number', e.target.value)} />
-        <br />
-        <TextField defaultValue=".... .... .... 1234" label="Credit Card" />
-      </div>
-    );
   };
+
+  const renderUserData = () => (
+    <div className={classes.information}>
+      <div className={classes.spacing}>
+        <Typography variant="subtitle1" color="textSecondary">Name:</Typography>
+        <Typography variant="subtitle1">{booking.name}</Typography>
+      </div>
+      <div className={classes.spacing}>
+        <Typography variant="subtitle1" color="textSecondary">Phone:</Typography>
+        <Typography variant="subtitle1">{booking.phone_number}
+        </Typography>
+      </div>
+      <div className={classes.spacing}>
+        <Typography variant="subtitle1" color="textSecondary">Card:</Typography>
+        <Typography variant="subtitle1">.... .... .... 1234</Typography>
+      </div>
+    </div>
+  );
+
+  const currentService = services.find((x) => x._id === booking.service);
 
   return (
     <>
-      <div style={{
-        display: 'flex',
-        flexFlow: 'row nowrap',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-      >
-        <h1>Review Booking</h1>
-        {!editMode && (
-          <IconButton onClick={() => setEditMode(true)}>
-            <Icon>
-              <EditIcon />
-            </Icon>
-          </IconButton>
-        )}
-      </div>
-      {renderTextFields()}
-      <div>
-        <Divider variant="middle" style={{ flexGrow: 1 }} />
-      </div>
-      <div>
-        <Grid container spacing={3} className={classes.grid}>
-          <Grid item xs={4}>
-            <Card
-              className={classes.card}
-              style={{ borderColor: type === 'hair' ? theme.palette.primary.main : 'transparent' }}
-            >
-              <CardActionArea onClick={() => changeType('hair')}>
+      {loading ? <Loading /> : null}
+      <h2 className={classes.header}>Review Booking</h2>
+      {renderUserData()}
+      <Divider variant="middle" className={classes.divider} />
+      <Grid container spacing={3} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Grid item xs={4}>
+          <Card className={classes.card}>
+            {
+              currentService.type === 'hair'
+              && (
+              <CardActionArea>
                 <CardMedia component="image" image={hairIllustration} className={classes.media} />
                 <h5 className={classes.cardContent}>Hair</h5>
               </CardActionArea>
-            </Card>
-          </Grid>
-          <Grid item xs={8}>
-            <div className={classes.spacing}>
-              <Typography variant="h6" gutterBottom>
-                HairCut:&nbsp;
-              </Typography>
-              <Typography variant="h6" gutterBottom>
-                HairCut Name
-              </Typography>
-            </div>
-            <div className={classes.spacing}>
-              <Typography variant="h6" gutterBottom>
-                Specialist:&nbsp;
-              </Typography>
-              <Typography variant="h6" gutterBottom>
-                Specialist Name
-              </Typography>
-            </div>
-            <div className={classes.spacing}>
-              <Typography variant="h6" gutterBottom>
-                Wednesday March 25, 1:00 - 1:30 P.M.
-              </Typography>
-            </div>
-          </Grid>
+              )
+            }
+            {
+              currentService.type === 'wax'
+              && (
+              <CardActionArea>
+                <CardMedia component="image" image={eye} className={classes.media} />
+                <h5 className={classes.cardContent}>Wax</h5>
+              </CardActionArea>
+              )
+            }
+            {
+              currentService.type === 'nails'
+              && (
+              <CardActionArea>
+                <CardMedia component="image" image={hand} className={classes.media} />
+                <h5 className={classes.cardContent}>Nails</h5>
+              </CardActionArea>
+              )
+            }
+          </Card>
         </Grid>
-        <Grid container spacing={3} className={classes.grid}>
-          <Grid item xs={4}>
-            <Typography variant="h6" gutterBottom>
-              Notes
+        <Grid item xs={6}>
+          <div style={{ display: 'flex' }}>
+            <Typography variant="subtitle1" color="textSecondary">Service:&nbsp;</Typography>
+            <Typography variant="subtitle1">
+              {currentService.type.split('').map((x, i) => (i === 0 ? x.toUpperCase() : x)).join('')}
             </Typography>
-          </Grid>
-          <Grid item xs={4}>
-            <Typography variant="h6" gutterBottom>
-              Notes
+          </div>
+          <div style={{ display: 'flex' }}>
+            <Typography variant="subtitle1" color="textSecondary">Specialist:&nbsp;</Typography>
+            <Typography variant="subtitle1">
+              { specialists && booking.specialist
+                ? specialists.find((s) => s._id === booking.specialist).name
+                : 'TBD' }
             </Typography>
-          </Grid>
-          <Grid item xs={4}>
-            <Typography variant="h6" gutterBottom>
-              Notes
-            </Typography>
-          </Grid>
+          </div>
+          <Typography variant="subtitle1">{moment(booking.time).format('MMMM Do YYYY, h:mm a')}</Typography>
         </Grid>
-      </div>
-      <div>
-        <Divider variant="middle" style={{ flexGrow: 1 }} />
-      </div>
+        <Grid item xs={12}>
+          <Typography variant="subtitle1" color="textSecondary">Notes: {booking.notes}</Typography>
+        </Grid>
+      </Grid>
+      <Divider variant="middle" className={classes.divider} />
       <div style={{ marginTop: 10 }}>
         <div className={classes.spacing}>
-          <Typography variant="h6" gutterBottom>
-            Subtotal:
-          </Typography>
-          <div className={classes.middleSpace} />
-          <Typography variant="h6" gutterBottom>
-            $$$
-          </Typography>
+          <Typography variant="subtitle1" color="textSecondary">Subtotal:</Typography>
+          <Typography variant="subtitle1">$$$</Typography>
         </div>
         <div className={classes.spacing}>
-          <Typography variant="h6" gutterBottom>
-            Tax:
-          </Typography>
-          <div className={classes.middleSpace} />
-          <Typography variant="h6" gutterBottom>
-            $$$
-          </Typography>
+          <Typography variant="subtitle1" color="textSecondary">Tax:</Typography>
+          <Typography variant="subtitle1">$$$</Typography>
         </div>
         <div className={classes.spacing}>
-          <Typography variant="h5" gutterBottom>
-            Total:
-          </Typography>
-          <div className={classes.middleSpace} />
-          <Typography variant="h5" gutterBottom>
-            $$$
-          </Typography>
+          <Typography variant="h5" color="textSecondary">Total:</Typography>
+          <Typography variant="h5">$$$</Typography>
         </div>
       </div>
       <div className={classes.buttons}>
         <Button
           variant="contained"
           color="primary"
-          onClick={() => history.push(`/confirmation/${id}`)}
+          onClick={() => updateBookingRequest()}
         >
           Request Appointment
         </Button>
@@ -202,5 +148,15 @@ ReviewBooking.propTypes = {
     specialist: PropTypes.string,
     notes: PropTypes.string,
   }).isRequired,
+  specialists: PropTypes.shape([{
+    name: PropTypes.string,
+    specialties: PropTypes.array,
+  }]).isRequired,
+  services: PropTypes.shape([{
+    type: PropTypes.string,
+    services: PropTypes.array,
+  }]).isRequired,
+  loading: PropTypes.bool.isRequired,
+  sendRequest: PropTypes.func.isRequired,
 };
 export default ReviewBooking;

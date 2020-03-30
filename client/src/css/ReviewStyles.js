@@ -1,9 +1,15 @@
 import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({
-
-  login: {
+  header: {
     textAlign: 'center',
+    marginTop: 0,
+    paddingTop: 5,
+  },
+  divider: {
+    flexGrow: 1,
+    marginTop: 10,
+    marginBottom: 10,
   },
   buttons: {
     paddingTop: 20,
@@ -11,6 +17,7 @@ const useStyles = makeStyles(() => ({
   },
   spacing: {
     display: 'flex',
+    justifyContent: 'space-between',
   },
   middleSpace: {
     flex: '1 0 auto',
@@ -32,10 +39,6 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  grid: {
-    marginTop: 10,
-    marginBottom: 10,
   },
 }));
 

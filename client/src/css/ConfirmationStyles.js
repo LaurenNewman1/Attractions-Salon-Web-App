@@ -1,25 +1,17 @@
 import { makeStyles } from '@material-ui/core';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   page: {
-    height: 'calc(100vh - 64px)',
     display: 'flex',
-    alignItems: 'center',
-    background: 'white',
-    color: 'black',
     justifyContent: 'center',
   },
-  centerCol: {
-    height: 'calc(100vh - 64px)',
-  },
-  text: {
-    fontSize: '28px',
-    textAlign: 'center',
-    padding: '10vh',
-  },
   icon: {
-    fontSize: '300%',
-    color: '#00eb7d',
+    fontSize: '400%',
+    color: theme.palette.secondary.main,
+    marginBottom: 30,
+  },
+  spacing: {
+    marginBottom: 30,
   },
 }));
 
