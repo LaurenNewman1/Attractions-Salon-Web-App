@@ -1,9 +1,10 @@
+/* eslint-disable no-restricted-globals */
 import {
   Grid, TextField, InputAdornment, Button, Typography, Divider, Hidden,
 } from '@material-ui/core';
 import React, { useState } from 'react';
 import { Email, Lock } from '@material-ui/icons';
-import { useHistory, Link, useLocation } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Page from '../components/Page';
 import useStyles from '../css/LoginStyles';

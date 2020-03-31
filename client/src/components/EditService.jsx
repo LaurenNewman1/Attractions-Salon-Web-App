@@ -1,140 +1,292 @@
+/* eslint-disable react/no-array-index-key */
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  ExpansionPanel,
-  ExpansionPanelSummary,
-  ExpansionPanelDetails,
+  ExpansionPanel, Grid, Dialog, DialogTitle, DialogContent,
+  ExpansionPanelSummary, FormControl, Select,
+  ExpansionPanelDetails, InputLabel, MenuItem,
   Typography, TextField, Button, InputAdornment, DialogActions,
+  Table, TableBody, TableCell, TableContainer, TableHead,
+  TableRow, Paper, IconButton,
 } from '@material-ui/core';
 import {
-  ExpandMore, AttachMoney, Schedule,
+  ExpandMore, AttachMoney, Schedule, Add, Delete,
 } from '@material-ui/icons';
-// import {
-//   useHistory,
-// } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import AddOnTable from './AddOnTable';
 import useStyles from '../css/EditServiceStyles';
+import Confirm from './Confirm';
 
-const EditService = ({ service, deleteService, changeService }) => {
+const EditService = ({
+  index, service, deleteService, changeService, types,
+  updateService, group, asdf, deleteAddon,
+}) => {
   const classes = useStyles();
-  //   const history = useHistory();
-  const [clicked, setClicked] = React.useState(true);
-  // const [values, setValues] = service;
-  const [name, setName] = React.useState(service.name);
-  const [type, setType] = React.useState(service.type);
-  const [subtype, setSubType] = React.useState(service.subtype);
-  const [time, setTime] = React.useState(service.time);
-  const [price, setPrice] = React.useState(service.price);
-  const [description, setDescription] = React.useState(service.description);
-  const [addons] = React.useState(service.addons);
+  const [openAddon, setOpenAddon] = React.useState(false);
+  const [newAddonName, setNewAddonName] = React.useState('');
+  const [newAddonPrice, setNewAddonPrice] = React.useState(1);
+  const [open, setOpen] = React.useState(false);
+  const [localService, setLocalService] = useState(service);
+  const [delAddonWindow, setDelAddonWindow] = useState({
+    open: false,
+    addonIndex: -1,
+  });
 
-  const renderSavedPage = () => {
-    changeService(service._id, {
-      name,
-      type: type.toLowerCase(),
-      subtype,
-      time,
-      price,
-      description,
-      addons,
+  const onClickDeleteAddon = () => {
+    deleteAddon(service, delAddonWindow.addonIndex);
+    setDelAddonWindow({ open: false, addonIndex: -1 });
+  };
+
+  const updateAddonName = (e, i) => {
+    localService.addons[i].name = e;
+    updateService(localService);
+  };
+
+  const updateAddonPrice = (e, i) => {
+    localService.addons[i].price = e;
+    updateService(localService);
+  };
+
+  const updateServiceArg = (...argus) => {
+    const newFields = { ...localService };
+    argus.forEach((argu) => {
+      const [fieldName, val] = argu;
+      newFields[fieldName] = val;
     });
+    setLocalService(newFields);
   };
 
-  const handleOpen = () => {
-    setClicked(!clicked);
+  const commitService = async () => {
+    const success = await changeService(localService);
+    console.log('succes', success);
+    if (success) {
+      setOpen(false);
+    }
   };
 
-  const handleClick = (e) => {
-    e.stopPropagation();
+  const newService = { ...service };
+  const newAddon = (e) => {
+    e.preventDefault();
+    setOpenAddon(false);
+    const newAddonNameV = newAddonName;
+    const newAddonPriceV = newAddonPrice;
+    const nAddon = { name: newAddonNameV, price: newAddonPriceV };
+    updateServiceArg(['addons', [...localService.addons, nAddon]]);
+    updateService(localService);
   };
 
-  const updateAddonName = (e, index) => {
-    console.log('name value', e);
-    addons[index].name = e;
+  const cancelChanges = () => {
+    setLocalService(newService);
+    updateService(newService);
+    setOpen(false);
   };
-  const updateAddonPrice = (e, index) => {
-    console.log('price value', e);
-    addons[index].price = e;
-  };
+
+  useEffect(() => {
+    setLocalService(newService);
+  }, [open]);
 
   return (
-    <ExpansionPanel>
-      <ExpansionPanelSummary
-        onClick={handleOpen}
-        expandIcon={<ExpandMore />}
-        aria-controls="panel1a-content"
-        id="panel1a-header"
-      >
-        {clicked
+    <ExpansionPanel expanded={open} onChange={() => setOpen(!open)}>
+      <ExpansionPanelSummary expandIcon={<ExpandMore />}>
+        {!open
           ? (<Typography>{service.name}</Typography>
           )
           : (
             <TextField
-              onClick={(e) => handleClick(e)}
-              onChange={(e) => setName(e.target.value)}
-              defaultValue={service.name}
+              onClick={(e) => e.stopPropagation()}
+              onChange={(e) => updateServiceArg(['name', e.target.value])}
+              value={localService.name}
               className={classes.heading}
               style={{ border: '5px' }}
             />
           ) }
       </ExpansionPanelSummary>
       <ExpansionPanelDetails>
-        <form className={classes.textfield} autoComplete="off">
-          <TextField id="standard-basic" label="Type" defaultValue={service.type} onChange={(e) => setType(e.target.value)} />
-          <TextField id="standard-basic" label="SubType" defaultValue={service.subtype} onChange={(e) => setSubType(e.target.value)} />
-          <TextField
-            id="standard-basic"
-            label="Price"
-            defaultValue={service.price}
-            onChange={(e) => setPrice(e.target.value)}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <AttachMoney />
-                </InputAdornment>
-              ),
-            }}
-          />
-          <TextField
-            id="standard-basic"
-            label="Time"
-            defaultValue={service.time}
-            onChange={(e) => setTime(e.target.value)}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Schedule />
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position="end">
-                  <Typography>mins</Typography>
-                </InputAdornment>
-              ),
-            }}
-          />
-          <TextField id="outlined-multiline-static" onChange={(e) => setDescription(e.target.value)} multiline style={{ width: '88%', paddingBottom: '20px' }} label="Description" defaultValue={service.description} />
-          <div className={classes.tablediv}>
-            {!service.addons.length ? null
-              : service.addons.map((addon, index) => (
-                <AddOnTable className={classes.table} updateAddonName={updateAddonName} updateAddonPrice={updateAddonPrice} label="Addons" index={index} addon={addon} />
-              ))}
-          </div>
-        </form>
+        <Grid container spacing={2} className={classes.textfield}>
+          <Grid item xs={12} sm={6} md={3} style={{ display: 'flex', alignItems: 'center' }}>
+            <FormControl style={{ width: '100%' }}>
+              <InputLabel>Type</InputLabel>
+              {Object.keys(types).length
+                ? (
+                  <Select
+                    value={localService.type || ''}
+                    onChange={(e) => updateServiceArg(['type', e.target.value], ['subtype', ''])}
+                  >
+                    {Object.keys(types).map((type) => (
+                      <MenuItem key={type} value={type}>{type}</MenuItem>
+                    ))}
+                  </Select>
+                ) : null}
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} sm={6} md={3} style={{ display: 'flex', alignItems: 'center' }}>
+            <FormControl style={{ width: '100%' }}>
+              <InputLabel>Subtype</InputLabel>
+              {Object.keys(types).length
+                ? (
+                  <Select
+                    value={localService.subtype || ''}
+                    onChange={(e) => updateServiceArg(['subtype', e.target.value])}
+                  >
+                    {Object.keys(types).length
+                      ? types[Object.keys(types).find(
+                        (t) => t === localService.type,
+                      )].map((sub) => (
+                        <MenuItem key={sub} value={sub}>{sub}</MenuItem>
+                      )) : null}
+                  </Select>
+                ) : null}
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <TextField
+              label="Price"
+              style={{ width: '100%' }}
+              value={localService.price}
+              onChange={(e) => updateServiceArg(['price', e.target.value])}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <AttachMoney />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <TextField
+              label="Time"
+              style={{ width: '100%' }}
+              value={localService.time}
+              onChange={(e) => updateServiceArg(['time', e.target.value])}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Schedule />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <Typography>mins</Typography>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              onChange={(e) => updateServiceArg(['description', e.target.value])}
+              multiline
+              style={{ width: '100%' }}
+              label="Description"
+              value={localService.description}
+            />
+          </Grid>
+          <Grid item xs={12} className={classes.tablediv}>
+            <div className={classes.table}>
+              <TableContainer component={Paper}>
+                <Table size="small" aria-label="a dense table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>
+                        <h3 style={{ paddingLeft: 10, display: 'flex', alignItems: 'center' }}>
+                          Addons
+                          <IconButton color="primary" onClick={() => setOpenAddon(true)}>
+                            <Add size="large" />
+                          </IconButton>
+                        </h3>
+                      </TableCell>
+                      <Dialog open={openAddon} onClose={() => setOpenAddon(false)}>
+                        <DialogTitle>New Addon</DialogTitle>
+                        <DialogContent>
+                          <form className={classes.textfield}>
+                            <TextField onChange={(e) => setNewAddonName(e.target.value)} label="Name" />
+                            <TextField
+                              onChange={(e) => setNewAddonPrice(e.target.value)}
+                              label="Price"
+                              InputProps={{
+                                startAdornment: (
+                                  <InputAdornment position="start">
+                                    <AttachMoney />
+                                  </InputAdornment>
+                                ),
+                              }}
+                            />
+                          </form>
+                        </DialogContent>
+                        <DialogActions>
+                          <Button onClick={() => setOpenAddon(false)}>Cancel</Button>
+                          <Button onClick={(e) => newAddon(e)} color="primary" variant="contained">
+                            Add
+                          </Button>
+                        </DialogActions>
+                      </Dialog>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Name</TableCell>
+                      <TableCell>Price</TableCell>
+                      <TableCell />
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {!localService.addons.length ? null
+                      : localService.addons.map((add, i) => (
+                        <TableRow key={i}>
+                          <TableCell component="th" scope="row">
+                            <TextField
+                              value={add.name}
+                              onChange={(e) => updateAddonName(e.target.value, i)}
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <TextField
+                              InputProps={{
+                                startAdornment: (
+                                  <InputAdornment position="start">
+                                    <AttachMoney />
+                                  </InputAdornment>
+                                ),
+                              }}
+                              value={add.price}
+                              onChange={(e) => updateAddonPrice(Number(e.target.value), i)}
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <IconButton onClick={() => setDelAddonWindow({
+                              open: true, addonIndex: i,
+                            })}
+                            >
+                              <Delete />
+                            </IconButton>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </div>
+
+          </Grid>
+        </Grid>
       </ExpansionPanelDetails>
       <DialogActions>
-        <Button variant="contained" color="grey" onClick={() => deleteService(service._id)}>
+        <Button variant="contained" onClick={async () => { await deleteService(asdf, group, index); setOpen(false); }}>
           Delete
         </Button>
         <div style={{ flex: '1 0 0' }} />
-        <Button>
-          Cancel
-        </Button>
-        <Button variant="contained" color="primary" onClick={() => renderSavedPage()}>
-          Save
-        </Button>
+        <Button onClick={() => cancelChanges()}>Cancel</Button>
+        <Button variant="contained" color="primary" onClick={() => commitService()}>Save</Button>
       </DialogActions>
+      {delAddonWindow.open
+        ? (
+          <Confirm
+            open={delAddonWindow.open}
+            title={`Delete the ${service.addons[delAddonWindow.addonIndex].name} addon?`}
+            content="Clicking delete will permanently remove this addon."
+            confirmText="Delete"
+            onConfirm={() => onClickDeleteAddon()}
+            onCancel={() => setDelAddonWindow({ open: false, addonIndex: -1 })}
+          />
+        ) : null}
     </ExpansionPanel>
   );
 };
@@ -152,7 +304,18 @@ EditService.propTypes = {
     addons: PropTypes.array,
   }).isRequired,
   deleteService: PropTypes.func.isRequired,
+  deleteAddon: PropTypes.func.isRequired,
   changeService: PropTypes.func.isRequired,
+  updateService: PropTypes.func.isRequired,
+  index: PropTypes.number.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  group: PropTypes.object.isRequired,
+  asdf: PropTypes.string.isRequired,
+  types: PropTypes.shape({
+    hair: PropTypes.array,
+    wax: PropTypes.array,
+    nails: PropTypes.array,
+  }).isRequired,
 };
 
 
