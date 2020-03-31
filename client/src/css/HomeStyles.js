@@ -4,7 +4,7 @@ import {
 
 const useStyles = makeStyles(() => ({
   page: {
-    height: 'calc(100vh - 64px)',
+    height: 'calc(100vh - 56px)',
   },
   blackBox: {
     backgroundColor: 'black',
@@ -22,7 +22,7 @@ const useStyles = makeStyles(() => ({
   },
   modelImg: {
     maxWidth: '100%',
-    maxHeight: '100%',
+    maxHeight: '90%',
     objectFit: 'contain',
     position: 'relative',
     bottom: 0,

@@ -35,6 +35,39 @@ const requestRegister = async (name, email, number, password) => {
   return [res.status === 200, await res.json()];
 };
 
+const requestResetPassword = async (email) => {
+  const res = await fetch('/api/login/reset', {
+    method: 'POST',
+    cache: 'no-cache',
+    credentials: 'same-origin', // include, *same-origin, omit
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    redirect: 'follow', // manual, *follow, error
+    referrerPolicy: 'no-referrer', // no-referrer, *client
+    body: JSON.stringify({ email }),
+  });
+
+  return res.status === 200;
+};
+
+const requestPasswordUpdate = async (token, password) => {
+  const res = await fetch(`/api/users/password/${token}`, {
+    method: 'POST',
+    cache: 'no-cache',
+    credentials: 'same-origin', // include, *same-origin, omit
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    redirect: 'follow', // manual, *follow, error
+    referrerPolicy: 'no-referrer', // no-referrer, *client
+    body: JSON.stringify({ password }),
+  });
+
+  return res.status === 200;
+};
+
+
 const requestLogout = async () => {
   const res = await fetch('/api/logout', {
     method: 'DELETE',
@@ -45,6 +78,23 @@ const requestLogout = async () => {
   });
 
   return res.status === 200;
+};
+
+
+const requestProfileChange = async (userId, params) => {
+  const res = await fetch(`/api/users/${userId}`, {
+    method: 'PUT',
+    cache: 'no-cache',
+    credentials: 'same-origin', // include, *same-origin, omit
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    redirect: 'follow', // manual, *follow, error
+    referrerPolicy: 'no-referrer', // no-referrer, *client
+    body: JSON.stringify(params),
+  });
+
+  return [res.status === 200, await res.json()];
 };
 
 
@@ -67,6 +117,20 @@ export default () => {
   // const register = requestRegister;
   // eslint-disable-next-line max-len
   const register = async (name, email, number, password) => requestRegister(name, email, number, password);
+
+  const changeProfile = async (userId, params) => {
+    const result = await requestProfileChange(userId, params);
+
+    if (result[0] === true) {
+      // it worked
+      setUserData({
+        userData,
+        ...params,
+      });
+    }
+
+    return result;
+  };
 
   const logout = async () => {
     if (await requestLogout()) { isLoggedIn(false); }
@@ -91,5 +155,6 @@ export default () => {
     });
   }, [loggedIn]);
 
-  return [userData, loggedIn, login, register, logout];
+  return [userData, loggedIn, login, register, logout,
+    changeProfile, requestResetPassword, requestPasswordUpdate];
 };

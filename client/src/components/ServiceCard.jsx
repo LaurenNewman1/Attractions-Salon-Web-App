@@ -54,7 +54,7 @@ const ServiceCard = ({ service }) => {
           size="small"
           onClick={() => history.push('/book')}
         >
-          Book Now
+          Request Booking
         </Button>
       </CardActions>
     </Card>

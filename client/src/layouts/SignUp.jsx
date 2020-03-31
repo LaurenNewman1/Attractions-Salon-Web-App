@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Button, TextField, Grid, InputAdornment,
+  Button, TextField, Grid, InputAdornment, Hidden,
 } from '@material-ui/core';
 import {
   Email, Person, Phone, Lock,
@@ -30,7 +30,7 @@ const SignUp = ({ register }) => {
     },
   };
 
-  const getAvaliableErrors = (field) => {
+  const getAvailableErrors = (field) => {
     if (!hasError) return false;
     if (!errorBody.errors) return false;
     if (!errorBody.errors[field]) return false;
@@ -50,11 +50,13 @@ const SignUp = ({ register }) => {
   };
 
   return (
-    <Page>
+    <Page maxWidth={false}>
       <Grid container className={classes.page}>
-        <Grid item xs={12} sm={6} className={classes.imgContainer}>
-          <img src={signUpImg} alt="" className={classes.modelImg} />
-        </Grid>
+        <Hidden xsDown>
+          <Grid item xs={12} sm={6} className={classes.imgContainer}>
+            <img src={signUpImg} alt="" className={classes.modelImg} />
+          </Grid>
+        </Hidden>
         <Grid item xs={12} sm={6} className={classes.form}>
           <h1 className={classes.login}>Sign Up</h1>
           <div>
@@ -62,8 +64,8 @@ const SignUp = ({ register }) => {
               fullWidth
               type
               className={classes.field}
-              error={getAvaliableErrors('name')}
-              helperText={hasError ? getAvaliableErrors('name') : 'Full Name'}
+              error={getAvailableErrors('name')}
+              helperText={hasError ? getAvailableErrors('name') : 'Full Name'}
               value={name}
               onChange={(e) => setName(e.target.value)}
               InputProps={{
@@ -78,8 +80,8 @@ const SignUp = ({ register }) => {
               fullWidth
               type="email"
               className={classes.field}
-              error={getAvaliableErrors('email')}
-              helperText={hasError ? getAvaliableErrors('email') : 'Email Address'}
+              error={getAvailableErrors('email')}
+              helperText={hasError ? getAvailableErrors('email') : 'Email Address'}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               InputProps={{

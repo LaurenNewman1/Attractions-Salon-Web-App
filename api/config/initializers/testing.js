@@ -7,7 +7,7 @@ const MongoStore = connectMongo(session);
 
 const test = async (app) => {
   app.use(morgan('dev'));
-  const connection = await mongoose.connect(process.env.MONGO_URL,
+  const connection = await mongoose.connect(process.env.DB_URL_TEST,
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,

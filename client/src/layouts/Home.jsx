@@ -1,18 +1,28 @@
 import React from 'react';
 import {
-  Grid, Typography, Button,
+  Grid, Typography, Button, Hidden,
 } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import Page from '../components/Page';
 import useStyles from '../css/HomeStyles';
 import coverModel from '../images/coverModel.png';
 
-const Home = () => {
+const Home = ({ loggedIn, setFromBookPage }) => {
   const classes = useStyles();
   const history = useHistory();
 
+  const handleBook = () => {
+    if (loggedIn) {
+      history.push('/book');
+    } else {
+      setFromBookPage(true);
+      history.push('/login');
+    }
+  };
+
   return (
-    <Page>
+    <Page maxWidth={false}>
       <Grid className={classes.page}>
         <Grid item xs={12} className={classes.blackBox}>
           <Grid container className={classes.page}>
@@ -29,20 +39,27 @@ const Home = () => {
                   </Typography>
                 </Grid>
                 <Grid item xs={12} align="center" className={classes.bookBtn}>
-                  <Button variant="contained" color="primary" onClick={() => history.push('/book')}>
-                    Make a Booking
+                  <Button variant="contained" color="primary" onClick={() => handleBook()}>
+                    Request Booking
                   </Button>
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={12} sm={6} align="center" className={classes.rightContainer}>
-              <img src={coverModel} alt="" className={classes.modelImg} />
-            </Grid>
+            <Hidden xsDown>
+              <Grid item xs={12} sm={6} align="center" className={classes.rightContainer}>
+                <img src={coverModel} alt="" className={classes.modelImg} />
+              </Grid>
+            </Hidden>
           </Grid>
         </Grid>
       </Grid>
     </Page>
   );
+};
+
+Home.propTypes = {
+  loggedIn: PropTypes.bool.isRequired,
+  setFromBookPage: PropTypes.func.isRequired,
 };
 
 
