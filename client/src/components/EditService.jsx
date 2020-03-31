@@ -3,8 +3,8 @@
 import React, { useEffect, useState } from 'react';
 import {
   ExpansionPanel, Grid, Dialog, DialogTitle, DialogContent,
-  ExpansionPanelSummary,
-  ExpansionPanelDetails,
+  ExpansionPanelSummary, FormControl, Select,
+  ExpansionPanelDetails, InputLabel, MenuItem,
   Typography, TextField, Button, InputAdornment, DialogActions,
   Table, TableBody, TableCell, TableContainer, TableHead,
   TableRow, Paper, IconButton,
@@ -17,7 +17,7 @@ import useStyles from '../css/EditServiceStyles';
 import Confirm from './Confirm';
 
 const EditService = ({
-  index, service, deleteService, changeService,
+  index, service, deleteService, changeService, types,
   updateService, group, asdf, deleteAddon,
 }) => {
   const classes = useStyles();
@@ -46,16 +46,21 @@ const EditService = ({
     updateService(localService);
   };
 
-  const updateServiceArg = (name, val) => {
-    const newService = { ...localService };
-    newService[name] = val;
-    setLocalService(newService);
+  const updateServiceArg = (...argus) => {
+    const newFields = { ...localService };
+    argus.forEach((argu) => {
+      const [fieldName, val] = argu;
+      newFields[fieldName] = val;
+    });
+    setLocalService(newFields);
   };
 
-  const commitService = () => {
-    updateService(service, localService);
-    changeService(localService);
-    setOpen(false);
+  const commitService = async () => {
+    const success = await changeService(localService);
+    console.log('succes', success);
+    if (success) {
+      setOpen(false);
+    }
   };
 
   const newService = { ...service };
@@ -65,7 +70,7 @@ const EditService = ({
     const newAddonNameV = newAddonName;
     const newAddonPriceV = newAddonPrice;
     const nAddon = { name: newAddonNameV, price: newAddonPriceV };
-    updateServiceArg('addons', [...localService.addons, nAddon]);
+    updateServiceArg(['addons', [...localService.addons, nAddon]]);
     updateService(localService);
   };
 
@@ -88,7 +93,7 @@ const EditService = ({
           : (
             <TextField
               onClick={(e) => e.stopPropagation()}
-              onChange={(e) => updateServiceArg('name', e.target.value)}
+              onChange={(e) => updateServiceArg(['name', e.target.value])}
               value={localService.name}
               className={classes.heading}
               style={{ border: '5px' }}
@@ -97,28 +102,47 @@ const EditService = ({
       </ExpansionPanelSummary>
       <ExpansionPanelDetails>
         <Grid container spacing={2} className={classes.textfield}>
-          <Grid item xs={12} sm={6} md={3}>
-            <TextField
-              label="Type"
-              style={{ width: '100%' }}
-              value={localService.type}
-              onChange={(e) => updateServiceArg('type', e.target.value)}
-            />
+          <Grid item xs={12} sm={6} md={3} style={{ display: 'flex', alignItems: 'center' }}>
+            <FormControl style={{ width: '100%' }}>
+              <InputLabel>Type</InputLabel>
+              {Object.keys(types).length
+                ? (
+                  <Select
+                    value={localService.type || ''}
+                    onChange={(e) => updateServiceArg(['type', e.target.value], ['subtype', ''])}
+                  >
+                    {Object.keys(types).map((type) => (
+                      <MenuItem key={type} value={type}>{type}</MenuItem>
+                    ))}
+                  </Select>
+                ) : null}
+            </FormControl>
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <TextField
-              label="Subtype"
-              style={{ width: '100%' }}
-              value={localService.subtype}
-              onChange={(e) => updateServiceArg('subtype', e.target.value)}
-            />
+          <Grid item xs={12} sm={6} md={3} style={{ display: 'flex', alignItems: 'center' }}>
+            <FormControl style={{ width: '100%' }}>
+              <InputLabel>Subtype</InputLabel>
+              {Object.keys(types).length
+                ? (
+                  <Select
+                    value={localService.subtype || ''}
+                    onChange={(e) => updateServiceArg(['subtype', e.target.value])}
+                  >
+                    {Object.keys(types).length
+                      ? types[Object.keys(types).find(
+                        (t) => t === localService.type,
+                      )].map((sub) => (
+                        <MenuItem key={sub} value={sub}>{sub}</MenuItem>
+                      )) : null}
+                  </Select>
+                ) : null}
+            </FormControl>
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
             <TextField
               label="Price"
               style={{ width: '100%' }}
               value={localService.price}
-              onChange={(e) => updateServiceArg('price', e.target.value)}
+              onChange={(e) => updateServiceArg(['price', e.target.value])}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -133,7 +157,7 @@ const EditService = ({
               label="Time"
               style={{ width: '100%' }}
               value={localService.time}
-              onChange={(e) => updateServiceArg('time', e.target.value)}
+              onChange={(e) => updateServiceArg(['time', e.target.value])}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -150,7 +174,7 @@ const EditService = ({
           </Grid>
           <Grid item xs={12}>
             <TextField
-              onChange={(e) => updateServiceArg('description', e.target.value)}
+              onChange={(e) => updateServiceArg(['description', e.target.value])}
               multiline
               style={{ width: '100%' }}
               label="Description"
@@ -163,12 +187,14 @@ const EditService = ({
                 <Table size="small" aria-label="a dense table">
                   <TableHead>
                     <TableRow>
-                      <h3 style={{ paddingLeft: 10, display: 'flex', alignItems: 'center' }}>
-                        Addons
-                        <IconButton color="primary" onClick={() => setOpenAddon(true)}>
-                          <Add size="large" />
-                        </IconButton>
-                      </h3>
+                      <TableCell>
+                        <h3 style={{ paddingLeft: 10, display: 'flex', alignItems: 'center' }}>
+                          Addons
+                          <IconButton color="primary" onClick={() => setOpenAddon(true)}>
+                            <Add size="large" />
+                          </IconButton>
+                        </h3>
+                      </TableCell>
                       <Dialog open={openAddon} onClose={() => setOpenAddon(false)}>
                         <DialogTitle>New Addon</DialogTitle>
                         <DialogContent>
@@ -243,7 +269,7 @@ const EditService = ({
         </Grid>
       </ExpansionPanelDetails>
       <DialogActions>
-        <Button variant="contained" color="grey" onClick={async () => { await deleteService(asdf, group, index); setOpen(false); }}>
+        <Button variant="contained" onClick={async () => { await deleteService(asdf, group, index); setOpen(false); }}>
           Delete
         </Button>
         <div style={{ flex: '1 0 0' }} />
@@ -281,10 +307,15 @@ EditService.propTypes = {
   deleteAddon: PropTypes.func.isRequired,
   changeService: PropTypes.func.isRequired,
   updateService: PropTypes.func.isRequired,
-  index: PropTypes.string.isRequired,
+  index: PropTypes.number.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
-  group: PropTypes.array.isRequired,
+  group: PropTypes.object.isRequired,
   asdf: PropTypes.string.isRequired,
+  types: PropTypes.shape({
+    hair: PropTypes.array,
+    wax: PropTypes.array,
+    nails: PropTypes.array,
+  }).isRequired,
 };
 
 

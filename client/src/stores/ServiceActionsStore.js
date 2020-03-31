@@ -51,6 +51,7 @@ const assembleTypeKey = (type, subtype) => `${type}${subtype ? `/${subtype}` : '
 
 export default () => {
   const [services, setService] = useState({});
+  const [types, setTypes] = useState({});
   const [init, setInit] = useState(true);
   const [loading, setLoading] = useState(true);
 
@@ -131,7 +132,12 @@ export default () => {
         }
         mappedServices[key].push(service);
       });
+      const serviceTypes = await fetch('/api/services/types')
+        .then((response) => response.json())
+        .then((data) => data);
+
       setService(mappedServices);
+      setTypes(serviceTypes);
       setLoading(false);
     };
 
@@ -142,5 +148,5 @@ export default () => {
   }, [services]);
 
   return [services, loading, addService, modifyService, updateService,
-    deleteService, deleteAddon];
+    deleteService, deleteAddon, types];
 };

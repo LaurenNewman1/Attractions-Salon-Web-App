@@ -31,16 +31,8 @@ const adminServices = () => {
   const classes = useStyles();
 
   const [confirmDelete, setConfirmDelete] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [
-    services,
-    loading,
-    addService,
-    modifyService,
-    updateService,
-    deleteService,
-    deleteAddon,
-  ] = useServices();
+  const [services, loading, addService, modifyService, updateService,
+    deleteService, deleteAddon, types] = useServices();
   const [alert, setAlert] = useState({
     open: false,
     type: '',
@@ -49,7 +41,6 @@ const adminServices = () => {
   const [deleteCandidate, setDeleteCandidate] = useState({});
 
   const onClickAdd = async (service) => {
-    setOpen(false);
     const success = await addService(service);
     setAlert({
       open: true,
@@ -81,7 +72,6 @@ const adminServices = () => {
     setConfirmDelete(false);
     const success = await deleteService(deleteCandidate);
     setDeleteCandidate({});
-    setOpen(false);
     setAlert({
       open: true,
       type: success ? TYPE_SUCCESS : TYPE_ERROR,
@@ -89,37 +79,52 @@ const adminServices = () => {
     });
   };
 
-  const onClickSave = async (oldService, service) => {
-    const success = await updateService(oldService, service);
-    setAlert({
-      open: true,
-      type: success ? TYPE_SUCCESS : TYPE_ERROR,
-      text: success ? 'Service saved successfully.' : 'Save failed.',
-    });
+  const onClickSave = async (service) => {
+    // Validate
+    if (!service.type.length
+          || (types[Object.keys(types).find((t) => t === service.type)].length && !service.subtype.length)
+          || !service.name.length
+          || !service.description.length) {
+      setAlert({
+        open: true,
+        type: TYPE_ERROR,
+        text: 'Please provide valid entries.',
+      });
+    } else {
+      const success = await updateService(service);
+      setAlert({
+        open: true,
+        type: success ? TYPE_SUCCESS : TYPE_ERROR,
+        text: success ? 'Service saved successfully.' : 'Save failed.',
+      });
+      return success;
+    }
+    return 'false';
   };
 
 
-  const serviceSection = (types) => types.map((key) => {
+  const serviceSection = (serviceTypes) => serviceTypes.map((key) => {
     const categoryServices = services[key];
     return (
       !categoryServices || !categoryServices.length ? null
         : (
-          <>
+          <div key={key}>
             <Typography variant="h5" className={classes.header}>{serviceCategoryLUT[key]}</Typography>
             {categoryServices.map((service, index) => (
               <EditService
+                key={service._id}
                 service={service}
                 index={index}
-                open={open}
                 deleteService={() => setDelete(service)}
                 deleteAddon={(serv, addonIndex) => onDeleteAddon(serv, addonIndex)}
                 changeService={(committedService) => onClickSave(committedService)}
                 updateService={(oldService, committedService) => modifyService(oldService, committedService)}
                 group={services}
                 asdf="services"
+                types={types}
               />
             ))}
-          </>
+          </div>
         )
     );
   });
