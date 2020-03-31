@@ -1,4 +1,7 @@
+import format from 'date-fns/format';
 import Appointment from '../model/appointment';
+import User from '../model/user';
+import { SendTextEmail } from '../lib/mail';
 
 export const read = async (req, res) => {
   // Find Appointment from Database and return
@@ -49,6 +52,9 @@ export const update = async (req, res) => {
     const appointment = await Appointment.findByIdAndUpdate(req.params.someId, updateParams).exec();
 
     if (appointment) {
+      if (updateParams.confirmed) {
+        await SendTextEmail(appointment.email, 'Your Booking has been Confirmed', `Hi ${appointment.name}, your booking with Attractions Salon has been comfirmed for ${format(appointment.time, 'MM/dd/yyyy K:mm aa')}`);
+      }
       res.status(200).type('json').send(appointment);
     } else {
       res.status(404).type('json').send({ error: 'Appointment not found' });
@@ -65,6 +71,11 @@ export const create = async (req, res) => {
     const dateTime = new Date(params.time);
     const finalParams = { ...params, time: dateTime };
     const appointment = await Appointment.create(finalParams);
+    await SendTextEmail(appointment.email, 'Your Booking has been Submitted', `Hi ${appointment.name}, your booking has been submitted. You will get an email soon when Attractions Salon has confirmed your appointment time.`);
+    const owner = await User.findOne({ role: 2 }).exec();
+    if (owner) {
+      await SendTextEmail(owner.email, 'A Booking has been Submitted', `Hi ${owner.name}, ${appointment.name} has submitted a booking request for review.`);
+    }
     res.status(200).type('json').send(appointment);
   } catch (err) {
     res.status(403).type('json').send(err);

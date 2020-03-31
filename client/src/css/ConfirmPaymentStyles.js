@@ -1,49 +1,34 @@
 import { makeStyles } from '@material-ui/core';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   page: {
-    display: 'flex',
-    alignItems: 'center',
-    paddingLeft: 10,
-  },
-  login: {
+    width: '100%',
     textAlign: 'center',
   },
-  buttons: {
-    paddingTop: 10,
+  header: {
     textAlign: 'center',
-  },
-  zipCode: {
-    marginTop: 15,
-  },
-  checkBox: {
-    paddingTop: 30,
-    textAlign: 'center',
+    marginTop: 0,
+    paddingTop: 5,
   },
   divider: {
-    paddingLeft: 50,
-    paddingRight: 50,
     display: 'flex',
     flewFlow: 'row nowrap',
-    justifyContents: 'stretch',
+    justifyContents: 'center',
     alignItems: 'center',
+    width: '100%',
   },
   paper: {
     padding: 20,
     textAlign: 'center',
-    // This doesn't work
     borderRadius: 20, // "20px"
     display: 'flex',
     flexFlow: 'column nowrap',
     justifyContent: 'flex start',
     alignItems: 'stretch',
-    height: 180,
-    width: 400,
-    backgroundColor: '#40cec5',
+    height: 150,
+    width: 350,
+    backgroundColor: theme.palette.secondary.main,
 
-  },
-  spacing: {
-    display: 'flex',
   },
   middleSpace: {
     flex: '1 0 auto',
@@ -55,11 +40,14 @@ const useStyles = makeStyles(() => ({
   },
   link: {
     float: 'right',
-    color: 'black',
     paddingRight: '10%',
+    marginBottom: 15,
+    marginTop: 5,
   },
-  actualLink: {
-    color: 'black',
+  spaceBetween: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    width: '100%',
   },
 }));
 

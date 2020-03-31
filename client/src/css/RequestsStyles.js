@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   icon: {
     display: 'flex',
     alignItems: 'center',
@@ -15,6 +15,9 @@ const useStyles = makeStyles(() => ({
   none: {
     width: '100%',
     textAlign: 'center',
+  },
+  payInStore: {
+    color: theme.palette.primary.dark,
   },
 }));
 

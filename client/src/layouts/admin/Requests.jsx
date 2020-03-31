@@ -76,6 +76,9 @@ const Requests = () => {
         <CardHeader
           title={request.name}
           subheader={`Requested ${moment(request.timeOrdered).fromNow()}`}
+          action={request.payInStore
+            ? <Typography className={classes.payInStore}>PAY IN STORE</Typography>
+            : null}
           style={{ paddingBottom: 0 }}
         />
         <CardContent>

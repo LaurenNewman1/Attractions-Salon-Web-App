@@ -4,7 +4,7 @@ import {
 
 const useStyles = makeStyles(() => ({
   page: {
-    height: 'calc(100vh - 64px)',
+    height: 'calc(100vh - 56px)',
   },
   blackBox: {
     backgroundColor: 'black',

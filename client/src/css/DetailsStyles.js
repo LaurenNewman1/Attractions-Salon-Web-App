@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/core';
 const useStyles = makeStyles(() => ({
   textfield: {
     width: '100%',
-    marginBottom: 5,
   },
   formControl: {
     width: '100%',
@@ -24,7 +23,7 @@ const useStyles = makeStyles(() => ({
   header: {
     textAlign: 'center',
     marginTop: 0,
-    paddingTop: 30,
+    paddingTop: 5,
   },
   card: {
     borderWidth: 2,

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Button, TextField, Grid, InputAdornment,
+  Button, TextField, Grid, InputAdornment, Hidden,
 } from '@material-ui/core';
 import {
   Email, Person, Phone, Lock,
@@ -50,11 +50,13 @@ const SignUp = ({ register }) => {
   };
 
   return (
-    <Page>
+    <Page maxWidth={false}>
       <Grid container className={classes.page}>
-        <Grid item xs={12} sm={6} className={classes.imgContainer}>
-          <img src={signUpImg} alt="" className={classes.modelImg} />
-        </Grid>
+        <Hidden xsDown>
+          <Grid item xs={12} sm={6} className={classes.imgContainer}>
+            <img src={signUpImg} alt="" className={classes.modelImg} />
+          </Grid>
+        </Hidden>
         <Grid item xs={12} sm={6} className={classes.form}>
           <h1 className={classes.login}>Sign Up</h1>
           <div>

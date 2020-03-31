@@ -45,7 +45,7 @@ const ResetPassword = ({ attemptReset }) => {
   const errorHelpingText = hasError ? errorBody.error : '';
 
   return (
-    <Page>
+    <Page maxWidth={false}>
       <Grid container className={classes.page}>
         <Grid item xs={12} sm={6} className={classes.imgContainer}>
           <img src={loginImg} alt="" className={classes.modelImg} />

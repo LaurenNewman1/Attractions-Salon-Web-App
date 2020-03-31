@@ -13,7 +13,7 @@ const Page = ({ maxWidth, children }) => {
       <Container
         maxWidth={maxWidth}
         disableGutters
-        className={maxWidth === 'lg' ? undefined : classes.topPagePadding}
+        className={maxWidth ? classes.sidePadding : classes.topPagePadding}
       >
         { children }
       </Container>
