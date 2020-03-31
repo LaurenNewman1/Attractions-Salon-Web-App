@@ -53,7 +53,7 @@ const EditService = ({
   };
 
   const commitService = () => {
-    updateService(localService);
+    updateService(service, localService);
     changeService(localService);
     setOpen(false);
   };

@@ -95,12 +95,19 @@ export default () => {
     return success;
   };
 
-  const modifyService = (service) => {
+  const modifyService = (oldService, service) => {
     const updatedServices = { ...services };
     const { _id, type, subtype } = service;
-    const key = assembleTypeKey(type, subtype);
-    const serviceIndex = services[key].findIndex((s) => s._id === _id);
-    updatedServices[key][serviceIndex] = service;
+    const { type: oldType, subtype: oldSubtype } = oldService;
+    const oldKey = assembleTypeKey(oldType, oldSubtype);
+    const newKey = assembleTypeKey(type, subtype);
+    const serviceIndex = services[oldKey].findIndex((s) => s._id === _id);
+    if (oldKey !== newKey) {
+      updatedServices[oldKey].splice(serviceIndex, 1);
+      updatedServices[newKey].push(service);
+    } else {
+      updatedServices[newKey][serviceIndex] = service;
+    }
     setService(updatedServices);
   };
 

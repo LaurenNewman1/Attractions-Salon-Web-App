@@ -89,8 +89,8 @@ const adminServices = () => {
     });
   };
 
-  const onClickSave = async (service) => {
-    const success = await updateService(service);
+  const onClickSave = async (oldService, service) => {
+    const success = await updateService(oldService, service);
     setAlert({
       open: true,
       type: success ? TYPE_SUCCESS : TYPE_ERROR,
@@ -114,7 +114,7 @@ const adminServices = () => {
                 deleteService={() => setDelete(service)}
                 deleteAddon={(serv, addonIndex) => onDeleteAddon(serv, addonIndex)}
                 changeService={(committedService) => onClickSave(committedService)}
-                updateService={(committedService) => modifyService(committedService)}
+                updateService={(oldService, committedService) => modifyService(oldService, committedService)}
                 group={services}
                 asdf="services"
               />
@@ -123,6 +123,8 @@ const adminServices = () => {
         )
     );
   });
+
+  const serviceSections = serviceSection(Object.keys(serviceCategoryLUT));
 
   return (
     <Page maxWidth="md">
@@ -140,7 +142,7 @@ const adminServices = () => {
           onClickAdd={(service) => onClickAdd(service)}
         />
       </Typography>
-      {serviceSection(Object.keys(serviceCategoryLUT))}
+      {serviceSections}
       {confirmDelete
         ? (
           <Confirm
