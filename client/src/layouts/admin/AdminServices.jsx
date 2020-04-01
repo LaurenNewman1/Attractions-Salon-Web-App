@@ -32,7 +32,6 @@ const adminServices = () => {
 
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [open, setOpen] = useState(false);
-  const [viewing, setViewing] = useState({});
   const [
     services,
     loading,
