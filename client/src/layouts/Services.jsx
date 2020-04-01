@@ -51,7 +51,7 @@ const Services = () => {
         : (
           <div className={classes.root}>
             {/* Hair */}
-            <Typography variant="h4" className={classes.header}>Hair Cuts</Typography>
+            <Typography variant="h4" className={classes.header} style={{ marginTop: 0 }}>Hair Cuts</Typography>
             <Grid container spacing={3} className={classes.container}>
               {!cuts.length ? null
                 : cuts.map((service) => (

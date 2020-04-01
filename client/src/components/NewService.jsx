@@ -103,7 +103,6 @@ const NewService = ({
 
 NewService.propTypes = {
   onClickAdd: PropTypes.func.isRequired,
-  updateNewService: PropTypes.func.isRequired,
 };
 
 export default NewService;

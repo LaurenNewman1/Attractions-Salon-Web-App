@@ -13,6 +13,7 @@ const useStyles = makeStyles((theme) => ({
   },
   stepper: {
     width: '100%',
+    backgroundColor: theme.palette.secondary.main,
   },
   toolbar: theme.mixins.toolbar,
 }));

@@ -15,12 +15,15 @@ const router = (app) => {
   app.delete('/api/users/:someId', users.remove);
   app.put('/api/users/:someId', users.update);
   app.post('/api/users', users.create);
+  app.post('/api/login/reset', users.genForgetPassword);
+  app.post('/api/users/password/:token', users.updatePassword);
 
   // Service Routes
   app.post('/api/services', services.create);
   app.get('/api/services', services.readall);
   app.get('/api/services/types/:type', services.readType);
   app.get('/api/services/types/:type/:subtype', services.readType);
+  app.get('/api/services/types', services.getTypes);
   app.get('/api/services/:someId', services.read);
   app.put('/api/services/:_id', services.update);
   app.delete('/api/services/:_id', services.remove);

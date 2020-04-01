@@ -2,16 +2,20 @@ import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({
   header: {
+    textAlign: 'center',
+    marginTop: 0,
+  },
+  center: {
+    textAlign: 'center',
+  },
+  divider: {
     display: 'flex',
+    flewFlow: 'row nowrap',
+    justifyContents: 'stretch',
     alignItems: 'center',
-    justifyContent: 'space-around',
-    whiteSpace: 'nowrap',
   },
-  grow: {
-    flexGrow: 1,
-  },
-  content: {
-    width: '100%',
+  button: {
+    textAlign: 'center',
     marginTop: 10,
   },
 }));
