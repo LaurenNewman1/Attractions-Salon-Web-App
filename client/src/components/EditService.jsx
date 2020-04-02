@@ -36,14 +36,12 @@ const EditService = ({
     setDelAddonWindow({ open: false, addonIndex: -1 });
   };
 
-  const updateAddonName = (e, i) => {
+  const updateAddonName = async (e, i) => {
     localService.addons[i].name = e;
-    updateService(localService);
   };
 
-  const updateAddonPrice = (e, i) => {
+  const updateAddonPrice = async (e, i) => {
     localService.addons[i].price = e;
-    updateService(localService);
   };
 
   const updateServiceArg = (...argus) => {
@@ -57,9 +55,11 @@ const EditService = ({
 
   const commitService = async () => {
     const success = await changeService(localService);
-    console.log('succes', success);
     if (success) {
       setOpen(false);
+      setLocalService(localService);
+    } else {
+      setOpen(true);
     }
   };
 
@@ -71,18 +71,12 @@ const EditService = ({
     const newAddonPriceV = newAddonPrice;
     const nAddon = { name: newAddonNameV, price: newAddonPriceV };
     updateServiceArg(['addons', [...localService.addons, nAddon]]);
-    updateService(localService);
   };
 
   const cancelChanges = () => {
     setLocalService(newService);
-    updateService(newService);
     setOpen(false);
   };
-
-  useEffect(() => {
-    setLocalService(newService);
-  }, [open]);
 
   return (
     <ExpansionPanel expanded={open} onChange={() => setOpen(!open)}>
@@ -101,93 +95,97 @@ const EditService = ({
           ) }
       </ExpansionPanelSummary>
       <ExpansionPanelDetails>
-        <Grid container spacing={2} className={classes.textfield}>
-          <Grid item xs={12} sm={6} md={3} style={{ display: 'flex', alignItems: 'center' }}>
-            <FormControl style={{ width: '100%' }}>
-              <InputLabel>Type</InputLabel>
-              {Object.keys(types).length
-                ? (
-                  <Select
-                    value={localService.type || ''}
-                    onChange={(e) => updateServiceArg(['type', e.target.value], ['subtype', ''])}
-                  >
-                    {Object.keys(types).map((type) => (
-                      <MenuItem key={type} value={type}>{type}</MenuItem>
-                    ))}
-                  </Select>
-                ) : null}
-            </FormControl>
+        <Grid container spacing={1}>
+          <Grid item xs={12} sm={6}>
+            <div className={classes.tableDiv}>
+              <Grid item xs={6}>
+                <FormControl style={{ width: '95%', paddingBottom: '20px' }}>
+                  <InputLabel>Type</InputLabel>
+                  {Object.keys(types).length
+                    ? (
+                      <Select
+                        value={localService.type || ''}
+                        onChange={(e) => updateServiceArg(['type', e.target.value], ['subtype', ''])}
+                      >
+                        {Object.keys(types).map((type) => (
+                          <MenuItem key={type} value={type}>{type}</MenuItem>
+                        ))}
+                      </Select>
+                    ) : null}
+                </FormControl>
+              </Grid>
+              <Grid item xs={6}>
+                <FormControl style={{ width: '95%' }}>
+                  <InputLabel>Subtype</InputLabel>
+                  {Object.keys(types).length
+                    ? (
+                      <Select
+                        value={localService.subtype || ''}
+                        onChange={(e) => updateServiceArg(['subtype', e.target.value])}
+                      >
+                        {Object.keys(types).length
+                          ? types[Object.keys(types).find(
+                            (t) => t === localService.type,
+                          )].map((sub) => (
+                            <MenuItem key={sub} value={sub}>{sub}</MenuItem>
+                          )) : null}
+                      </Select>
+                    ) : null}
+                </FormControl>
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  label="Price"
+                  style={{ width: '95%', paddingBottom: '20px' }}
+                  value={localService.price}
+                  onChange={(e) => updateServiceArg(['price', e.target.value])}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <AttachMoney />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  label="Time"
+                  style={{ width: '95%' }}
+                  value={localService.time}
+                  onChange={(e) => updateServiceArg(['time', e.target.value])}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Schedule />
+                      </InputAdornment>
+                    ),
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <Typography>mins</Typography>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  onChange={(e) => updateServiceArg(['description', e.target.value])}
+                  multiline
+                  style={{ width: '97.5%' }}
+                  label="Description"
+                  value={localService.description}
+                />
+              </Grid>
+            </div>
           </Grid>
-          <Grid item xs={12} sm={6} md={3} style={{ display: 'flex', alignItems: 'center' }}>
-            <FormControl style={{ width: '100%' }}>
-              <InputLabel>Subtype</InputLabel>
-              {Object.keys(types).length
-                ? (
-                  <Select
-                    value={localService.subtype || ''}
-                    onChange={(e) => updateServiceArg(['subtype', e.target.value])}
-                  >
-                    {Object.keys(types).length
-                      ? types[Object.keys(types).find(
-                        (t) => t === localService.type,
-                      )].map((sub) => (
-                        <MenuItem key={sub} value={sub}>{sub}</MenuItem>
-                      )) : null}
-                  </Select>
-                ) : null}
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <TextField
-              label="Price"
-              style={{ width: '100%' }}
-              value={localService.price}
-              onChange={(e) => updateServiceArg(['price', e.target.value])}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <AttachMoney />
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <TextField
-              label="Time"
-              style={{ width: '100%' }}
-              value={localService.time}
-              onChange={(e) => updateServiceArg(['time', e.target.value])}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Schedule />
-                  </InputAdornment>
-                ),
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <Typography>mins</Typography>
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              onChange={(e) => updateServiceArg(['description', e.target.value])}
-              multiline
-              style={{ width: '100%' }}
-              label="Description"
-              value={localService.description}
-            />
-          </Grid>
-          <Grid item xs={12} className={classes.tablediv}>
+          <Grid item xs={12} md={6}>
             <div className={classes.table}>
               <TableContainer component={Paper}>
-                <Table size="small" aria-label="a dense table">
+                <Table aria-label="a dense table">
                   <TableHead>
                     <TableRow>
-                      <TableCell>
+                      <TableCell padding="none">
                         <h3 style={{ paddingLeft: 10, display: 'flex', alignItems: 'center' }}>
                           Addons
                           <IconButton color="primary" onClick={() => setOpenAddon(true)}>
@@ -231,13 +229,13 @@ const EditService = ({
                     {!localService.addons.length ? null
                       : localService.addons.map((add, i) => (
                         <TableRow key={i}>
-                          <TableCell component="th" scope="row">
+                          <TableCell size="small" component="th" scope="row">
                             <TextField
                               value={add.name}
                               onChange={(e) => updateAddonName(e.target.value, i)}
                             />
                           </TableCell>
-                          <TableCell>
+                          <TableCell size="small">
                             <TextField
                               InputProps={{
                                 startAdornment: (
@@ -250,7 +248,7 @@ const EditService = ({
                               onChange={(e) => updateAddonPrice(Number(e.target.value), i)}
                             />
                           </TableCell>
-                          <TableCell>
+                          <TableCell size="small">
                             <IconButton onClick={() => setDelAddonWindow({
                               open: true, addonIndex: i,
                             })}

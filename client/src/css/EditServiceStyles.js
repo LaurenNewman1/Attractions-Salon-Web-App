@@ -6,12 +6,16 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 10,
   },
   table: {
-    width: '60%',
+    width: '100%',
+    height: '80%',
   },
-  tablediv: {
+  tableDiv: {
     // top: '100',
-    marginBottom: '90',
-    width: '88%',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+    // width: '88%',
   },
   container: {
     display: 'flex',
@@ -47,9 +51,9 @@ const useStyles = makeStyles((theme) => ({
     width: '45%',
   },
   textfield: {
-    '& .MuiTextField-root': {
-      margin: theme.spacing(1),
-    },
+    // '& .MuiTextField-root': {
+    //   margin: theme.spacing(1),
+    // },
   },
 }));
 

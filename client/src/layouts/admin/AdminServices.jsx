@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Typography,
 } from '@material-ui/core';
@@ -128,7 +128,6 @@ const adminServices = () => {
         )
     );
   });
-
   const serviceSections = serviceSection(Object.keys(serviceCategoryLUT));
 
   return (
