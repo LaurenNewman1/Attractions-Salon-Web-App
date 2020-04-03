@@ -4,6 +4,7 @@ import {
 } from '@material-ui/core';
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useParams } from 'react-router-dom';
 import useStyles from '../css/DetailsStyles';
 import hairIllustration from '../images/hairIllustration.png';
 import eye from '../images/eye.png';
@@ -24,6 +25,7 @@ const MenuProps = {
 const Details = ({
   booking, updateBooking, loading, specialists, services,
 }) => {
+  const params = useParams();
   const classes = useStyles();
   const theme = useTheme();
   const [serviceOptions, setServiceOptions] = useState([]);
@@ -31,19 +33,35 @@ const Details = ({
   const [type, setType] = useState(services.find((s) => s._id === booking.service)
     ? services.find((s) => s._id === booking.service).type : '');
 
+  // const res = fetchServicesByType(params._id);
+  // console.log('all the params of service', res);
   useEffect(() => {
-    // If user is going back
-    if (type.length) {
-      const serviceOpts = services.filter((s) => s.type === type);
-      setServiceOptions(serviceOpts);
-      setAddOnOptions(serviceOpts.find((s) => s._id === booking.service).addons);
+    const fetchServicesByType = async () => fetch(`/api/services/${params.id}`)
+      .then((response) => response.json())
+      .then((data) => data);
+    async function fetchData() {
+    // console.log(await fetchServicesByType());
+      const requestedService = await fetchServicesByType();
+      setType(requestedService.type);
+      updateBooking(['service', ''], ['addons', []], ['specialist', '']);
+      setServiceOptions(services.filter((s) => s.type === requestedService.type));
+      setAddOnOptions([]);
+      updateBooking(['service', requestedService._id], ['addons', []], ['specialist', '']);
+      setAddOnOptions(requestedService.addons);
     }
-  }, []);
+    fetchData();
+    // If user is going back
+    // if (type.length) {
+    //   const serviceOpts = services.filter((s) => s.type === type);
+    //   setServiceOptions(serviceOpts);
+    //   setAddOnOptions(serviceOpts.find((s) => s._id === booking.service).addons);
+    // }
+  }, [services]);
 
   const changeType = async (newType) => {
     setType(newType);
     updateBooking(['service', ''], ['addons', []], ['specialist', '']);
-    setServiceOptions(services.filter((s) => s.type === newType));
+    await setServiceOptions(services.filter((s) => s.type === newType));
     setAddOnOptions([]);
   };
 

@@ -14,6 +14,10 @@ import useStyles from '../css/ServiceStyles';
 const ServiceCard = ({ service }) => {
   const classes = useStyles();
   const history = useHistory();
+  const serviceClick = () => {
+    console.log('this is service booked', service);
+    history.push(`/book/${service._id}`);
+  };
 
   return (
     <Card>
@@ -52,7 +56,7 @@ const ServiceCard = ({ service }) => {
           variant="contained"
           color="primary"
           size="small"
-          onClick={() => history.push('/book')}
+          onClick={() => serviceClick()}
         >
           Request Booking
         </Button>
@@ -63,6 +67,7 @@ const ServiceCard = ({ service }) => {
 
 ServiceCard.propTypes = {
   service: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     price: PropTypes.number,
     time: PropTypes.number.isRequired,
