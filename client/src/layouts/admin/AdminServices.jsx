@@ -118,7 +118,7 @@ const adminServices = () => {
                 deleteService={() => setDelete(service)}
                 deleteAddon={(serv, addonIndex) => onDeleteAddon(serv, addonIndex)}
                 changeService={(committedService) => onClickSave(committedService)}
-                updateService={(oldService, committedService) => modifyService(oldService, committedService)}
+                updateService={(committedService) => modifyService(committedService)}
                 group={services}
                 asdf="services"
                 types={types}

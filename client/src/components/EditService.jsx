@@ -38,10 +38,12 @@ const EditService = ({
 
   const updateAddonName = async (e, i) => {
     localService.addons[i].name = e;
+    updateService(localService);
   };
 
   const updateAddonPrice = async (e, i) => {
     localService.addons[i].price = e;
+    updateService(localService);
   };
 
   const updateServiceArg = (...argus) => {
@@ -77,6 +79,10 @@ const EditService = ({
     setLocalService(newService);
     setOpen(false);
   };
+
+  useEffect(() => {
+    setLocalService(newService);
+  }, [open]);
 
   return (
     <ExpansionPanel expanded={open} onChange={() => setOpen(!open)}>
