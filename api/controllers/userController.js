@@ -7,6 +7,7 @@ import genForgetPasswordHash from '../helpers/user';
 import { SendForgetPassword } from '../lib/mail';
 
 const logger = GetLogger('User Controller');
+const stripe = require('stripe')(process.env.STRIPE_API_KEY);
 
 export const genForgetPassword = async (req, res) => {
   const { email } = req.body;
@@ -131,9 +132,98 @@ export const create = async (req, res) => {
   try {
     const params = req.body;
     const hash = await argon2.hash(params.password);
-    const finalUser = { ...params, password: hash, role: 0 };
+    const customer = await stripe.customers.create();
+    const finalUser = { ...params, password: hash, role: 0, customer_id: customer.id};
     const user = await User.create(finalUser);
     res.status(200).type('json').send(user);
+  } catch (err) {
+    res.status(403).type('json').send(err);
+  }
+};
+
+export const createCard = async (req, res) => {
+  try {
+    const { someId } = req.params;
+    const user = await User.findById(someId).exec();
+
+    if (!user) {
+      res.status(404).type('json').send({ error: 'User not found' });
+    }
+    else {
+      const params = req.body;
+      const card = await stripe.paymentMethods.create(
+          {
+            type: 'card',
+            card: params,
+          }
+      );
+
+      await stripe.paymentMethods.attach(card.id, {customer: user.customer_id});
+
+      res.status(200).type('json').send(card);
+    }
+  } catch (err) {
+    res.status(403).type('json').send(err);
+  }
+};
+
+export const getCards = async (req, res) => {
+  try {
+    const { someId } = req.params;
+    const user = await User.findById(someId).exec();
+
+    if (!user) {
+      res.status(404).type('json').send({ error: 'User not found' });
+    }
+    else {
+      const methods = await stripe.paymentMethods.list({customer: user.customer_id, type: 'card'});
+
+      res.status(200).type('json').send(methods);
+    }
+  } catch (err) {
+    res.status(403).type('json').send(err);
+  }
+};
+
+export const getCard = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.someId).exec();
+
+    if (!user) {
+      res.status(404).type('json').send({ error: 'User not found' });
+    }
+    else {
+      const card = await stripe.paymentMethods.retrieve(req.params.cardId);
+
+      if(!card) {
+        res.status(404).type('json').send({ error: 'Card not found' });
+      }
+      else {
+        res.status(200).type('json').send(card);
+      }
+    }
+  } catch (err) {
+    res.status(403).type('json').send(err);
+  }
+};
+
+export const removeCard = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.someId).exec();
+
+    if (!user) {
+      res.status(404).type('json').send({ error: 'User not found' });
+    }
+    else {
+      const card = await stripe.paymentMethods.detach(req.params.cardId);
+
+      if(!card) {
+        res.status(404).type('json').send({ error: 'Card not found' });
+      }
+      else {
+        res.status(200).type('json').send(card);
+      }
+    }
   } catch (err) {
     res.status(403).type('json').send(err);
   }

@@ -24,6 +24,9 @@ const User = new Schema({
   forget_password_id: {
     type: String,
   },
+  customer_id: {
+    type: String,
+  },
 });
 
 User.plugin(accessibleFieldsPlugin);
