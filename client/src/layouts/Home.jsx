@@ -1,8 +1,7 @@
 import React from 'react';
 import {
-  Grid, Typography, Button, Hidden,
+  Grid, Typography, Button, Hidden, useMediaQuery,
 } from '@material-ui/core';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Page from '../components/Page';
