@@ -228,3 +228,34 @@ export const removeCard = async (req, res) => {
     res.status(403).type('json').send(err);
   }
 };
+
+export const updateCard = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.someId).exec();
+
+    if (!user) {
+      res.status(404).type('json').send({ error: 'User not found' });
+    }
+    else {
+      const params = req.body;
+      const newCard = await stripe.paymentMethods.create(
+          {
+            type: 'card',
+            card: params,
+          }
+      );
+
+      if(!newCard) {
+        res.status(404).type('json').send({ error: 'Card not valid' });
+      }
+      else {
+        await stripe.paymentMethods.detach(req.params.cardId)
+        await stripe.paymentMethods.attach(newCard.id, {customer: user.customer_id});
+        
+        res.status(200).type('json').send(newCard);
+      }
+    }
+  } catch (err) {
+    res.status(403).type('json').send(err);
+  }
+};
