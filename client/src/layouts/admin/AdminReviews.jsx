@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import {
   Typography, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
   TextField, ExpansionPanelActions, Button, Fab, Dialog, DialogActions,
-  DialogContent, DialogTitle,
+  DialogContent, DialogTitle, Checkbox,
 } from '@material-ui/core';
 import {
-  ExpandMore, Add,
+  ExpandMore, Add, Refresh,
 } from '@material-ui/icons';
 import Page from '../../components/Page';
 import Confirm from '../../components/Confirm';
@@ -28,7 +28,7 @@ const AdminReviews = () => {
   });
 
   const [reviews, loading, newReview, updateReviews,
-    updateNewReview, deleteReview, addReview, saveReview] = useReviews();
+    updateNewReview, deleteReview, addReview, saveReview, refreshReviews] = useReviews();
 
   const onClickAdd = async () => {
     setDialog(false);
@@ -66,6 +66,10 @@ const AdminReviews = () => {
     setOpen(false);
   };
 
+  const onCheckboxClicked = (review, event) => {
+    event.stopPropagation();
+  };
+
   const expandChange = (panel) => (event, isExpanded) => {
     // cancel any previously closed ones
     if (open !== false) {
@@ -91,7 +95,7 @@ const AdminReviews = () => {
       );
     }
     return (
-      <Typography>{name}</Typography>
+      <Typography className={classes.label}>{name}</Typography>
     );
   };
 
@@ -105,11 +109,16 @@ const AdminReviews = () => {
           display="block"
           gutterBottom
         >
-          <div style={{ width: 40 }} />
+          <div style={{ width: 60 }} />
           Reviews
-          <Fab color="primary" size="small" onClick={() => setDialog(true)}>
-            <Add />
-          </Fab>
+          <div>
+            <Fab className={classes.fabButton} color="primary" size="small" onClick={() => setDialog(true)}>
+              <Add />
+            </Fab>
+            <Fab className={classes.fabButton} color="secondary" size="small" onClick={() => refreshReviews()}>
+              <Refresh />
+            </Fab>
+          </div>
         </h1>
       </div>
       {!reviews || !reviews.length ? null
@@ -120,6 +129,7 @@ const AdminReviews = () => {
             onChange={expandChange(index)}
           >
             <ExpansionPanelSummary expandIcon={<ExpandMore />}>
+              <Checkbox color="primary" onClick={(event) => onCheckboxClicked(review, event)} />
               {renderName(review.reviewer, index)}
             </ExpansionPanelSummary>
             <ExpansionPanelDetails style={{ display: 'block' }}>

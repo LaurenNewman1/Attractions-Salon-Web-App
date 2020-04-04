@@ -14,6 +14,14 @@ const useStyles = makeStyles(() => ({
     width: '100%',
     marginTop: 10,
   },
+  fabButton: {
+    marginLeft: '0.5em',
+    marginRight: '0.5em',
+  },
+  label: {
+    lineHeight: '42px',
+    paddingTop: '3px',
+  },
 }));
 
 export default useStyles;

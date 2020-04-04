@@ -103,6 +103,10 @@ export default () => {
     return success;
   };
 
+  const refreshReviews = () => {
+    console.log("This should contact the server to retrieve reviews from google and reset the state");
+  };
+
   const updateReviews = (index, ...argus) => {
     const allReviews = [...reviews];
     const newFields = allReviews[index];
@@ -130,5 +134,5 @@ export default () => {
   }, []);
 
   return [reviews, loading, newReview, updateReviews,
-    updateNewReview, deleteReview, addReview, saveReview];
+    updateNewReview, deleteReview, addReview, saveReview, refreshReviews];
 };
