@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { startOfWeek, addDays, addHours } from 'date-fns';
 import { Paper, Grid, Chip } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
 import { ListAlt, Person, Notes } from '@material-ui/icons';
 import { ViewState } from '@devexpress/dx-react-scheduler';
 import {
@@ -12,6 +12,9 @@ import {
   Appointments,
   AppointmentTooltip,
   AppointmentForm,
+  Toolbar,
+  DateNavigator,
+  TodayButton,
 } from '@devexpress/dx-react-scheduler-material-ui';
 
 const style = ({ palette }) => ({
@@ -21,7 +24,14 @@ const style = ({ palette }) => ({
   textCenter: {
     textAlign: 'center',
   },
+  chip: {
+    backgroundColor: palette.secondary.main,
+  },
+  chipGrid: {
+    textAlign: 'center',
+  },
 });
+
 
 const TooptipContent = withStyles(style, { name: 'Content' })(({
   children, appointmentData, classes, ...restProps
@@ -51,10 +61,10 @@ const TooptipContent = withStyles(style, { name: 'Content' })(({
         <span>{appointmentData.service.name}</span>
       </Grid>
     </Grid>
-    <Grid container alignItems="center">
+    <Grid container alignItems="stretch">
       {appointmentData.addons.map((addon) => (
-        <Grid key={addon._id} item xs={4}>
-          <Chip label={addon.name} />
+        <Grid key={addon._id} item xs={3} className={classes.chipGrid}>
+          <Chip className={classes.chip} label={addon.name} />
         </Grid>
       ))}
     </Grid>
@@ -89,7 +99,7 @@ const DashboardCalendar = ({
         data={appointmentEvents}
       >
         <ViewState
-          currentDate={new Date()}
+          defaultCurrentDate={new Date()}
         />
         <WeekView
           startDayHour={startingHour}
@@ -97,6 +107,9 @@ const DashboardCalendar = ({
           excludedDays={excludedDays}
           cellDuration={30}
         />
+        <Toolbar />
+        <DateNavigator />
+        <TodayButton />
         <Appointments />
         <AppointmentTooltip
           showCloseButton
