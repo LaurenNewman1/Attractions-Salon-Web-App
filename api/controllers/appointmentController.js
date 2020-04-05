@@ -79,8 +79,8 @@ export const create = async (req, res) => {
       await SendTextEmail(owner.email, 'A Booking has been Submitted', `Hi ${owner.name}, ${appointment.name} has submitted a booking request for review.`);
     }
 
-    const user = await User.find({email: params.email}).exec();
     if(!params.payInStore) {
+      const user = await User.findOne({email: params.email}).exec();
       const intent = await stripe.paymentIntents.create(
           {
             amount: params.amount,

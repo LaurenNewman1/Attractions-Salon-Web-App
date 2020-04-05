@@ -191,20 +191,13 @@ export const getCards = async (req, res) => {
 
 export const getCard = async (req, res) => {
   try {
-    const user = await User.findById(req.params.someId).exec();
+    const card = await stripe.paymentMethods.retrieve(req.params.cardId);
 
-    if (!user) {
-      res.status(404).type('json').send({ error: 'User not found' });
+    if(!card) {
+      res.status(404).type('json').send({ error: 'Card not found' });
     }
     else {
-      const card = await stripe.paymentMethods.retrieve(req.params.cardId);
-
-      if(!card) {
-        res.status(404).type('json').send({ error: 'Card not found' });
-      }
-      else {
-        res.status(200).type('json').send(card);
-      }
+      res.status(200).type('json').send(card);
     }
   } catch (err) {
     res.status(403).type('json').send(err);
@@ -213,20 +206,13 @@ export const getCard = async (req, res) => {
 
 export const removeCard = async (req, res) => {
   try {
-    const user = await User.findById(req.params.someId).exec();
+    const card = await stripe.paymentMethods.detach(req.params.cardId);
 
-    if (!user) {
-      res.status(404).type('json').send({ error: 'User not found' });
+    if(!card) {
+      res.status(404).type('json').send({ error: 'Card not found' });
     }
     else {
-      const card = await stripe.paymentMethods.detach(req.params.cardId);
-
-      if(!card) {
-        res.status(404).type('json').send({ error: 'Card not found' });
-      }
-      else {
-        res.status(200).type('json').send(card);
-      }
+      res.status(200).type('json').send(card);
     }
   } catch (err) {
     res.status(403).type('json').send(err);
