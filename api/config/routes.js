@@ -23,6 +23,7 @@ const router = (app) => {
   app.post('/api/login/reset', users.genForgetPassword);
   app.post('/api/users/password/:token', users.updatePassword);
   app.post('/api/users/card/:someId',users.createCard);
+  app.post('/api/card',users.createCard);
 
   // Service Routes
   app.post('/api/services', services.create);

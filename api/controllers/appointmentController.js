@@ -3,6 +3,8 @@ import Appointment from '../model/appointment';
 import User from '../model/user';
 import { SendTextEmail } from '../lib/mail';
 
+const stripe = require('stripe')(process.env.STRIPE_API_KEY);
+
 export const read = async (req, res) => {
   // Find Appointment from Database and return
   try {
@@ -69,14 +71,30 @@ export const create = async (req, res) => {
   try {
     const params = req.body;
     const dateTime = new Date(params.time);
-    const finalParams = { ...params, time: dateTime };
+    const finalParams = {...params, time: dateTime};
     const appointment = await Appointment.create(finalParams);
     await SendTextEmail(appointment.email, 'Your Booking has been Submitted', `Hi ${appointment.name}, your booking has been submitted. You will get an email soon when Attractions Salon has confirmed your appointment time.`);
     const owner = await User.findOne({ role: 2 }).exec();
     if (owner) {
       await SendTextEmail(owner.email, 'A Booking has been Submitted', `Hi ${owner.name}, ${appointment.name} has submitted a booking request for review.`);
     }
-    res.status(200).type('json').send(appointment);
+
+    const user = await User.find({email: params.email}).exec();
+    if(!params.payInStore) {
+      const intent = await stripe.paymentIntents.create(
+          {
+            amount: params.amount,
+            currency: params.currency,
+            payment_method: params.method_id,
+            customer: user.customer_id,
+          });
+
+      const appointmentNew = await Appointment.findByIdAndUpdate(appointment._id,{intent_id: intent.id});
+      res.status(200).type('json').send(appointmentNew);
+    }
+    else {
+      res.status(200).type('json').send(appointment);
+    }
   } catch (err) {
     res.status(403).type('json').send(err);
   }

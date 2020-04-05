@@ -143,23 +143,27 @@ export const create = async (req, res) => {
 
 export const createCard = async (req, res) => {
   try {
-    const { someId } = req.params;
-    const user = await User.findById(someId).exec();
+    const params = req.body;
+    const card = await stripe.paymentMethods.create(
+        {
+          type: 'card',
+          card: params,
+        }
+    );
 
-    if (!user) {
-      res.status(404).type('json').send({ error: 'User not found' });
+    if(req.params.someId != undefined) {
+      const {someId} = req.params;
+      const user = await User.findById(someId).exec();
+
+      if (!user) {
+        res.status(404).type('json').send({error: 'User not found'});
+      }
+      else {
+        await stripe.paymentMethods.attach(card.id, {customer: user.customer_id});
+        res.status(200).type('json').send(card);
+      }
     }
     else {
-      const params = req.body;
-      const card = await stripe.paymentMethods.create(
-          {
-            type: 'card',
-            card: params,
-          }
-      );
-
-      await stripe.paymentMethods.attach(card.id, {customer: user.customer_id});
-
       res.status(200).type('json').send(card);
     }
   } catch (err) {
