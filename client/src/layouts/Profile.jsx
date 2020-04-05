@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 import React, { useState } from 'react';
 import {
-  Grid, Button, TextField, IconButton, Icon,
+  Grid, Button, TextField, IconButton, Icon, useTheme, useMediaQuery,
 } from '@material-ui/core';
 import { AccountCircle, Edit as EditIcon } from '@material-ui/icons';
 import Typography from '@material-ui/core/Typography';
@@ -16,6 +16,8 @@ const Profile = ({ userData, logout, changeProfile }) => {
   const [textBoxValues, setTextBoxValues] = React.useState({});
   const history = useHistory();
   const classes = useStyles();
+  const theme = useTheme();
+  const isSmall = useMediaQuery(theme.breakpoints.down('sm'));
   const [editMode, setEditMode] = useState(false);
 
   React.useEffect(() => {
@@ -71,7 +73,7 @@ const Profile = ({ userData, logout, changeProfile }) => {
   const renderTextFields = () => {
     if (!editMode) {
       return (
-        <div>
+        <div style={{ textAlign: isSmall ? 'center' : undefined }}>
           <Typography variant="h6" gutterBottom>
             Email:
             {' '}
@@ -89,7 +91,7 @@ const Profile = ({ userData, logout, changeProfile }) => {
       );
     }
     return (
-      <div>
+      <div style={{ textAlign: isSmall ? 'center' : undefined }}>
         <TextField style={{ paddingBottom: 10 }} defaultValue={name} label="Name" value={textBoxValues.name} onChange={(e) => updateTextBoxValue('name', e.target.value)} />
         <br />
         <TextField style={{ paddingBottom: 10 }} defaultValue={email} label="Email" value={textBoxValues.email} onChange={(e) => updateTextBoxValue('email', e.target.value)} />
@@ -121,13 +123,13 @@ const Profile = ({ userData, logout, changeProfile }) => {
       </div>
       <div>
         <Grid container spacing={8} className={classes.container}>
-          <Grid item xs={6} md={6} className={classes.leftContainer}>
+          <Grid item xs={12} md={6} className={isSmall ? classes.leftContainerSmall : classes.leftContainer}>
             <div>
               <AccountCircle style={{ fontSize: 120 }} />
               <Typography variant="h6" gutterBottom style={{ textAlign: 'center' }}>{name}</Typography>
             </div>
           </Grid>
-          <Grid item xs={6} md={6}>
+          <Grid item xs={12} md={6}>
             {renderTextFields()}
           </Grid>
           <Grid item xs={12} className={classes.logout}>

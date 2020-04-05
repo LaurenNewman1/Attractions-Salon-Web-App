@@ -15,6 +15,10 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  leftContainerSmall: {
+    display: 'flex',
+    justifyContent: 'center',
+  },
   leftContainer: {
     display: 'flex',
     justifyContent: 'flex-end',
