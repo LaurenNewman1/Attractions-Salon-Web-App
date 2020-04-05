@@ -79,7 +79,7 @@ const App = () => {
             <Route path="/contact" component={Contact} />
             <Route path="/login" component={() => <Login login={login} fromBookPage={fromBookPage} resetPassword={requestResetPassword} />} />
             <Route path="/resetpassword/:token" component={() => <ResetPassword attemptReset={requestPasswordUpdate} />} />
-            <Route path="/signUp" component={() => <SignUp register={register} />} />
+            <Route path="/signUp" component={() => <SignUp register={register} login={login} />} />
             <Route
               path="/profile"
               component={() => (

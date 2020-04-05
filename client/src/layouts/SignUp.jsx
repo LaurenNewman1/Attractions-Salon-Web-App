@@ -11,7 +11,7 @@ import useStyles from '../css/LoginStyles';
 import Page from '../components/Page';
 import signUpImg from '../images/signUpImg.jpg';
 
-const SignUp = ({ register }) => {
+const SignUp = ({ register, login }) => {
   const classes = useStyles();
   const history = useHistory();
   const [email, setEmail] = useState('');
@@ -43,7 +43,14 @@ const SignUp = ({ register }) => {
     setErrorBody({});
     setHasError(!successful);
     if (successful) {
-      history.push('/login');
+      // This is the attempted login
+      const [succ, error] = await login(email, password);
+      setHasError(!succ);
+      if (succ) {
+        history.push('/profile');
+      } else {
+        setErrorBody(error);
+      }
     } else {
       setErrorBody(errors);
     }
@@ -58,7 +65,7 @@ const SignUp = ({ register }) => {
           </Grid>
         </Hidden>
         <Grid item xs={12} sm={6} className={classes.form}>
-          <h1 className={classes.login}>Sign Up</h1>
+          <h1 className={classes.login}>Create Account</h1>
           <div>
             <TextField
               fullWidth
@@ -140,6 +147,8 @@ const SignUp = ({ register }) => {
 
 SignUp.propTypes = {
   register: PropTypes.func.isRequired,
+  login: PropTypes.func.isRequired,
 };
+
 
 export default SignUp;
