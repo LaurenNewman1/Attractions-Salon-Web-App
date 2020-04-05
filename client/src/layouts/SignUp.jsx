@@ -49,9 +49,11 @@ const SignUp = ({ register, login }) => {
       if (succ) {
         history.push('/profile');
       } else {
+        // Error in the attempted login
         setErrorBody(error);
       }
     } else {
+      // Error in the attempted register
       setErrorBody(errors);
     }
   };
