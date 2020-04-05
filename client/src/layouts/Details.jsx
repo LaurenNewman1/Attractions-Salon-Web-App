@@ -34,13 +34,11 @@ const Details = ({
     ? services.find((s) => s._id === booking.service).type : '');
 
   // const res = fetchServicesByType(params._id);
-  // console.log('all the params of service', res);
   useEffect(() => {
     const fetchServicesByType = async () => fetch(`/api/services/${params.id}`)
       .then((response) => response.json())
       .then((data) => data);
     async function fetchData() {
-    // console.log(await fetchServicesByType());
       const requestedService = await fetchServicesByType();
       setType(requestedService.type);
       updateBooking(['service', ''], ['addons', []], ['specialist', '']);

@@ -53,6 +53,7 @@ export default () => {
   const [users, setUsers] = useState([]);
   const [users1, setUsers1] = useState([]);
   const [users2, setUsers2] = useState([]);
+  const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [newUser, setNewUser] = useState({
     name: '',
@@ -188,6 +189,11 @@ export default () => {
         .then((response) => response.json())
         .then((data) => data);
 
+      const servicesRequestFetch = async () => fetch(`/api/services/types`)
+        .then((response) => response.json())
+        .then((data) => data);
+
+      setServices(await servicesRequestFetch());
       setUsers2(await usersRequestFetch('2'));
       setUsers1(await usersRequestFetch('1'));
       setUsers(await usersRequestFetch('0'));
@@ -200,5 +206,5 @@ export default () => {
   }, []);
 
   return [users, users1, users2, newUser, loading, updateUsers,
-    updateNewUser, deleteUser, addUser, saveUser];
+    updateNewUser, deleteUser, addUser, saveUser, services];
 };

@@ -15,7 +15,6 @@ const ServiceCard = ({ service }) => {
   const classes = useStyles();
   const history = useHistory();
   const serviceClick = () => {
-    console.log('this is service booked', service);
     history.push(`/book/${service._id}`);
   };
 
