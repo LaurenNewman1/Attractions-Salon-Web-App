@@ -189,7 +189,7 @@ export default () => {
         .then((response) => response.json())
         .then((data) => data);
 
-      const servicesRequestFetch = async () => fetch(`/api/services/types`)
+      const servicesRequestFetch = async () => fetch('/api/services/types')
         .then((response) => response.json())
         .then((data) => data);
 

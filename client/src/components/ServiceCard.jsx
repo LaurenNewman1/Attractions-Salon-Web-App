@@ -14,9 +14,6 @@ import useStyles from '../css/ServiceStyles';
 const ServiceCard = ({ service }) => {
   const classes = useStyles();
   const history = useHistory();
-  const serviceClick = () => {
-    history.push(`/book/${service._id}`);
-  };
 
   return (
     <Card>
@@ -55,7 +52,7 @@ const ServiceCard = ({ service }) => {
           variant="contained"
           color="primary"
           size="small"
-          onClick={() => serviceClick()}
+          onClick={() => history.push(`/book/${service._id}`)}
         >
           Request Booking
         </Button>
