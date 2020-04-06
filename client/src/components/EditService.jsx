@@ -4,8 +4,8 @@ import React, { useEffect, useState } from 'react';
 import {
   ExpansionPanel, Grid, Dialog, DialogTitle, DialogContent,
   ExpansionPanelSummary, FormControl, Select,
-  ExpansionPanelDetails, InputLabel, MenuItem,
-  Typography, TextField, Button, InputAdornment, DialogActions,
+  ExpansionPanelDetails, InputLabel, MenuItem, DialogActions,
+  Typography, TextField, Button, InputAdornment, ExpansionPanelActions,
   Table, TableBody, TableCell, TableContainer, TableHead,
   TableRow, Paper, IconButton,
 } from '@material-ui/core';
@@ -101,11 +101,11 @@ const EditService = ({
           ) }
       </ExpansionPanelSummary>
       <ExpansionPanelDetails>
-        <Grid container spacing={1}>
+        <Grid container spacing={3}>
           <Grid item xs={12} sm={6}>
-            <div className={classes.tableDiv}>
+            <Grid container spacing={1}>
               <Grid item xs={6}>
-                <FormControl style={{ width: '95%', paddingBottom: '20px' }}>
+                <FormControl style={{ width: '100%' }}>
                   <InputLabel>Type</InputLabel>
                   {Object.keys(types).length
                     ? (
@@ -121,7 +121,7 @@ const EditService = ({
                 </FormControl>
               </Grid>
               <Grid item xs={6}>
-                <FormControl style={{ width: '95%' }}>
+                <FormControl style={{ width: '100%' }}>
                   <InputLabel>Subtype</InputLabel>
                   {Object.keys(types).length
                     ? (
@@ -142,7 +142,7 @@ const EditService = ({
               <Grid item xs={6}>
                 <TextField
                   label="Price"
-                  style={{ width: '95%', paddingBottom: '20px' }}
+                  style={{ width: '100%' }}
                   value={localService.price}
                   onChange={(e) => updateServiceArg(['price', e.target.value])}
                   InputProps={{
@@ -157,7 +157,7 @@ const EditService = ({
               <Grid item xs={6}>
                 <TextField
                   label="Time"
-                  style={{ width: '95%' }}
+                  style={{ width: '100%' }}
                   value={localService.time}
                   onChange={(e) => updateServiceArg(['time', e.target.value])}
                   InputProps={{
@@ -178,108 +178,76 @@ const EditService = ({
                 <TextField
                   onChange={(e) => updateServiceArg(['description', e.target.value])}
                   multiline
-                  style={{ width: '97.5%' }}
+                  style={{ width: '100%' }}
                   label="Description"
                   value={localService.description}
                 />
               </Grid>
-            </div>
+            </Grid>
           </Grid>
-          <Grid item xs={12} md={6}>
-            <div className={classes.table}>
-              <TableContainer component={Paper}>
-                <Table aria-label="a dense table">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell padding="none">
-                        <h3 style={{ paddingLeft: 10, display: 'flex', alignItems: 'center' }}>
-                          Addons
-                          <IconButton color="primary" onClick={() => setOpenAddon(true)}>
-                            <Add size="large" />
+          <Grid item xs={12} sm={6}>
+            <TableContainer component={Paper}>
+              <h4 className={classes.addonsLbl}>
+                Addons
+                <IconButton color="primary" onClick={() => setOpenAddon(true)}>
+                  <Add size="large" />
+                </IconButton>
+              </h4>
+              <Table size="small">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Name</TableCell>
+                    <TableCell>Price</TableCell>
+                    <TableCell />
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {!localService.addons.length ? null
+                    : localService.addons.map((add, i) => (
+                      <TableRow key={i}>
+                        <TableCell size="small" component="th" scope="row">
+                          <TextField
+                            value={add.name}
+                            onChange={(e) => updateAddonName(e.target.value, i)}
+                          />
+                        </TableCell>
+                        <TableCell size="small">
+                          <TextField
+                            InputProps={{
+                              startAdornment: (
+                                <InputAdornment position="start">
+                                  <AttachMoney />
+                                </InputAdornment>
+                              ),
+                            }}
+                            value={add.price}
+                            onChange={(e) => updateAddonPrice(Number(e.target.value), i)}
+                          />
+                        </TableCell>
+                        <TableCell size="small">
+                          <IconButton onClick={() => setDelAddonWindow({
+                            open: true, addonIndex: i,
+                          })}
+                          >
+                            <Delete />
                           </IconButton>
-                        </h3>
-                      </TableCell>
-                      <Dialog open={openAddon} onClose={() => setOpenAddon(false)}>
-                        <DialogTitle>New Addon</DialogTitle>
-                        <DialogContent>
-                          <form className={classes.textfield}>
-                            <TextField onChange={(e) => setNewAddonName(e.target.value)} label="Name" />
-                            <TextField
-                              onChange={(e) => setNewAddonPrice(e.target.value)}
-                              label="Price"
-                              InputProps={{
-                                startAdornment: (
-                                  <InputAdornment position="start">
-                                    <AttachMoney />
-                                  </InputAdornment>
-                                ),
-                              }}
-                            />
-                          </form>
-                        </DialogContent>
-                        <DialogActions>
-                          <Button onClick={() => setOpenAddon(false)}>Cancel</Button>
-                          <Button onClick={(e) => newAddon(e)} color="primary" variant="contained">
-                            Add
-                          </Button>
-                        </DialogActions>
-                      </Dialog>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>Name</TableCell>
-                      <TableCell>Price</TableCell>
-                      <TableCell />
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {!localService.addons.length ? null
-                      : localService.addons.map((add, i) => (
-                        <TableRow key={i}>
-                          <TableCell size="small" component="th" scope="row">
-                            <TextField
-                              value={add.name}
-                              onChange={(e) => updateAddonName(e.target.value, i)}
-                            />
-                          </TableCell>
-                          <TableCell size="small">
-                            <TextField
-                              InputProps={{
-                                startAdornment: (
-                                  <InputAdornment position="start">
-                                    <AttachMoney />
-                                  </InputAdornment>
-                                ),
-                              }}
-                              value={add.price}
-                              onChange={(e) => updateAddonPrice(Number(e.target.value), i)}
-                            />
-                          </TableCell>
-                          <TableCell size="small">
-                            <IconButton onClick={() => setDelAddonWindow({
-                              open: true, addonIndex: i,
-                            })}
-                            >
-                              <Delete />
-                            </IconButton>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </div>
-
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
           </Grid>
         </Grid>
       </ExpansionPanelDetails>
-      <DialogActions>
+      <ExpansionPanelActions>
         <Button variant="contained" onClick={async () => { await deleteService(asdf, group, index); setOpen(false); }}>
           Delete
         </Button>
         <div style={{ flex: '1 0 0' }} />
         <Button onClick={() => cancelChanges()}>Cancel</Button>
         <Button variant="contained" color="primary" onClick={() => commitService()}>Save</Button>
-      </DialogActions>
+      </ExpansionPanelActions>
       {delAddonWindow.open
         ? (
           <Confirm
@@ -291,6 +259,31 @@ const EditService = ({
             onCancel={() => setDelAddonWindow({ open: false, addonIndex: -1 })}
           />
         ) : null}
+      <Dialog open={openAddon} onClose={() => setOpenAddon(false)}>
+        <DialogTitle>New Addon</DialogTitle>
+        <DialogContent>
+          <form className={classes.textfield}>
+            <TextField onChange={(e) => setNewAddonName(e.target.value)} label="Name" />
+            <TextField
+              onChange={(e) => setNewAddonPrice(e.target.value)}
+              label="Price"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <AttachMoney />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </form>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenAddon(false)}>Cancel</Button>
+          <Button onClick={(e) => newAddon(e)} color="primary" variant="contained">
+            Add
+          </Button>
+        </DialogActions>
+      </Dialog>
     </ExpansionPanel>
   );
 };
