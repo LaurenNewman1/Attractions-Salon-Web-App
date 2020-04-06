@@ -96,19 +96,17 @@ export default () => {
     return success;
   };
 
-  const modifyService = (oldService, service) => {
+  const modifyService = async (service) => {
     const updatedServices = { ...services };
     const { _id, type, subtype } = service;
-    const { type: oldType, subtype: oldSubtype } = oldService;
-    const oldKey = assembleTypeKey(oldType, oldSubtype);
     const newKey = assembleTypeKey(type, subtype);
-    const serviceIndex = services[oldKey].findIndex((s) => s._id === _id);
-    if (oldKey !== newKey) {
-      updatedServices[oldKey].splice(serviceIndex, 1);
-      updatedServices[newKey].push(service);
-    } else {
-      updatedServices[newKey][serviceIndex] = service;
-    }
+    const currIndex = updatedServices[newKey].findIndex((s) => s._id === _id);
+    // if (currIndex) {
+    //   updatedServices[newKey].splice(serviceIndex, 1);
+    //   updatedServices[newKey].push(service);
+    // } else {
+    updatedServices[newKey][currIndex] = service;
+    // }
     setService(updatedServices);
   };
 
@@ -116,6 +114,22 @@ export default () => {
     setLoading(true);
     // eslint-disable-next-line no-unused-vars
     const [success, rev] = await requestServiceChange(service);
+    if (success) {
+      const updatedService = { ...services };
+      const { _id, type, subtype } = service;
+      const { _id: oldId, type: oldType, subtype: oldSubtype } = rev;
+      const oldKey = assembleTypeKey(oldType, oldSubtype);
+      const newKey = assembleTypeKey(type, subtype);
+      const currIndex = updatedService[newKey].findIndex((s) => s._id === _id);
+      if (oldKey !== newKey) {
+        const indexToRemove = updatedService[assembleTypeKey(oldType, oldSubtype)].findIndex((s) => s._id === oldId);
+        updatedService[assembleTypeKey(oldType, oldSubtype)].splice(indexToRemove, 1);
+        updatedService[assembleTypeKey(type, subtype)].push(service);
+      } else {
+        updatedService[newKey][currIndex] = service;
+      }
+      setService(updatedService);
+    }
     setLoading(false);
     return success;
   };
