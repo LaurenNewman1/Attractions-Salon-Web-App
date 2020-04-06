@@ -99,7 +99,7 @@ const adminServices = () => {
       });
       return success;
     }
-    return 'false';
+    return false;
   };
 
 

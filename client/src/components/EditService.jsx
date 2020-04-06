@@ -58,9 +58,10 @@ const EditService = ({
   const commitService = async () => {
     const success = await changeService(localService);
     if (success) {
-      setOpen(false);
       setLocalService(localService);
+      setOpen(false);
     } else {
+      console.log('service status', success);
       setOpen(true);
     }
   };
