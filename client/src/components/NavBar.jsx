@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   AppBar, Toolbar, Button, IconButton, useMediaQuery, SwipeableDrawer,
   ListItem, List, ListItemText,
@@ -24,12 +24,30 @@ const adminOptions = [
   { name: 'Reviews', route: '/admin/reviews' },
 ];
 
+const staffOptions = [
+  { name: 'Dashboard', route: '/staff/dashboard' },
+];
+
 const NavBar = ({ loggedIn, userData, setFromBookPage }) => {
   const history = useHistory();
   const classes = useStyles();
-  const options = useState(userData && userData.role === 2 ? adminOptions : userOptions);
+  const [options, setOptions] = useState([]);
   const [open, setOpen] = useState(false);
   const matches = useMediaQuery((theme) => theme.breakpoints.up('sm'));
+
+  useEffect(() => {
+    switch (userData.role) {
+      case 2:
+        setOptions(adminOptions);
+        break;
+      case 1:
+        setOptions(staffOptions);
+        break;
+      default:
+        setOptions(userOptions);
+        break;
+    }
+  }, [userData]);
 
   const routeToLogin = () => {
     setFromBookPage(false);
@@ -65,7 +83,7 @@ const NavBar = ({ loggedIn, userData, setFromBookPage }) => {
 
   const renderBar = () => (
     <>
-      {options[0].map((opt, index) => {
+      {options.map((opt, index) => {
         if (index === 0) {
           return (
             <>
@@ -104,7 +122,7 @@ const NavBar = ({ loggedIn, userData, setFromBookPage }) => {
         }}
       >
         <List>
-          {options[0].map((opt) => (
+          {options.map((opt) => (
             <ListItem
               button
               key={opt.name}
