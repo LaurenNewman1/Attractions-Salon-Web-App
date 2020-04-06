@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Typography,
 } from '@material-ui/core';
@@ -26,9 +26,19 @@ const Users = () => {
   });
   const [userGroup, setUserGroup] = useState([]);
   const [userGroupName, setUserGroupName] = useState('');
+  const [subtypes, setSubtypes] = useState([]);
 
   const [users, users1, users2,, loading, updateUsers,
-    updateNewUser, deleteUser, addUser, saveUser] = useUsers();
+    updateNewUser, deleteUser, addUser, saveUser, services] = useUsers();
+
+  useEffect(() => {
+    const changeServicesToSubTypes = Object.keys(services).map((key) => services[key]);
+    const merged = changeServicesToSubTypes.flat(1);
+    setSubtypes(merged);
+    // console.log(changeServicesToSubTypes);
+    // setSubtypes(changeServicesToSubTypes);
+    // console.log(subtypes);
+  }, [services]);
 
   const setDelete = (userGName, group, index) => {
     console.log(userGName, group, index);
@@ -128,6 +138,7 @@ const Users = () => {
             userGroup={users2}
             userGroupName="2"
             open={open}
+            subtypes={subtypes}
             expandChange={(panel, list) => expandChange(panel, list)}
             cancelChanges={(panel, list) => cancelChanges(panel, list)}
           />
@@ -144,6 +155,7 @@ const Users = () => {
             updateUser={updateUsers}
             userGroup={users1}
             userGroupName="1"
+            subtypes={subtypes}
             open={open}
             expandChange={(panel, list) => expandChange(panel, list)}
             cancelChanges={(panel, list) => cancelChanges(panel, list)}

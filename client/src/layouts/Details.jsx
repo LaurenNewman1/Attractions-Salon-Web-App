@@ -31,6 +31,7 @@ const Details = ({
   const [type, setType] = useState(services.find((s) => s._id === booking.service)
     ? services.find((s) => s._id === booking.service).type : '');
 
+
   useEffect(() => {
     // If user is going back
     if (type.length) {
@@ -40,10 +41,22 @@ const Details = ({
     }
   }, []);
 
+  useEffect(() => {
+    const serviceDetails = services.find((s) => s._id === booking.service);
+    async function fetchData(typ) {
+      setType(typ);
+      setServiceOptions(services.filter((s) => s.type === typ));
+      setAddOnOptions(serviceDetails.addons);
+    }
+    if (serviceDetails) {
+      fetchData(serviceDetails.type);
+    }
+  }, [services]);
+
   const changeType = async (newType) => {
     setType(newType);
     updateBooking(['service', ''], ['addons', []], ['specialist', '']);
-    setServiceOptions(services.filter((s) => s.type === newType));
+    await setServiceOptions(services.filter((s) => s.type === newType));
     setAddOnOptions([]);
   };
 
@@ -131,7 +144,7 @@ const Details = ({
               )}
               MenuProps={MenuProps}
             >
-              {addOnOptions.map((add) => (
+              {addOnOptions ? addOnOptions.map((add) => (
                 <MenuItem key={add.name} value={add}>
                   {add.name}
                   {' '}
@@ -139,7 +152,7 @@ const Details = ({
                   {add.price}
                   )
                 </MenuItem>
-              ))}
+              )) : null}
             </Select>
           </FormControl>
         </Grid>
