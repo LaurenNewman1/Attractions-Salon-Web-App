@@ -57,6 +57,10 @@ export const update = async (req, res) => {
       if (updateParams.confirmed) {
         await SendTextEmail(appointment.email, 'Your Booking has been Confirmed', `Hi ${appointment.name}, your booking with Attractions Salon has been comfirmed for ${format(appointment.time, 'MM/dd/yyyy K:mm aa')}`);
       }
+      if(!(appointment.payInStore))
+      {
+        await stripe.paymentIntents.confirm(appointment.intent_id);
+      }
       res.status(200).type('json').send(appointment);
     } else {
       res.status(404).type('json').send({ error: 'Appointment not found' });
