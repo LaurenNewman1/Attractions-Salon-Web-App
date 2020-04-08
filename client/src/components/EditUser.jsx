@@ -31,6 +31,9 @@ const EditUser = ({
   // subtypes.map((sub) => console.log(sub));
   console.log(subtypes);
 
+  if (user.specialties) {
+    console.log('user', user.name, user.specialties);
+  }
   // console.log(subtypes);
   return (
     <ExpansionPanel
