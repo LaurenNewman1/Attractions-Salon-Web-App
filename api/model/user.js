@@ -24,6 +24,15 @@ const User = new Schema({
   forget_password_id: {
     type: String,
   },
+  specialties: {
+    type: [String],
+  },
+  banner: {
+    type: String,
+  },
+  bio: {
+    type: String,
+  },
 });
 
 User.plugin(accessibleFieldsPlugin);
