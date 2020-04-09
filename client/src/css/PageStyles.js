@@ -25,6 +25,9 @@ const useStyles = makeStyles((theme) => ({
     padding: 0,
     backgroundColor: theme.palette.background.main,
   },
+  drawer: {
+    width: 240,
+  },
 }));
 
 export default useStyles;
