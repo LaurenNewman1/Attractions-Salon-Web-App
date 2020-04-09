@@ -23,7 +23,7 @@ import Dashboard from './layouts/admin/Dashboard';
 import Users from './layouts/admin/Users';
 import AdminReviews from './layouts/admin/AdminReviews';
 import StaffDash from './layouts/admin/StaffDash';
-import About from './layouts/About';
+import About2 from './layouts/About2';
 
 const App = () => {
   const [
@@ -79,7 +79,7 @@ const App = () => {
             <Route path="/book/:id" component={() => <Book userData={userData} />} />
             <Route path="/book/" component={() => <Book userData={userData} />} />
             <Route path="/services" component={Services} />
-            <Route path="/about" component={About} />
+            <Route path="/about" component={About2} />
             <Route path="/contact" component={Contact} />
             <Route path="/login" component={() => <Login login={login} fromBookPage={fromBookPage} resetPassword={requestResetPassword} />} />
             <Route path="/resetpassword/:token" component={() => <ResetPassword attemptReset={requestPasswordUpdate} />} />
