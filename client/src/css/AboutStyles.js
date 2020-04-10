@@ -63,6 +63,8 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: 40,
     paddingRight: '10%',
     paddingLeft: '10%',
+    margin: 0,
+    width: '100%',
   },
   center: {
     display: 'flex',
