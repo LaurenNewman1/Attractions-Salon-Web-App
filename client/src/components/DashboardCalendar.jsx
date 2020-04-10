@@ -2,7 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { startOfWeek, addDays, addHours } from 'date-fns';
-import { Paper, Grid, Chip } from '@material-ui/core';
+import { Paper, Grid, Chip, Button } from '@material-ui/core';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import { ListAlt, Person, Notes } from '@material-ui/icons';
 import { ViewState } from '@devexpress/dx-react-scheduler';
@@ -31,7 +31,6 @@ const style = ({ palette }) => ({
     textAlign: 'center',
   },
 });
-
 
 const TooptipContent = withStyles(style, { name: 'Content' })(({
   children, appointmentData, classes, ...restProps
@@ -71,12 +70,25 @@ const TooptipContent = withStyles(style, { name: 'Content' })(({
   </AppointmentTooltip.Content>
 ));
 
+const ToolBarContents = ({ children }) => (
+  <Toolbar.Root>
+    {children}
+  </Toolbar.Root>
+);
+
+ToolBarContents.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  children: PropTypes.object.isRequired,
+};
+
 const DashboardCalendar = ({
   numOfDays,
   startingHour,
   hoursPerDay,
   beginningOfWeek,
   appointments,
+  buttons,
+  OnButtonPress,
 }) => {
   const appointmentEvents = appointments.map((a) => (
     {
@@ -92,6 +104,14 @@ const DashboardCalendar = ({
 
   const daysWorked = [...Array(numOfDays).keys()].map((i) => i + beginningOfWeek.getDay());
   const excludedDays = [...Array(7).keys()].filter((i) => !daysWorked.includes(i));
+
+  const mappedButtons = buttons.map(({ name, color }, i) => (
+    <Button key={name} color={color} variant="contained" onClick={() => OnButtonPress(i)}>{name}</Button>
+  ));
+
+  const allToolBarChildren = [
+    ...mappedButtons,
+  ];
 
   return (
     <Paper>
@@ -110,6 +130,7 @@ const DashboardCalendar = ({
         <Toolbar />
         <DateNavigator />
         <TodayButton />
+        <ToolBarContents>{allToolBarChildren}</ToolBarContents>
         <Appointments />
         <AppointmentTooltip
           showCloseButton
@@ -143,12 +164,20 @@ const APPOINTMENT_SHAPE = PropTypes.shape({
   notes: PropTypes.string,
 });
 
+const BUTTON_SHAPE = PropTypes.shape({
+  name: PropTypes.string,
+  onClick: PropTypes.func,
+  color: PropTypes.string,
+});
+
 DashboardCalendar.propTypes = {
   numOfDays: PropTypes.number,
   beginningOfWeek: PropTypes.instanceOf(Date),
   startingHour: PropTypes.number,
   hoursPerDay: PropTypes.number,
   appointments: PropTypes.arrayOf(APPOINTMENT_SHAPE).isRequired,
+  buttons: PropTypes.arrayOf(BUTTON_SHAPE),
+  OnButtonPress: PropTypes.func.isRequired,
 };
 
 DashboardCalendar.defaultProps = {
@@ -156,6 +185,7 @@ DashboardCalendar.defaultProps = {
   startingHour: 10,
   hoursPerDay: 9,
   beginningOfWeek: addDays(startOfWeek(new Date()), 2),
+  buttons: [],
 };
 
 export default DashboardCalendar;

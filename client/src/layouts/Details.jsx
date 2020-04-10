@@ -22,7 +22,7 @@ const MenuProps = {
 };
 
 const Details = ({
-  booking, updateBooking, loading, specialists, services,
+  booking, updateBooking, loading, specialists, services, compact,
 }) => {
   const classes = useStyles();
   const theme = useTheme();
@@ -57,7 +57,7 @@ const Details = ({
   return (
     <>
       {loading ? <Loading /> : null}
-      <h2 className={classes.header}>How can we help you today?</h2>
+      {!compact ? <h2 className={classes.header}>How can we help you today?</h2> : null}
       <Grid container spacing={3} className={classes.grid}>
         <Grid item xs={4}>
           <Card
@@ -207,6 +207,11 @@ Details.propTypes = {
     subtype: PropTypes.string,
     addons: PropTypes.array,
   }]).isRequired,
+  compact: PropTypes.bool,
+};
+
+Details.defaultProps = {
+  compact: false,
 };
 
 export default Details;
