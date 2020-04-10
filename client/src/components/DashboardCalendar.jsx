@@ -2,9 +2,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { startOfWeek, addDays, addHours } from 'date-fns';
-import { Paper, Grid, Chip, Button } from '@material-ui/core';
+import { Paper, Grid, Chip, Button, IconButton } from '@material-ui/core';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
-import { ListAlt, Person, Notes } from '@material-ui/icons';
+import { ListAlt, Person, Notes, Edit } from '@material-ui/icons';
 import { ViewState } from '@devexpress/dx-react-scheduler';
 import {
   Scheduler,
@@ -31,6 +31,22 @@ const style = ({ palette }) => ({
     textAlign: 'center',
   },
 });
+
+const ToolTipHeader = withStyles(style, { name: 'Header' })(({
+  children, appointmentData, classes, onEditClick, ...restProps
+}) => (
+  <AppointmentTooltip.Header
+    {...restProps}
+    appointmentData={appointmentData}
+  >
+    <IconButton
+      /* eslint-disable-next-line no-alert */
+      onClick={() => onEditClick()}
+    >
+      <Edit />
+    </IconButton>
+  </AppointmentTooltip.Header>
+));
 
 const TooptipContent = withStyles(style, { name: 'Content' })(({
   children, appointmentData, classes, ...restProps
@@ -89,6 +105,7 @@ const DashboardCalendar = ({
   appointments,
   buttons,
   OnButtonPress,
+  editAppointment,
 }) => {
   const appointmentEvents = appointments.map((a) => (
     {
@@ -133,11 +150,9 @@ const DashboardCalendar = ({
         <ToolBarContents>{allToolBarChildren}</ToolBarContents>
         <Appointments />
         <AppointmentTooltip
-          showCloseButton
+          headerComponent={(props) => <ToolTipHeader onEditClick={() => editAppointment(props.appointmentData)} {...props} />}
           contentComponent={TooptipContent}
-        />
-        <AppointmentForm
-          readOnly
+          showCloseButton
         />
       </Scheduler>
     </Paper>
@@ -178,6 +193,7 @@ DashboardCalendar.propTypes = {
   appointments: PropTypes.arrayOf(APPOINTMENT_SHAPE).isRequired,
   buttons: PropTypes.arrayOf(BUTTON_SHAPE),
   OnButtonPress: PropTypes.func.isRequired,
+  editAppointment: PropTypes.func.isRequired,
 };
 
 DashboardCalendar.defaultProps = {

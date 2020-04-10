@@ -67,9 +67,9 @@ export default (unconformed = true) => {
     return allRequests[index];
   };
 
-  const confirm = async (index) => {
+  const confirm = async (index, confirmStatus = true) => {
     setLoading(true);
-    const confirmedReq = updateRequests(index, ['confirmed', true]);
+    const confirmedReq = updateRequests(index, ['confirmed', confirmStatus]);
     const success = requestApptUpdate(confirmedReq._id, confirmedReq);
     if (success) {
       const allRequests = [...requests];
@@ -102,7 +102,7 @@ export default (unconformed = true) => {
   const refreshBookings = async () => {
     const bookRequestFetch = await getBookings();
     setRequests(bookRequestFetch);
-  }
+  };
 
   useEffect(() => {
     const callRequests = async () => {

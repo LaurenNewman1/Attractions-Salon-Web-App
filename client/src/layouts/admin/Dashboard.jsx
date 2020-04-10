@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { parseISO } from 'date-fns';
-import { DialogActions, DialogContent, DialogTitle, Dialog, Button } from '@material-ui/core';
+import { parseISO, isEqual } from 'date-fns';
+import { DialogActions, DialogContent, DialogTitle, Dialog, Button, DialogContentText } from '@material-ui/core';
 import Page from '../../components/Page';
 import DashboardCalendar from '../../components/DashboardCalendar';
 import useRequests from '../../stores/RequestStores';
@@ -40,6 +40,7 @@ const Dashboard = () => {
   const [clientInfo, setClientInfo] = useState(EMPTY_CLIENT_INFO);
   const [requestInfo, setRequstInfo] = useState(EMPTY_REQUEST);
   const [openCreateBooking, setOpenBooking] = useState(false);
+  const [bookingEditCandidate, setEditCandidate] = useState(-1);
 
   const submitNewAppointment = async () => {
     const fullAppointment = { ...clientInfo, ...requestInfo };
@@ -82,6 +83,19 @@ const Dashboard = () => {
     },
   ];
 
+  const newEditCandidate = (startDate) => {
+    console.log(startDate);
+    const bookingI = requests.findIndex((r) => startDate.toISOString() === r.time);
+    setEditCandidate(bookingI);
+  };
+
+  const unconfirmCandidate = async () => {
+    if (await confirm(bookingEditCandidate, false)) {
+      setEditCandidate(-1);
+      refreshBookings();
+    }
+  };
+
   return (
     <Page>
       <div style={{ padding: '32px' }}>
@@ -89,6 +103,7 @@ const Dashboard = () => {
           appointments={formedAppointments}
           buttons={toolbarButtons}
           OnButtonPress={(i) => toolbarButtons[i].onClick()}
+          editAppointment={(appointmentData) => newEditCandidate(appointmentData.startDate)}
         />
       </div>
 
@@ -121,6 +136,26 @@ const Dashboard = () => {
         <DialogActions>
           <Button onClick={() => submitNewAppointment()} color="primary" autoFocus>
             Create Booking
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={bookingEditCandidate !== -1}
+        onClose={() => setEditCandidate(-1)}
+      >
+        <DialogTitle id="alert-dialog-title">Are you sure you want to edit this appointment?</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Editing appointments requires them to be reconfirmed before appearing on the Dashboard calendar. Reconfirming will send the client an additional confirmation email. Are you sure you want to do this?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setEditCandidate(-1)} color="primary">
+            Cancel Edit
+          </Button>
+          <Button onClick={() => unconfirmCandidate()} color="primary" autoFocus>
+            Edit Appointment
           </Button>
         </DialogActions>
       </Dialog>
