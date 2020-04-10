@@ -80,7 +80,7 @@ const Users = () => {
 
   const cancelChanges = (index, groupName) => {
     updateUsers(groupName, index, ['name', viewing.name], ['email', viewing.email],
-      ['phone_number', viewing.phone_number], ['password', viewing.password], ['role', Number(viewing.role)]);
+      ['phone_number', viewing.phone_number], ['specialties', viewing.specialties], ['role', Number(viewing.role)]);
     setOpen({ i: -1, list: '' });
   };
 

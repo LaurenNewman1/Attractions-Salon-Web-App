@@ -29,12 +29,6 @@ const EditUser = ({
 }) => {
   const classes = useStyles();
   // subtypes.map((sub) => console.log(sub));
-  console.log(subtypes);
-
-  if (user.specialties) {
-    console.log('user', user.name, user.specialties);
-  }
-  // console.log(subtypes);
   return (
     <ExpansionPanel
       expanded={open.i === index && open.list === userGroupName}
@@ -75,8 +69,8 @@ const EditUser = ({
           </Grid>
           {subtypes && user.specialties ? (
             <Grid item xs={12} sm={6}>
-              <FormControl className={classes.textfield}>
-                <InputLabel>Add-ons</InputLabel>
+              <FormControl style={{ minWidth: 100 }}>
+                <InputLabel>Specialties</InputLabel>
                 <Select
                   multiple
                   value={user.specialties}
