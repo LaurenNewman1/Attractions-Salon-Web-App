@@ -33,6 +33,9 @@ const User = new Schema({
   bio: {
     type: String,
   },
+  title: {
+    type: String,
+  },
 });
 
 User.plugin(accessibleFieldsPlugin);

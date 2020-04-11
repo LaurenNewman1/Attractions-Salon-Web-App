@@ -39,6 +39,7 @@ const NewUser = ({ onClickAdd, updateNewUser }) => {
                 onChange={(e) => updateNewUser(['name', e.target.value])}
                 label="Name"
                 style={{ width: '100%' }}
+                required
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -46,6 +47,7 @@ const NewUser = ({ onClickAdd, updateNewUser }) => {
                 onChange={(e) => updateNewUser(['email', e.target.value])}
                 label="Email"
                 style={{ width: '100%' }}
+                required
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -53,6 +55,7 @@ const NewUser = ({ onClickAdd, updateNewUser }) => {
                 onChange={(e) => updateNewUser(['phone_number', e.target.value])}
                 label="Phone Number"
                 style={{ width: '100%' }}
+                required
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -60,10 +63,11 @@ const NewUser = ({ onClickAdd, updateNewUser }) => {
                 onChange={(e) => updateNewUser(['password', e.target.value])}
                 label="Password"
                 style={{ width: '100%' }}
+                required
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <FormControl style={{ width: '100% ' }}>
+              <FormControl style={{ width: '100% ' }} required>
                 <InputLabel>Role</InputLabel>
                 <Select
                   defaultValue=""
@@ -75,6 +79,20 @@ const NewUser = ({ onClickAdd, updateNewUser }) => {
                   <MenuItem value={0}>Client</MenuItem>
                 </Select>
               </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                onChange={(e) => updateNewUser(['title', e.target.value])}
+                label="Title"
+                style={{ width: '100%' }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                onChange={(e) => updateNewUser(['bio', e.target.value])}
+                label="Bio"
+                style={{ width: '100%' }}
+              />
             </Grid>
           </Grid>
         </DialogContent>

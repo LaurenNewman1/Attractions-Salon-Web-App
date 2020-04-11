@@ -14,7 +14,8 @@ const requestDelete = async (_id) => {
 };
 
 // eslint-disable-next-line camelcase
-const requestAdd = async (name, email, phone_number, password, role) => {
+const requestAdd = async (name, email, phone_number, password, role, title, bio) => {
+  console.log('role on add', role);
   const res = await fetch('/api/users',
     {
       method: 'POST',
@@ -26,7 +27,7 @@ const requestAdd = async (name, email, phone_number, password, role) => {
       redirect: 'follow', // manual, *follow, error
       referrerPolicy: 'no-referrer', // no-referrer, *client
       body: JSON.stringify({
-        name, email, phone_number, password, role,
+        name, email, phone_number, password, role, title, bio,
       }),
     });
 
@@ -61,6 +62,8 @@ export default () => {
     phone_number: '',
     password: '',
     role: '',
+    title: '',
+    bio: '',
   });
 
   const updateNewUser = (...argus) => {
@@ -91,14 +94,15 @@ export default () => {
         setUsers2(allUsers);
       }
     }
-    updateNewUser(['name', ''], ['email', ''], ['phone_number', ''], ['password', ''], ['role', 0]);
+    updateNewUser(['name', ''], ['email', ''], ['phone_number', ''], ['password', ''], ['role', 0], ['title', ''], ['bio', '']);
     setLoading(false);
     return success;
   };
 
   const addUser = async () => {
     setLoading(true);
-    const [success, rev] = await requestAdd(newUser.name, newUser.email, newUser.phone_number, newUser.password, newUser.role);
+    const [success, rev] = await requestAdd(newUser.name, newUser.email, newUser.phone_number, newUser.password, newUser.role, newUser.title, newUser.bio);
+    console.log('newuser role', newUser.role);
     if (success) {
       if (newUser.role === 0) {
         const allUsers = [...users];
@@ -114,7 +118,7 @@ export default () => {
         setUsers2(allUsers);
       }
     }
-    updateNewUser(['name', ''], ['email', ''], ['phone_number', ''], ['password', ''], ['role', 0]);
+    updateNewUser(['name', ''], ['email', ''], ['phone_number', ''], ['password', ''], ['role', 0], ['title', ''], ['bio', '']);
     setLoading(false);
     return success;
   };
@@ -123,7 +127,11 @@ export default () => {
     setLoading(true);
     const user = users.find((u) => u._id === id)
       || users1.find((u) => u._id === id) || users2.find((u) => u._id === id);
-      console.log(user);
+    if (user.role !== original.role && user.role === 0) {
+      user.title = '';
+      user.bio = '';
+      user.specialties = [];
+    }
     const { password, ...restOfUser } = user;
     const [success] = await requestUserUpdate(id, restOfUser);
     // Rearrange lists
@@ -133,15 +141,15 @@ export default () => {
       switch (user.role) {
         case 0:
           users.push(user);
-          setUsers(users);
+          // setUsers(users);
           break;
         case 1:
           users1.push(user);
-          setUsers1(users1);
+          // setUsers1(users1);
           break;
         case 2:
           users2.push(user);
-          setUsers2(users2);
+          // setUsers2(users2);
           break;
         default:
           break;
@@ -149,15 +157,15 @@ export default () => {
       switch (original.role) {
         case 0:
           users.splice(users.findIndex((u) => u._id === user._id), 1);
-          setUsers(users);
+          // setUsers(users);
           break;
         case 1:
           users1.splice(users1.findIndex((u) => u._id === user._id), 1);
-          setUsers1(users1);
+          // setUsers1(users1);
           break;
         case 2:
           users2.splice(users2.findIndex((u) => u._id === user._id), 1);
-          setUsers2(users2);
+          // setUsers2(users2);
           break;
         default:
           break;
