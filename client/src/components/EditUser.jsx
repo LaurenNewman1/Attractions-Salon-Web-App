@@ -28,7 +28,6 @@ const EditUser = ({
   expandChange, cancelChanges, subtypes,
 }) => {
   const classes = useStyles();
-  // subtypes.map((sub) => console.log(sub));
   return (
     <ExpansionPanel
       expanded={open.i === index && open.list === userGroupName}
@@ -67,32 +66,14 @@ const EditUser = ({
               style={{ width: '100% ' }}
             />
           </Grid>
-          {subtypes && user.specialties ? (
+          {user.role > 0 ? (
             <Grid item xs={12} sm={6}>
-              <FormControl style={{ minWidth: '100%' }}>
-                <InputLabel>Specialties</InputLabel>
-                <Select
-                  multiple
-                  value={user.specialties}
-                  onChange={(event) => updateUser(userGroupName, index, ['specialties', event.target.value])}
-                  input={<Input />}
-                  renderValue={(selected) => (
-                    <div className={classes.chips}>
-                      {selected.map((value) => (
-                        <Chip key={value} label={value} size="small" className={classes.chip} color="secondary" />
-                      ))}
-                    </div>
-                  )}
-                  MenuProps={MenuProps}
-                >
-                  {subtypes.map((add) => (
-                    <MenuItem key={add} value={add}>
-                      {add}
-                      {' '}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+              <TextField
+                label="Title"
+                value={user.title}
+                onChange={(e) => updateUser(userGroupName, index, ['title', e.target.value])}
+                style={{ width: '100% ' }}
+              />
             </Grid>
           ) : null}
           <Grid item xs={12} sm={6}>
@@ -109,22 +90,44 @@ const EditUser = ({
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="Title"
-              value={user.title}
-              onChange={(e) => updateUser(userGroupName, index, ['title', e.target.value])}
-              style={{ width: '100% ' }}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="Bio"
-              value={user.bio}
-              onChange={(e) => updateUser(userGroupName, index, ['bio', e.target.value])}
-              style={{ width: '100% ' }}
-            />
-          </Grid>
+          {subtypes && user.role > 0 ? (
+            <Grid item xs={12} sm={6}>
+              <FormControl style={{ minWidth: '100%' }}>
+                <InputLabel>Specialties</InputLabel>
+                <Select
+                  multiple
+                  value={user.specialties}
+                  onChange={(event) => updateUser(userGroupName, index, ['specialties', event.target.value])}
+                  input={<Input />}
+                  renderValue={(selected) => (
+                    <div className={classes.chips}>
+                      {selected.map((value) => (
+                        <Chip key={value} label={value} className={classes.chip} size="small" color="secondary" />
+                      ))}
+                    </div>
+                  )}
+                  MenuProps={MenuProps}
+                >
+                  {subtypes.map((add) => (
+                    <MenuItem key={add} value={add}>
+                      {add}
+                      {' '}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+          ) : null}
+          {user.role > 0 ? (
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Bio"
+                value={user.bio}
+                onChange={(e) => updateUser(userGroupName, index, ['bio', e.target.value])}
+                style={{ width: '100% ' }}
+              />
+            </Grid>
+          ) : null}
         </Grid>
 
       </ExpansionPanelDetails>

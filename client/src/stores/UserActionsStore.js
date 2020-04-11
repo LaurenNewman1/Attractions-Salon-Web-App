@@ -123,7 +123,7 @@ export default () => {
     setLoading(true);
     const user = users.find((u) => u._id === id)
       || users1.find((u) => u._id === id) || users2.find((u) => u._id === id);
-      console.log(user);
+    console.log(user);
     const { password, ...restOfUser } = user;
     const [success] = await requestUserUpdate(id, restOfUser);
     // Rearrange lists
@@ -197,7 +197,7 @@ export default () => {
         .then((response) => response.json())
         .then((data) => data);
 
-      const servicesRequestFetch = async () => fetch(`/api/services/types`)
+      const servicesRequestFetch = async () => fetch('/api/services/types')
         .then((response) => response.json())
         .then((data) => data);
 
