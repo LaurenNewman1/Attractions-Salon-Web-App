@@ -103,12 +103,11 @@ export default (unconformed = true) => {
       const allSpecialists = await fetch('/api/users/roles/1')
         .then((response) => response.json())
         .then((data) => data);
+      setSpecialists(allSpecialists);
       console.log(allSpecialists);
       const allServices = await fetchAllServices();
-
-      setRequests(bookRequestFetch);
       setServices(allServices);
-      setSpecialists(allSpecialists);
+      setRequests(bookRequestFetch);
       setLoading(false);
     };
 
