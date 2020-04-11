@@ -22,6 +22,7 @@ import useLogin from './stores/LoginStores';
 import Dashboard from './layouts/admin/Dashboard';
 import Users from './layouts/admin/Users';
 import AdminReviews from './layouts/admin/AdminReviews';
+import StaffDash from './layouts/admin/StaffDash';
 
 const App = () => {
   const [
@@ -74,12 +75,13 @@ const App = () => {
           />
           <Switch>
             <Route exact path="/" component={() => <Home loggedIn={loggedIn} setFromBookPage={setFromBookPage} />} />
-            <Route path="/book" component={() => <Book userData={userData} />} />
+            <Route path="/book/:id" component={() => <Book userData={userData} />} />
+            <Route path="/book/" component={() => <Book userData={userData} />} />
             <Route path="/services" component={Services} />
             <Route path="/contact" component={Contact} />
             <Route path="/login" component={() => <Login login={login} fromBookPage={fromBookPage} resetPassword={requestResetPassword} />} />
             <Route path="/resetpassword/:token" component={() => <ResetPassword attemptReset={requestPasswordUpdate} />} />
-            <Route path="/signUp" component={() => <SignUp register={register} />} />
+            <Route path="/signUp" component={() => <SignUp register={register} login={login} />} />
             <Route
               path="/profile"
               component={() => (
@@ -98,6 +100,9 @@ const App = () => {
             <Route path="/admin/users" component={Users} />
             <Route path="/admin/reviews" component={AdminReviews} />
             <Route path="/admin/services" component={AdminServices} />
+
+            {/* Staff */}
+            <Route path="/staff/dashboard" component={StaffDash} />
           </Switch>
         </Router>
       </ThemeProvider>

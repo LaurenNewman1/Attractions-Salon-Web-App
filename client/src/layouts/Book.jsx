@@ -7,6 +7,7 @@ import {
   KeyboardArrowLeft, KeyboardArrowRight,
 } from '@material-ui/icons';
 import PropTypes from 'prop-types';
+import { useParams } from 'react-router';
 import Page from '../components/Page';
 import useStyles from '../css/BookStyles';
 import Details from './Details';
@@ -17,6 +18,7 @@ import ReviewBooking from './ReviewBooking';
 import useBooking from '../stores/BookStore';
 
 const Book = ({ userData }) => {
+  const params = useParams();
   const [page, setPage] = useState(0);
   const [error, setError] = useState(false);
   const [booking, setBooking] = useState({
@@ -26,7 +28,7 @@ const Book = ({ userData }) => {
     confirmed: false,
     timeOrdered: new Date(Date.now()).toISOString(),
     time: new Date(Date.now()).toISOString(),
-    service: '',
+    service: params ? params.id : '',
     addons: [],
     specialist: '',
     notes: '',
