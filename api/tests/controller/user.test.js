@@ -2,7 +2,7 @@ import User from '../../model/user';
 import argon2 from 'argon2';
 
 import { getParams, SetupTesting, CleanUp } from '../helpers/test_helper'
-import { userParams as validUser, MakeUser } from '../factories/user'
+import { userParams as validUser, ownerParams, MakeUser, MakeOwner, workerParams, MakeWorker } from '../factories/user'
 
 describe('User Controller', () => {
   let agent, disconnectDB, refreshAgent;
