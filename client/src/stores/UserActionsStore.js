@@ -123,33 +123,41 @@ export default () => {
     setLoading(true);
     const user = users.find((u) => u._id === id)
       || users1.find((u) => u._id === id) || users2.find((u) => u._id === id);
+      console.log(user);
     const { password, ...restOfUser } = user;
     const [success] = await requestUserUpdate(id, restOfUser);
     // Rearrange lists
     console.log(user.role, original.role);
+    console.log(user._id, original._id);
     if (success && user.role !== original.role) {
       switch (user.role) {
         case 0:
           users.push(user);
+          setUsers(users);
           break;
         case 1:
           users1.push(user);
+          setUsers1(users1);
           break;
         case 2:
           users2.push(user);
+          setUsers2(users2);
           break;
         default:
           break;
       }
       switch (original.role) {
         case 0:
-          users.splice(users.find((u) => u._id === user._id), 1);
+          users.splice(users.findIndex((u) => u._id === user._id), 1);
+          setUsers(users);
           break;
         case 1:
-          users1.splice(users1.find((u) => u._id === user._id), 1);
+          users1.splice(users1.findIndex((u) => u._id === user._id), 1);
+          setUsers1(users1);
           break;
         case 2:
-          users2.splice(users2.find((u) => u._id === user._id), 1);
+          users2.splice(users2.findIndex((u) => u._id === user._id), 1);
+          setUsers2(users2);
           break;
         default:
           break;

@@ -69,7 +69,7 @@ const EditUser = ({
           </Grid>
           {subtypes && user.specialties ? (
             <Grid item xs={12} sm={6}>
-              <FormControl style={{ minWidth: 100 }}>
+              <FormControl style={{ minWidth: '100%' }}>
                 <InputLabel>Specialties</InputLabel>
                 <Select
                   multiple
@@ -79,7 +79,7 @@ const EditUser = ({
                   renderValue={(selected) => (
                     <div className={classes.chips}>
                       {selected.map((value) => (
-                        <Chip key={value} label={value} className={classes.chip} color="secondary" />
+                        <Chip key={value} label={value} size="small" className={classes.chip} color="secondary" />
                       ))}
                     </div>
                   )}
@@ -109,7 +109,24 @@ const EditUser = ({
               </Select>
             </FormControl>
           </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Title"
+              value={user.title}
+              onChange={(e) => updateUser(userGroupName, index, ['title', e.target.value])}
+              style={{ width: '100% ' }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Bio"
+              value={user.bio}
+              onChange={(e) => updateUser(userGroupName, index, ['bio', e.target.value])}
+              style={{ width: '100% ' }}
+            />
+          </Grid>
         </Grid>
+
       </ExpansionPanelDetails>
       <DialogActions>
         <Button variant="contained" onClick={() => deleteUser(userGroupName, userGroup, index)}>
@@ -132,6 +149,8 @@ EditUser.propTypes = {
     password: PropTypes.string.isRequired,
     role: PropTypes.number.isRequired,
     specialties: PropTypes.array.isRequired,
+    title: PropTypes.string.isRequired,
+    bio: PropTypes.string.isRequired,
   }).isRequired,
   deleteUser: PropTypes.func.isRequired,
   saveUser: PropTypes.func.isRequired,

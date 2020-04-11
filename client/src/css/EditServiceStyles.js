@@ -52,8 +52,10 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   chips: {
-    display: 'flex',
-    flexWrap: 'wrap',
+    maxHeight: '1em',
+  },
+  chip: {
+    marginRight: 4,
   },
 }));
 
