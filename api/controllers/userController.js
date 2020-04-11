@@ -23,16 +23,21 @@ export const genForgetPassword = async (req, res) => {
 export const updatePassword = async (req, res) => {
   const { password } = req.body;
   const { token } = req.params;
-
-  const user = await User.findOne({ forget_password_id: token });
-  if (user) {
-    const hash = await argon2.hash(password);
-    user.password = hash;
-    user.forget_password_id = undefined;
-    await user.save();
-    res.sendStatus(200);
+  
+  const abilities = currentUserAbilities(req);
+  if(abilities.can('reset_password', 'Self')) {
+    const user = await User.findOne({ forget_password_id: token });
+    if (user) {
+      const hash = await argon2.hash(password);
+      user.password = hash;
+      user.forget_password_id = undefined;
+      await user.save();
+      res.sendStatus(200);
+    } else {
+      res.sendStatus(401);
+    }
   } else {
-    res.sendStatus(401);
+    res.status(403).type('json').send({ error: 'Access Denied' });
   }
 };
 
@@ -55,6 +60,12 @@ export const read = async (req, res) => {
 
 export const readByRole = async (req, res) => {
   // Find User from Database by role and return
+  const ability = await currentUserAbilities(req);
+  if(ability.cannot('read', 'User')) {
+    res.status(403).type('json').send({ error: 'Access Denied' });
+    return;
+  }
+
   try {
     const data = await User.find(req.params).exec();
     if (!data || data.length == 0) {
@@ -69,7 +80,14 @@ export const readByRole = async (req, res) => {
 
 export const remove = async (req, res) => {
   // Find User from Database and remove
+  const ability = await currentUserAbilities(req);
+  if(ability.cannot('remove', 'User')) {
+    res.status(403).type('json').send({ error: 'Access Denied' });
+    return;
+  }
+  
   try {
+    const ability = await currentUserAbilities(req);
     let data = await User.deleteOne({ _id: req.params.someId });
     if (data.n !== 1) {
       data = { error: 'User not found!' };
