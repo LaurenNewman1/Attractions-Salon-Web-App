@@ -42,7 +42,7 @@ const Requests = () => {
 
   const validateConfirm = async (index) => {
     const req = requests[index];
-    if (req.name.length && req.specialist.length && Date.parse(req.time) > Date.now()) {
+    if (req.name.length && Date.parse(req.time) > Date.now()) {
       const success = await confirm(index);
       setAlert({
         open: true,
@@ -70,6 +70,7 @@ const Requests = () => {
 
   const requestCards = requests.length ? requests.map((request, index) => {
     const serviceDetails = services.find((s) => s._id === request.service);
+    console.log('specialist.specialties', specialists);
 
     return (
       <Card className={classes.card}>
@@ -113,13 +114,15 @@ const Requests = () => {
                   onChange={(e) => updateRequests(index, ['specialist', e.target.value])}
                 >
                   {specialists.map((specialist) => {
-                    if (specialist.specialties.find((s) => s === serviceDetails.type
+                    if (specialist.specialties) {
+                      if (specialist.specialties.find((s) => s === serviceDetails.type
                       || s === serviceDetails.subtype)) {
-                      return (
-                        <MenuItem key={specialist._id} value={specialist._id}>
-                          {specialist.name}
-                        </MenuItem>
-                      );
+                        return (
+                          <MenuItem key={specialist._id} value={specialist._id}>
+                            {specialist.name}
+                          </MenuItem>
+                        );
+                      }
                     }
                     return null;
                   })}

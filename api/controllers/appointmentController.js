@@ -71,6 +71,7 @@ export const create = async (req, res) => {
     const dateTime = new Date(params.time);
     const finalParams = { ...params, time: dateTime };
     const appointment = await Appointment.create(finalParams);
+    console.log('email', appointment.email);
     await SendTextEmail(appointment.email, 'Your Booking has been Submitted', `Hi ${appointment.name}, your booking has been submitted. You will get an email soon when Attractions Salon has confirmed your appointment time.`);
     const owner = await User.findOne({ role: 2 }).exec();
     if (owner) {
