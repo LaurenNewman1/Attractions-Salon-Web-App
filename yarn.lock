@@ -1083,14 +1083,15 @@
     es6-promisify "^6.0.0"
     stoppable "^1.0.5"
 
-"@googlemaps/google-maps-services-js@^2.3.1":
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/@googlemaps/google-maps-services-js/-/google-maps-services-js-2.3.1.tgz#e11eb9f4d88d85b71673dc218d2082524ea880e3"
-  integrity sha512-47kT5S0aB0UjcR5/2v2C/sm1wHWsrpp1vrb1f22xdPd8pJvjV2rnM9COvNCoG3C6M0we3V5DRN6yTTHPKVoeGA==
+"@googlemaps/google-maps-services-js@^2.5.2":
+  version "2.5.2"
+  resolved "https://registry.yarnpkg.com/@googlemaps/google-maps-services-js/-/google-maps-services-js-2.5.2.tgz#028aa78192997b1e1a9b25d265f336f069fa05df"
+  integrity sha512-Mtx+rCTHnITm3a8HVrXXybt+e8Kl06q/nhTPGcp/ObrBuI4sxW+GkDTFP1fYLri+E1sRW/0S0r5mW1WPhduRtw==
   dependencies:
     agentkeepalive "^4.1.0"
     axios "^0.19.0"
     query-string "^6.11.0"
+    retry-axios "^2.1.2"
 
 "@hapi/address@2.x.x":
   version "2.1.4"
@@ -5617,6 +5618,13 @@ globby@^6.1.0:
     object-assign "^4.0.1"
     pify "^2.0.0"
     pinkie-promise "^2.0.0"
+
+google-places-web@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/google-places-web/-/google-places-web-1.0.1.tgz#c37ba886bd9a9aee4e26483157dcc68f89ff0247"
+  integrity sha512-WDvvI9KeXAQVUmTeWXwKw6Vzebs7TBZfH3z9tWdhS/rIirE0VjZ2H/U9tS/Pb72IyAttah3Wg8mx5lK0mX5WYg==
+  dependencies:
+    superagent "^5.0.2"
 
 graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.2, graceful-fs@^4.2.3:
   version "4.2.3"
@@ -10337,6 +10345,11 @@ ret@~0.1.10:
   resolved "https://registry.yarnpkg.com/ret/-/ret-0.1.15.tgz#b8a4825d5bdb1fc3f6f53c2bc33f81388681c7bc"
   integrity sha512-TTlYpa+OL+vMMNG24xSlQGEJ3B/RzEfUlLct7b5G/ytav+wPrplCpVMFuwzXbkecJrb6IYo1iFb0S9v37754mg==
 
+retry-axios@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/retry-axios/-/retry-axios-2.1.2.tgz#78a8041bc34047a205aa4098af23f943ec58abd2"
+  integrity sha512-MVNOizOgcM+dXK/kJCMnHPCGjp2Z0o3Ngznh7SfJkIVrqemHmDcgUEAbEHs3RyR3lbJtSyamq9k3gmgGSaow1g==
+
 retry@^0.12.0:
   version "0.12.0"
   resolved "https://registry.yarnpkg.com/retry/-/retry-0.12.0.tgz#1b42a6266a21f07421d1b0b54b7dc167b01c013b"
@@ -11243,7 +11256,7 @@ superagent@^3.8.3:
     qs "^6.5.1"
     readable-stream "^2.3.5"
 
-superagent@^5.2.2:
+superagent@^5.0.2, superagent@^5.2.2:
   version "5.2.2"
   resolved "https://registry.yarnpkg.com/superagent/-/superagent-5.2.2.tgz#6ff726c5642795b2c27009e92687c8e69a6bb07d"
   integrity sha512-pMWBUnIllK4ZTw7p/UaobiQPwAO5w/1NRRTDpV0FTVNmECztsxKspj3ZWEordVEaqpZtmOQJJna4yTLyC/q7PQ==

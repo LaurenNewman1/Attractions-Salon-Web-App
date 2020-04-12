@@ -1,4 +1,5 @@
 import Review from "../model/review";
+import getGoogleReviews from '../lib/places';
 
 export const create = async (req, res) => {
     try {
@@ -69,5 +70,15 @@ export const readall = async(req, res) => {
         res.status(200).send(data);
     } catch {
         res.status(400).type('json').send(err);
+    }
+}
+
+export const getReviews = async (req, res) => {
+    let response;
+    try {
+        response = await getGoogleReviews();
+        res.status(200).type('json').send(response);
+    } catch {
+        res.status(500).type('json').send(response);
     }
 }

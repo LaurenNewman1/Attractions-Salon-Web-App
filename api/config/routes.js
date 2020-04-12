@@ -39,6 +39,7 @@ const router = (app) => {
 
   // Review Routes
   app.post('/api/reviews', reviews.create);
+  app.get('/api/reviews/sync', reviews.getReviews);
   app.put('/api/reviews/:someId', reviews.update);
   app.get('/api/reviews/:someId', reviews.read);
   app.get('/api/reviews', reviews.readall);
