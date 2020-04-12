@@ -35,13 +35,9 @@ const Users = () => {
     const changeServicesToSubTypes = Object.keys(services).map((key) => services[key]);
     const merged = changeServicesToSubTypes.flat(1);
     setSubtypes(merged);
-    // console.log(changeServicesToSubTypes);
-    // setSubtypes(changeServicesToSubTypes);
-    // console.log(subtypes);
   }, [services]);
 
   const setDelete = (userGName, group, index) => {
-    console.log(userGName, group, index);
     setUserGroup(group);
     setUserGroupName(userGName);
     setConfirmDelete(index);
@@ -57,7 +53,6 @@ const Users = () => {
   };
 
   const onClickDelete = async (_id) => {
-    console.log(_id);
     setConfirmDelete(-1);
     setOpen({ i: -1, list: '' });
     const success = await deleteUser(userGroupName, _id);
@@ -113,7 +108,7 @@ const Users = () => {
 
   return (
     <Page maxWidth="md">
-      {loading ? <Loading /> : null}
+      {loading ? <Loading disableShrink /> : null}
       <div style={{ paddingTop: 5 }}>
         <h1
           className={classes.pageHead}

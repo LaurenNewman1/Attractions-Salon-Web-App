@@ -9,6 +9,9 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexWrap: 'wrap',
   },
+  chip: {
+    marginRight: 2,
+  },
   card: {
     marginBottom: 20,
   },
