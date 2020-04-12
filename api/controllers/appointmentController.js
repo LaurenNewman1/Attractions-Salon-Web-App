@@ -1,7 +1,7 @@
 import format from 'date-fns/format';
 import Appointment from '../model/appointment';
 import User from '../model/user';
-import { SendTextEmail } from '../lib/mail';
+import { SendTextEmail, SendRequestEmail } from '../lib/mail';
 
 export const read = async (req, res) => {
   // Find Appointment from Database and return
@@ -65,16 +65,21 @@ export const update = async (req, res) => {
   }
 };
 
+
 export const create = async (req, res) => {
   try {
     const params = req.body;
     const dateTime = new Date(params.time);
     const finalParams = { ...params, time: dateTime };
     const appointment = await Appointment.create(finalParams);
-    await SendTextEmail(appointment.email, 'Your Booking has been Submitted', `Hi ${appointment.name}, your booking has been submitted. You will get an email soon when Attractions Salon has confirmed your appointment time.`);
+    // await SendTextEmail(appointment.email, 'Your Booking has been Submitted', `Appointment Requested!!!!! \n \n \n \n Hi ${appointment.name}, Attractions Salon will review your appointment
+    // and notify you when your appointment has been confirmed. Have any questions? Call us at (012)-345-6789. Time Requested: ${appointment.time}
+    // Service: ${appointment.service.name} Specialist: ${appointment.specialist.name} Notes: ${appointment.notes}`);
+    await SendTextEmail(appointment.email, appointment.email, appointment.name, appointment.notes, appointment.timeOrdered, appointment.addons);
     const owner = await User.findOne({ role: 2 }).exec();
     if (owner) {
-      await SendTextEmail(owner.email, 'A Booking has been Submitted', `Hi ${owner.name}, ${appointment.name} has submitted a booking request for review.`);
+    await SendRequestEmail('ocvrsbytolmqsrdsgi@ttirv.net', appointment.email, appointment.name, appointment.notes, appointment.timeOrdered, appointment.addons);
+      // await SendRequestEmail(owner.email, 'A Booking has been Submitted', `Hi ${owner.name}, ${appointment.name} has submitted a booking request for review.`);
     }
     res.status(200).type('json').send(appointment);
   } catch (err) {

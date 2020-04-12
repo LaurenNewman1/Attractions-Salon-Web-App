@@ -54,24 +54,111 @@ export const SendConfirmationEmail = async (userID, confirmToken) => {
 
 };
 
-export const SendTextEmail = async (to, subject, text, onlyProd = true) => {
+// export const SendTextEmail = async (to, subject, text, onlyProd = false) => {
+//   if (process.env.NODE_ENV !== 'production' && onlyProd) return true;
+
+//   console.log(onlyProd);
+//   try {
+//     await sgMail.send({
+//       ...textMsg,
+//       personalizations: [{
+//         dynamic_template_data: {
+//           ...unsubscribeData,
+//           text,
+//           subject,
+//         },
+//         to,
+//       }],
+//     });
+//     return true;
+//   } catch (err) {
+//     logger.error(err.toString());
+//     return false;
+//   }
+// };
+export const SendTextEmail = async (to, from, name, notes, time, addons, onlyProd = false) => {
   if (process.env.NODE_ENV !== 'production' && onlyProd) return true;
 
+  console.log(onlyProd);
   try {
-    await sgMail.send({
-      ...textMsg,
-      personalizations: [{
-        dynamic_template_data: {
-          ...unsubscribeData,
-          text,
-          subject,
-        },
-        to,
-      }],
-    });
+    await sgMail.send(
+      {
+        to: to,
+        from: 'attractions-salon@attractionssalon.com',
+        subject: 'Your Booking has Been Requested',
+        html: '<h1 style="text-align:center;">Appointment Requested!</h1><br>' +
+        '<p style="text-align:center">Attractions Salon will review your appointment and notify you</p>' +
+        '<p style="text-align:center">when your appointment has been confirmed!</p><br>' +
+        '<p style="text-align:center">Have any questions? Call us at (123)-456-7890.</p><br>' +
+        '<h4 style="text-align:center">Your order details: </h4>' +
+        '<p style="text-align:center">Name: ' 
+        + name + '</p>' 
+        + '<p style="text-align:center">Telephone number: ' 
+        + notes + '</p>' 
+        + '<p style="text-align:center">Email: ' 
+        + time + '</p>' 
+        + '<p style="text-align:center">Addons: '
+        + addons.map((s) => s.name) + '</p>'
+        + '<br><p style="text-align:center">Check out our other services!</p><br>'
+        + '<form style="text-align:center" action="https://www.google.com"><input style="background:pink; border:0 none; padding:5px 15px; cursor:pointer; border-radius:5px" type="submit" value="Services" /></form>'
+      },
+    );
     return true;
   } catch (err) {
     logger.error(err.toString());
     return false;
   }
 };
+
+export const SendRequestEmail = async (to, from, name, notes, time, addons, onlyProd = false) => {
+  if (process.env.NODE_ENV !== 'production' && onlyProd) return true;
+
+  console.log(onlyProd);
+  try {
+    await sgMail.send(
+      {
+        to: to,
+        from: 'attractions-salon@attractionssalon.com',
+        subject: 'Your Booking has Been Requested',
+        html: '<h1 style="text-align:center;">Appointment Pending Request!</h1><br>' +
+        '<p style="text-align:center">Attractions Salon will review your appointment and notify you</p>' +
+        '<p style="text-align:center">when your appointment has been confirmed!</p><br>' +
+        '<p style="text-align:center">Have any questions? Call us at (123)-456-7890.</p><br>' +
+        '<h4 style="text-align:center">Your order details: </h4>' +
+        '<p style="text-align:center">Name: ' 
+        + name + '</p>' 
+        + '<p style="text-align:center">Telephone number: ' 
+        + notes + '</p>' 
+        + '<p style="text-align:center">Email: ' 
+        + time + '</p>' 
+        + '<p style="text-align:center">Addons: '
+        + addons.map((s) => s.name) + '</p>'
+        + '<br><p style="text-align:center">Check out our other services!</p><br>'
+        + '<form style="text-align:center" action="https://www.google.com"><input style="background:pink; border:0 none; padding:5px 15px; cursor:pointer; border-radius:5px" type="submit" value="Services" /></form>'
+      },
+    );
+    return true;
+  } catch (err) {
+    logger.error(err.toString());
+    return false;
+  }
+};
+// export const SendTextEmail = async (to, from, htmlInput, onlyProd = false) => {
+//   if (process.env.NODE_ENV !== 'production' && onlyProd) return true;
+
+//   console.log(onlyProd);
+//   try {
+//     await sgMail.send(
+//       {
+//         to: to,
+//         from: 'attractions-salon@attractionssalon.com',
+//         subject: 'Your Booking has Been Requested',
+//         html: htmlInput,
+//       },
+//     );
+//     return true;
+//   } catch (err) {
+//     logger.error(err.toString());
+//     return false;
+//   }
+// };
