@@ -3,7 +3,7 @@
       "name": "Lea",
       "email": "placeholder@email.com",
       "phone_number": "placeholderPhone",
-      "password": "placeholderPass",
+      "password": "$argon2i$v=19$m=4096,t=3,p=1$QX54WvPgwUGjYrRtvBm4SQ$0yhjBcAcTHYcyvDXlrPGfQYyPffPqIv7hAELUbBH3iw",
       "role": 1,
       "specialties": [
         "manicure",
@@ -16,7 +16,7 @@
       "name": "Shamira",
       "email": "placeholder2@email.com",
       "phone_number": "placeholderPhone2",
-      "password": "placeholderPass2",
+      "password": "$argon2i$v=19$m=4096,t=3,p=1$QX54WvPgwUGjYrRtvBm4SQ$0yhjBcAcTHYcyvDXlrPGfQYyPffPqIv7hAELUbBH3iw",
       "role": 1,
       "specialties": [
         "styling",
@@ -27,7 +27,7 @@
       "name": "Brandi",
       "email": "placeholder3@email.com",
       "phone_number": "placeholderPhone3",
-      "password": "placeholderPass3",
+      "password": "$argon2i$v=19$m=4096,t=3,p=1$QX54WvPgwUGjYrRtvBm4SQ$0yhjBcAcTHYcyvDXlrPGfQYyPffPqIv7hAELUbBH3iw",
       "role": 2,
       "specialties": [
         "cut",
@@ -41,7 +41,7 @@
       "name": "Emily",
       "email": "placeholder4@email.com",
       "phone_number": "placeholderPhone4",
-      "password": "placeholderPass4",
+      "password": "$argon2i$v=19$m=4096,t=3,p=1$QX54WvPgwUGjYrRtvBm4SQ$0yhjBcAcTHYcyvDXlrPGfQYyPffPqIv7hAELUbBH3iw",
       "role": 1,
       "specialties": [
         "cut",
@@ -55,7 +55,7 @@
       "name": "Bonnie",
       "email": "placeholder5@email.com",
       "phone_number": "placeholderPhone5",
-      "password": "placeholderPass5",
+      "password": "$argon2i$v=19$m=4096,t=3,p=1$QX54WvPgwUGjYrRtvBm4SQ$0yhjBcAcTHYcyvDXlrPGfQYyPffPqIv7hAELUbBH3iw",
       "role": 1,
       "specialties": [
         "cut",
@@ -69,7 +69,7 @@
       "name": "Connie",
       "email": "placeholder6@email.com",
       "phone_number": "placeholderPhone6",
-      "password": "placeholderPass6",
+      "password": "$argon2i$v=19$m=4096,t=3,p=1$QX54WvPgwUGjYrRtvBm4SQ$0yhjBcAcTHYcyvDXlrPGfQYyPffPqIv7hAELUbBH3iw",
       "role": 1,
       "specialties": [
         "cut",
@@ -83,7 +83,7 @@
       "name": "Mary",
       "email": "placeholder7@email.com",
       "phone_number": "placeholderPhone7",
-      "password": "placeholderPass7",
+      "password": "$argon2i$v=19$m=4096,t=3,p=1$QX54WvPgwUGjYrRtvBm4SQ$0yhjBcAcTHYcyvDXlrPGfQYyPffPqIv7hAELUbBH3iw",
       "role": 1,
       "specialties": [
         "cut",
