@@ -95,14 +95,12 @@ const App = () => {
             <Route path="/confirmation/:id" component={Confirmation} />
 
             {/* Admin */}
-            <Route path="/admin/dashboard" component={Dashboard} />
+            <Route path="/admin/dashboard" component={() => <Dashboard userData={userData} />} />
             <Route path="/admin/requests" component={Requests} />
             <Route path="/admin/users" component={Users} />
             <Route path="/admin/reviews" component={AdminReviews} />
             <Route path="/admin/services" component={AdminServices} />
 
-            {/* Staff */}
-            <Route path="/staff/dashboard" component={StaffDash} />
           </Switch>
         </Router>
       </ThemeProvider>

@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
 import { parseISO, isEqual } from 'date-fns';
-import { DialogActions, DialogContent, DialogTitle, Dialog, Button, DialogContentText } from '@material-ui/core';
+import {
+  DialogActions, DialogContent, DialogTitle, Dialog, Button, DialogContentText,
+} from '@material-ui/core';
+import PropTypes from 'prop-types';
 import Page from '../../components/Page';
 import DashboardCalendar from '../../components/DashboardCalendar';
 import useRequests from '../../stores/RequestStores';
 import useBooking from '../../stores/BookStore';
 import Calendar from '../Calendar';
 import Details from '../Details';
+
 
 const EMPTY_CLIENT_INFO = {
   name: '',
@@ -25,7 +29,7 @@ const EMPTY_REQUEST = {
   payInStore: true,
 };
 
-const Dashboard = () => {
+const Dashboard = ({ userData }) => {
   const [
     requests,
     services,
@@ -64,12 +68,21 @@ const Dashboard = () => {
     setFunc(newFields);
   };
 
-  const formedAppointments = requests.map((r) => ({
+  let formedAppointments = requests.map((r) => ({
     ...r,
     time: parseISO(r.time),
     service: services.find((s) => s._id === r.service),
     specialist: specialists.find((s) => s._id === r.specialist),
   }));
+
+  if (userData.role === 1) {
+    formedAppointments = formedAppointments.filter((appt) => {
+      if (!appt.specialist || appt.specialist.name === userData.name) {
+        return true;
+      }
+      return false;
+    });
+  }
 
   if (loading) {
     return (<Page />);
@@ -162,5 +175,20 @@ const Dashboard = () => {
     </Page>
   );
 };
+
+Dashboard.propTypes = {
+  userData: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    role: PropTypes.number.isRequired,
+    email: PropTypes.string.isRequired,
+    phone_number: PropTypes.string.isRequired,
+    password: PropTypes.string.isRequired,
+  }),
+};
+
+Dashboard.defaultProps = {
+  userData: null,
+};
+
 
 export default Dashboard;
