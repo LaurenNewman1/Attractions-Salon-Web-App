@@ -12,7 +12,9 @@ import DateFnsUtils from '@date-io/date-fns';
 import useStyles from '../css/CalendarStyles';
 import Loading from '../components/Loading';
 
-const Calendar = ({ booking, updateBooking, loading, compact, lazyStateUpdate }) => {
+const Calendar = ({
+  booking, updateBooking, loading, compact, lazyStateUpdate,
+}) => {
   const classes = useStyles();
 
   const [name, setName] = useState(booking.name);

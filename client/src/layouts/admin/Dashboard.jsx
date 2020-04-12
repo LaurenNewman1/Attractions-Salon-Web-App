@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { parseISO, isEqual } from 'date-fns';
+import { parseISO } from 'date-fns';
 import {
   DialogActions, DialogContent, DialogTitle, Dialog, Button, DialogContentText,
 } from '@material-ui/core';
@@ -30,16 +30,7 @@ const EMPTY_REQUEST = {
 };
 
 const Dashboard = ({ userData }) => {
-  const [
-    requests,
-    services,
-    specialists,
-    loading,
-    updateRequests,
-    confirm,
-    deleteRequest,
-    refreshBookings,
-  ] = useRequests(false);
+  const [requests, services, specialists, loading,, confirm,, refreshBookings] = useRequests(false);
   const [bookingLoading, bookingSpecialists, bookingServices, sendRequest] = useBooking();
   const [clientInfo, setClientInfo] = useState(EMPTY_CLIENT_INFO);
   const [requestInfo, setRequstInfo] = useState(EMPTY_REQUEST);
@@ -125,10 +116,8 @@ const Dashboard = ({ userData }) => {
         fullWidth
         maxWidth="md"
         onClose={() => setOpenBooking(false)}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">Create a new Booking</DialogTitle>
+        <DialogTitle>Create a new Booking</DialogTitle>
         <DialogContent>
           <Calendar
             booking={clientInfo}
@@ -147,7 +136,8 @@ const Dashboard = ({ userData }) => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => submitNewAppointment()} color="primary" autoFocus>
+          <Button onClick={() => setOpenBooking(false)}>Cancel</Button>
+          <Button onClick={() => submitNewAppointment()} color="primary" variant="contained" autoFocus>
             Create Booking
           </Button>
         </DialogActions>
@@ -160,7 +150,9 @@ const Dashboard = ({ userData }) => {
         <DialogTitle id="alert-dialog-title">Are you sure you want to edit this appointment?</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Editing appointments requires them to be reconfirmed before appearing on the Dashboard calendar. Reconfirming will send the client an additional confirmation email. Are you sure you want to do this?
+            Editing appointments requires them to be reconfirmed before appearing on the
+            Dashboard calendar. Reconfirming will send the client an additional confirmation email.
+            Are you sure you want to do this?
           </DialogContentText>
         </DialogContent>
         <DialogActions>

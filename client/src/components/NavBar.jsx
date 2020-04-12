@@ -24,9 +24,9 @@ const adminOptions = [
   { name: 'Reviews', route: '/admin/reviews' },
 ];
 
-// const staffOptions = [
-//   { name: 'Dashboard', route: '/staff/dashboard' },
-// ];
+const staffOptions = [
+  { name: 'Dashboard', route: '/staff/dashboard' },
+];
 
 const NavBar = ({ loggedIn, userData, setFromBookPage }) => {
   const history = useHistory();
@@ -37,13 +37,12 @@ const NavBar = ({ loggedIn, userData, setFromBookPage }) => {
 
   useEffect(() => {
     switch (userData.role) {
-      case 1:
       case 2:
         setOptions(adminOptions);
         break;
-      // case 1:
-      //   setOptions(staffOptions);
-      //   break;
+      case 1:
+        setOptions(staffOptions);
+        break;
       default:
         setOptions(userOptions);
         break;

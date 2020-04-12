@@ -2,9 +2,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { startOfWeek, addDays, addHours } from 'date-fns';
-import { Paper, Grid, Chip, Button, IconButton } from '@material-ui/core';
+import {
+  Paper, Grid, Chip, Button, IconButton,
+} from '@material-ui/core';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
-import { ListAlt, Person, Notes, Edit } from '@material-ui/icons';
+import {
+  ListAlt, Person, Notes, Edit,
+} from '@material-ui/icons';
 import { ViewState } from '@devexpress/dx-react-scheduler';
 import {
   Scheduler,
