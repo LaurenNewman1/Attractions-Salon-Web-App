@@ -12,7 +12,6 @@ const Services = () => {
   const classes = useStyles();
   const [services, loading] = useServices();
 
-  console.log('render');
   const serviceCategoryLUT = {
     'hair/cut': 'Hair Cuts',
     'hair/dye': 'Hair Dyes',
