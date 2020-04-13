@@ -100,6 +100,7 @@ const requestProfileChange = async (userId, params) => {
 
 export default () => {
   const [loggedIn, isLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState({});
 
   // Call to login
@@ -137,7 +138,10 @@ export default () => {
   };
 
   useEffect(() => {
-    if (loggedIn) { return; }
+    if (loggedIn) {
+      setLoading(false);
+      return;
+    }
 
     fetch('/api/users').then((res) => {
       if (res.status === 200) {
@@ -152,9 +156,10 @@ export default () => {
         isLoggedIn(false);
         setUserData({});
       }
+      setLoading(false);
     });
   }, [loggedIn]);
 
   return [userData, loggedIn, login, register, logout,
-    changeProfile, requestResetPassword, requestPasswordUpdate];
+    changeProfile, requestResetPassword, requestPasswordUpdate, loading];
 };

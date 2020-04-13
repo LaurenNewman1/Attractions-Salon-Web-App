@@ -33,6 +33,7 @@ const App = () => {
     changeProfile,
     requestResetPassword,
     requestPasswordUpdate,
+    loading,
   ] = useLogin();
   const [fromBookPage, setFromBookPage] = useState(false);
   console.log(`Logged In: ${loggedIn}`);
@@ -67,6 +68,7 @@ const App = () => {
         <Router>
           <NavBar
             loggedIn={loggedIn}
+            loading={loading}
             logout={() => logout()}
             userData={userData}
             fromBookPage={fromBookPage}

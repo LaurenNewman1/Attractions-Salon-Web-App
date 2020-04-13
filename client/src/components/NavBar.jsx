@@ -37,6 +37,9 @@ const NavBar = ({ loggedIn, userData, setFromBookPage }) => {
 
   useEffect(() => {
     switch (userData.role) {
+      case 0:
+        setOptions(userOptions);
+        break;
       case 2:
         setOptions(adminOptions);
         break;
@@ -44,7 +47,7 @@ const NavBar = ({ loggedIn, userData, setFromBookPage }) => {
         setOptions(staffOptions);
         break;
       default:
-        setOptions(userOptions);
+        setOptions([]);
         break;
     }
   }, [userData]);
@@ -81,18 +84,20 @@ const NavBar = ({ loggedIn, userData, setFromBookPage }) => {
     history.push(route);
   };
 
+  const attractionsLogo = (opt) => (
+    <>
+      <Button onClick={() => history.push(opt.route)} aria-label="logo">
+        <img src={logo} alt="logo" style={{ width: '150px' }} />
+      </Button>
+      <div className={classes.grow} />
+    </>
+  );
+
   const renderBar = () => (
     <>
       {options.map((opt, index) => {
         if (index === 0) {
-          return (
-            <>
-              <Button onClick={() => history.push(opt.route)} aria-label="logo">
-                <img src={logo} alt="logo" style={{ width: '150px' }} />
-              </Button>
-              <div className={classes.grow} />
-            </>
-          );
+          return attractionsLogo(opt);
         } if (opt.name === 'Book') {
           return (
             <Button onClick={() => handleBook()}>{opt.name}</Button>
@@ -100,7 +105,8 @@ const NavBar = ({ loggedIn, userData, setFromBookPage }) => {
         }
         return <Button onClick={() => history.push(opt.route)}>{opt.name}</Button>;
       })}
-      {userLogin}
+      {options.length === 0 ? attractionsLogo({ route: '/' }) : null}
+      {options.length === 0 ? null : userLogin}
     </>
   );
 
