@@ -59,14 +59,14 @@ export const update = async (req, res) => {
           const intent = await stripe.paymentIntents.confirm(appointment.intent_id);
 
           if (intent.status != 'succeeded') {
-            await Appointment.findByIdAndUpdate(req.params.someId, {confirmed: false}).exec();
+            await Appointment.findByIdAndUpdate(req.params.someId, { confirmed: false }).exec();
             res.status(400).type('json').send({ error: 'Payment Failed' });
             return;
           }
         }
         await SendTextEmail(appointment.email, 'Your Booking has been Confirmed', `Hi ${appointment.name}, your booking with Attractions Salon has been comfirmed for ${format(appointment.time, 'MM/dd/yyyy K:mm aa')}`);
       }
-        res.status(200).type('json').send(appointment);
+      res.status(200).type('json').send(appointment);
     } else {
       res.status(404).type('json').send({ error: 'Appointment not found' });
     }
@@ -80,7 +80,7 @@ export const create = async (req, res) => {
   try {
     const params = req.body;
     const dateTime = new Date(params.time);
-    const finalParams = {...params, time: dateTime};
+    const finalParams = { ...params, time: dateTime };
     const appointment = await Appointment.create(finalParams);
     console.log('email', appointment.email);
     await SendTextEmail(appointment.email, 'Your Booking has been Submitted', `Hi ${appointment.name}, your booking has been submitted. You will get an email soon when Attractions Salon has confirmed your appointment time.`);
@@ -89,20 +89,20 @@ export const create = async (req, res) => {
       await SendTextEmail(owner.email, 'A Booking has been Submitted', `Hi ${owner.name}, ${appointment.name} has submitted a booking request for review.`);
     }
 
-    if(!params.payInStore) {
-      const user = await User.findOne({email: params.email}).exec();
+    if (!params.payInStore) {
+      const user = await User.findOne({ email: params.email }).exec();
       const intent = await stripe.paymentIntents.create(
-          {
-            amount: params.amount,
-            currency: params.currency,
-            payment_method: params.method_id,
-            customer: user.customer_id,
-          });
+        {
+          amount: params.amount,
+          currency: params.currency,
+          payment_method: params.method_id,
+          customer: user.customer_id,
+        },
+      );
 
-      const appointmentNew = await Appointment.findByIdAndUpdate(appointment._id,{intent_id: intent.id});
+      const appointmentNew = await Appointment.findByIdAndUpdate(appointment._id, { intent_id: intent.id });
       res.status(200).type('json').send(appointmentNew);
-    }
-    else {
+    } else {
       res.status(200).type('json').send(appointment);
     }
   } catch (err) {

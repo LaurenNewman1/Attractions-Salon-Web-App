@@ -19,13 +19,13 @@ const router = (app) => {
   app.post('/api/login/reset', users.genForgetPassword);
   app.post('/api/users/password/:token', users.updatePassword);
 
-  //Card
-  app.post('/api/users/card/:someId',users.createCard); //Save to User
-  app.post('/api/card',users.createCard);               //Generate Card
-  app.get('/api/card/:cardId',users.getCard);    //One Card
-  app.get('/api/users/card/:someId',users.getCards);   //All Cards
-  app.delete('/api/users/card/:cardId',users.removeCard);
-  app.put('/api/users/card/:someId/:cardId',users.updateCard);
+  // Card
+  app.post('/api/users/card/:someId', users.createCard); // Save to User
+  app.post('/api/card', users.createCard); // Generate Card
+  app.get('/api/card/:cardId', users.getCard); // One Card
+  app.get('/api/users/card/:someId', users.getCards); // All Cards
+  app.delete('/api/users/card/:cardId', users.removeCard);
+  app.put('/api/users/card/:someId/:cardId', users.updateCard);
 
   // Service Routes
   app.post('/api/services', services.create);
