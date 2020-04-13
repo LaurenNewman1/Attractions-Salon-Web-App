@@ -38,7 +38,7 @@ describe('Review Controller', () => {
     });
 
     describe('POST /create', () => {
-        let service;
+        let review;
         beforeEach(async (done) => {
             await CleanUp();
             review = await MakeReview();
