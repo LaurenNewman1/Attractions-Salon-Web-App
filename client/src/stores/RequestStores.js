@@ -67,9 +67,9 @@ export default (unconformed = true) => {
     return allRequests[index];
   };
 
-  const confirm = async (index) => {
+  const confirm = async (index, confirmStatus = true) => {
     setLoading(true);
-    const confirmedReq = updateRequests(index, ['confirmed', true]);
+    const confirmedReq = updateRequests(index, ['confirmed', confirmStatus]);
     const success = requestApptUpdate(confirmedReq._id, confirmedReq);
     if (success) {
       const allRequests = [...requests];
@@ -93,12 +93,20 @@ export default (unconformed = true) => {
     return success;
   };
 
+  const getBookings = async () => {
+    const requestURL = unconformed ? '/api/appointments/status/false' : '/api/appointments/status/true';
+    const bookRequestFetch = await fetch(requestURL);
+    return bookRequestFetch.json();
+  };
+
+  const refreshBookings = async () => {
+    const bookRequestFetch = await getBookings();
+    setRequests(bookRequestFetch);
+  };
+
   useEffect(() => {
     const callRequests = async () => {
-      const requestURL = unconformed ? '/api/appointments/status/false' : '/api/appointments/status/true';
-      const bookRequestFetch = await fetch(requestURL)
-        .then((response) => response.json())
-        .then((data) => data);
+      const bookRequestFetch = await getBookings();
 
       const allSpecialists = await fetch('/api/users/roles/1')
         .then((response) => response.json())
@@ -116,5 +124,5 @@ export default (unconformed = true) => {
     }
   }, []);
 
-  return [requests, services, specialists, loading, updateRequests, confirm, deleteRequest];
+  return [requests, services, specialists, loading, updateRequests, confirm, deleteRequest, refreshBookings];
 };

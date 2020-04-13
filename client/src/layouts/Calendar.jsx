@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   TextField, Grid,
@@ -12,8 +12,14 @@ import DateFnsUtils from '@date-io/date-fns';
 import useStyles from '../css/CalendarStyles';
 import Loading from '../components/Loading';
 
-const Calendar = ({ booking, updateBooking, loading }) => {
+const Calendar = ({
+  booking, updateBooking, loading, compact, lazyStateUpdate,
+}) => {
   const classes = useStyles();
+
+  const [name, setName] = useState(booking.name);
+  const [email, setEmail] = useState(booking.email);
+  const [phoneNumber, setPhoneNumber] = useState(booking.phone_number);
 
   const disableWeekends = (date) => date.getDay() === 0
                                   || date.getDay() === 1
@@ -23,18 +29,29 @@ const Calendar = ({ booking, updateBooking, loading }) => {
     updateBooking(['time', dateTime.toISOString()]);
   };
 
+  const updateParent = () => {
+    updateBooking(['name', name], ['email', email], ['phone_number', phoneNumber]);
+  };
+
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       {loading ? <Loading /> : null}
-      <h2 className={classes.header}>Schedule your appointment!</h2>
+      {!compact ? <h2 className={classes.header}>Schedule your appointment!</h2> : null}
       <Grid container spacing={1}>
         <Grid item xs={12}>
           <TextField
             required
             label="Name"
             className={classes.textfield}
-            value={booking.name}
-            onChange={(event) => updateBooking(['name', event.target.value])}
+            onBlur={() => { if (lazyStateUpdate) updateParent(); }}
+            value={name}
+            onChange={(event) => {
+              setName(event.target.value);
+              if (lazyStateUpdate) {
+                return;
+              }
+              updateBooking(['name', event.target.value]);
+            }}
           />
         </Grid>
         <Grid item xs={12}>
@@ -42,8 +59,15 @@ const Calendar = ({ booking, updateBooking, loading }) => {
             required
             label="Email"
             className={classes.textfield}
-            value={booking.email}
-            onChange={(event) => updateBooking(['email', event.target.value])}
+            onBlur={() => { if (lazyStateUpdate) updateParent(); }}
+            value={email}
+            onChange={(event) => {
+              setEmail(event.target.value);
+              if (lazyStateUpdate) {
+                return;
+              }
+              updateBooking(['email', event.target.value]);
+            }}
           />
         </Grid>
         <Grid item xs={12}>
@@ -51,8 +75,15 @@ const Calendar = ({ booking, updateBooking, loading }) => {
             required
             label="Phone Number"
             className={classes.textfield}
-            value={booking.phone_number}
-            onChange={(event) => updateBooking(['phone_number', event.target.value])}
+            onBlur={() => { if (lazyStateUpdate) updateParent(); }}
+            value={phoneNumber}
+            onChange={(event) => {
+              setPhoneNumber(event.target.value);
+              if (lazyStateUpdate) {
+                return;
+              }
+              updateBooking(['phone_number', event.target.value]);
+            }}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -102,6 +133,13 @@ Calendar.propTypes = {
   }).isRequired,
   updateBooking: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
+  compact: PropTypes.bool,
+  lazyStateUpdate: PropTypes.bool,
+};
+
+Calendar.defaultProps = {
+  compact: false,
+  lazyStateUpdate: false,
 };
 
 export default Calendar;

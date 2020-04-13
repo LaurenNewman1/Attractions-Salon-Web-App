@@ -22,7 +22,6 @@ import useLogin from './stores/LoginStores';
 import Dashboard from './layouts/admin/Dashboard';
 import Users from './layouts/admin/Users';
 import AdminReviews from './layouts/admin/AdminReviews';
-import StaffDash from './layouts/admin/StaffDash';
 
 const App = () => {
   const [
@@ -95,14 +94,15 @@ const App = () => {
             <Route path="/confirmation/:id" component={Confirmation} />
 
             {/* Admin */}
-            <Route path="/admin/dashboard" component={Dashboard} />
+            <Route path="/admin/dashboard" component={() => <Dashboard userData={userData} />} />
             <Route path="/admin/requests" component={Requests} />
             <Route path="/admin/users" component={Users} />
             <Route path="/admin/reviews" component={AdminReviews} />
             <Route path="/admin/services" component={AdminServices} />
 
             {/* Staff */}
-            <Route path="/staff/dashboard" component={StaffDash} />
+            <Route path="/staff/dashboard" component={() => <Dashboard userData={userData} />} />
+
           </Switch>
         </Router>
       </ThemeProvider>
