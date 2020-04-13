@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import {
   ExpansionPanel, Select, FormControl,
   ExpansionPanelSummary, InputLabel,
@@ -22,7 +22,7 @@ const MenuProps = {
     },
   },
 };
-
+// -typing lag
 const EditUser = ({
   index, user, deleteUser, saveUser, updateUser, userGroup, userGroupName, open,
   expandChange, cancelChanges, subtypes,
@@ -34,16 +34,15 @@ const EditUser = ({
       onChange={expandChange(index, userGroupName)}
     >
       <ExpansionPanelSummary expandIcon={<ExpandMore />}>
-        {open.i === index && open.list === userGroupName
-          ? (
-            <TextField
-              onClick={(e) => e.stopPropagation()}
-              onChange={(e) => updateUser(userGroupName, index, ['name', e.target.value])}
-              value={user.name}
-              className={classes.heading}
-              style={{ border: '5px' }}
-            />
-          )
+        {open.i === index && open.list === userGroupName ? (
+          <TextField
+            onClick={(e) => e.stopPropagation()}
+            onChange={(e) => updateUser(userGroupName, index, ['name', e.target.value])}
+            value={user.name}
+            className={classes.heading}
+            style={{ border: '5px' }}
+          />
+        )
           : (
             <Typography>{user.name}</Typography>
           ) }
@@ -152,8 +151,8 @@ EditUser.propTypes = {
     password: PropTypes.string.isRequired,
     role: PropTypes.number.isRequired,
     specialties: PropTypes.array.isRequired,
-    title: PropTypes.string.isRequired,
-    bio: PropTypes.string.isRequired,
+    title: PropTypes.string,
+    bio: PropTypes.string,
   }).isRequired,
   deleteUser: PropTypes.func.isRequired,
   saveUser: PropTypes.func.isRequired,
@@ -169,8 +168,8 @@ EditUser.propTypes = {
   expandChange: PropTypes.func.isRequired,
   cancelChanges: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
-  subtypes: PropTypes.array.isRequired,
+  subtypes: PropTypes.array,
 };
 
 
-export default EditUser;
+export default memo(EditUser);

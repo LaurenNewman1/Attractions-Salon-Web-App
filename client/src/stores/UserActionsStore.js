@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 
 const requestDelete = async (_id) => {
   const res = await fetch(`/api/users/${_id}`, {
@@ -61,7 +61,7 @@ export default () => {
     email: '',
     phone_number: '',
     password: '',
-    role: '',
+    role: null,
     title: '',
     bio: '',
   });
@@ -108,17 +108,21 @@ export default () => {
         const allUsers = [...users];
         allUsers.push(rev);
         setUsers(allUsers);
+        updateNewUser(['name', ''], ['email', ''], ['phone_number', ''], ['password', ''], ['role', null], ['title', ''], ['bio', '']);
       } else if (newUser.role === 1) {
         const allUsers = [...users1];
         allUsers.push(rev);
         setUsers1(allUsers);
+        updateNewUser(['name', ''], ['email', ''], ['phone_number', ''], ['password', ''], ['role', null], ['title', ''], ['bio', '']);
       } else if (newUser.role === 2) {
         const allUsers = [...users2];
         allUsers.push(rev);
         setUsers2(allUsers);
+        updateNewUser(['name', ''], ['email', ''], ['phone_number', ''], ['password', ''], ['role', null], ['title', ''], ['bio', '']);
       }
+    } else {
+      updateNewUser(['name', newUser.name], ['email', newUser.email], ['phone_number', newUser.phone_number], ['password', newUser.password], ['role', newUser.role], ['title', newUser.title], ['bio', newUser.bio]);
     }
-    updateNewUser(['name', ''], ['email', ''], ['phone_number', ''], ['password', ''], ['role', 0], ['title', ''], ['bio', '']);
     setLoading(false);
     return success;
   };
@@ -199,7 +203,8 @@ export default () => {
     }
   };
 
-  useEffect(() => {
+  useMemo(() => {
+    console.log('render through store');
     const callUsers = async () => {
       const usersRequestFetch = async (type) => fetch(`/api/users/roles/${type}`)
         .then((response) => response.json())

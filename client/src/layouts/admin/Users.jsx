@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import {
   Typography,
 } from '@material-ui/core';
@@ -28,7 +28,7 @@ const Users = () => {
   const [userGroupName, setUserGroupName] = useState('');
   const [subtypes, setSubtypes] = useState([]);
 
-  const [users, users1, users2,, loading, updateUsers,
+  const [users, users1, users2, newUser, loading, updateUsers,
     updateNewUser, deleteUser, addUser, saveUser, services] = useUsers();
 
   useEffect(() => {
@@ -118,7 +118,7 @@ const Users = () => {
         >
           <div style={{ width: 40 }} />
           Users
-          <NewUser onClickAdd={onClickAdd} setAlert={setAlert} updateNewUser={updateNewUser} />
+          <NewUser onClickAdd={onClickAdd} newUser={newUser} setAlert={setAlert} updateNewUser={updateNewUser} />
         </h1>
       </div>
       <Typography variant="h4" className={classes.header}>Admins</Typography>
@@ -168,6 +168,7 @@ const Users = () => {
             saveUser={(id) => onClickSave(id)}
             updateUser={updateUsers}
             userGroup={users}
+            subtypes={subtypes}
             userGroupName="0"
             open={open}
             expandChange={(panel, list) => expandChange(panel, list)}
@@ -195,4 +196,4 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default memo(Users);
