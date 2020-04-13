@@ -50,9 +50,6 @@ export const SendForgetPassword = async (email, token, onlyProd = true) => {
   }
 };
 
-export const SendConfirmationEmail = async (userID, confirmToken) => {
-
-};
 
 // export const SendTextEmail = async (to, subject, text, onlyProd = false) => {
 //   if (process.env.NODE_ENV !== 'production' && onlyProd) return true;
@@ -76,7 +73,8 @@ export const SendConfirmationEmail = async (userID, confirmToken) => {
 //     return false;
 //   }
 // };
-export const SendTextEmail = async (to, from, name, notes, time, addons, onlyProd = false) => {
+// eslint-disable-next-line max-len
+export const SendTextEmail = async (to, from, name, notes, time, addons, tele, serviceName, serviceDescription, servicePrice, onlyProd = false) => {
   if (process.env.NODE_ENV !== 'production' && onlyProd) return true;
 
   console.log(onlyProd);
@@ -85,20 +83,26 @@ export const SendTextEmail = async (to, from, name, notes, time, addons, onlyPro
       {
         to: to,
         from: 'attractions-salon@attractionssalon.com',
-        subject: 'Your Booking has Been Requested',
+        subject: 'Attractions Salon Request Pending',
         html: '<h1 style="text-align:center;">Appointment Requested!</h1><br>' +
         '<p style="text-align:center">Attractions Salon will review your appointment and notify you</p>' +
         '<p style="text-align:center">when your appointment has been confirmed!</p><br>' +
         '<p style="text-align:center">Have any questions? Call us at (123)-456-7890.</p><br>' +
         '<h4 style="text-align:center">Your order details: </h4>' +
         '<p style="text-align:center">Name: ' 
-        + name + '</p>' 
-        + '<p style="text-align:center">Telephone number: ' 
-        + notes + '</p>' 
+        + name + '!</p>' 
+        + '<p style="text-align:center">Phone: ' 
+        + tele + '</p>' 
         + '<p style="text-align:center">Email: ' 
-        + time + '</p>' 
+        + to + '</p>' 
+        + '<p style="text-align:center">Service: '
+        + serviceName + '($' + servicePrice + ')' + '</p>'
+        + '<p style="text-align:center">Description: ' 
+        + serviceDescription + '</p>' 
         + '<p style="text-align:center">Addons: '
-        + addons.map((s) => s.name) + '</p>'
+        + addons.map((s) => `${s.name} ($${s.price})`).join(', ') + '</p>'
+        + '<p style="text-align:center">Total: $'
+        + addons.reduce((a, b) => a + b.price, servicePrice) + '</p>' 
         + '<br><p style="text-align:center">Check out our other services!</p><br>'
         + '<form style="text-align:center" action="https://www.google.com"><input style="background:pink; border:0 none; padding:5px 15px; cursor:pointer; border-radius:5px" type="submit" value="Services" /></form>'
       },
@@ -110,7 +114,7 @@ export const SendTextEmail = async (to, from, name, notes, time, addons, onlyPro
   }
 };
 
-export const SendRequestEmail = async (to, from, name, notes, time, addons, onlyProd = false) => {
+export const SendRequestEmail = async (to, from, name, notes, time, addons, tele, serviceName, servicePrice, serviceDescription, onlyProd = false) => {
   if (process.env.NODE_ENV !== 'production' && onlyProd) return true;
 
   console.log(onlyProd);
@@ -119,22 +123,24 @@ export const SendRequestEmail = async (to, from, name, notes, time, addons, only
       {
         to: to,
         from: 'attractions-salon@attractionssalon.com',
-        subject: 'Your Booking has Been Requested',
-        html: '<h1 style="text-align:center;">Appointment Pending Request!</h1><br>' +
-        '<p style="text-align:center">Attractions Salon will review your appointment and notify you</p>' +
-        '<p style="text-align:center">when your appointment has been confirmed!</p><br>' +
-        '<p style="text-align:center">Have any questions? Call us at (123)-456-7890.</p><br>' +
-        '<h4 style="text-align:center">Your order details: </h4>' +
+        subject: 'Attractions Salon Booking Request',
+        html: '<html><head><link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"></head><h1 style="text-align:center;">Appointment Request!</h1><br>' +
+        '<form style="text-align:center" action="https://attractions-salon.herokuapp.com/admin/requests"><input style="background:pink; border:0 none; padding:5px 15px; cursor:pointer; border-radius:5px" type="submit" value="Review Details" /></form>' +
+        '<h4 style="text-align:center">Order details: </h4>' +
         '<p style="text-align:center">Name: ' 
         + name + '</p>' 
         + '<p style="text-align:center">Telephone number: ' 
-        + notes + '</p>' 
+        + tele + '</p>' 
         + '<p style="text-align:center">Email: ' 
-        + time + '</p>' 
+        + to + '</p>' 
+        + '<p style="text-align:center">Service: '
+        + serviceName + '($' + servicePrice + ')' + '</p>'
+        + '<p style="text-align:center">Description: ' 
+        + serviceDescription + '</p>' 
         + '<p style="text-align:center">Addons: '
-        + addons.map((s) => s.name) + '</p>'
-        + '<br><p style="text-align:center">Check out our other services!</p><br>'
-        + '<form style="text-align:center" action="https://www.google.com"><input style="background:pink; border:0 none; padding:5px 15px; cursor:pointer; border-radius:5px" type="submit" value="Services" /></form>'
+        + addons.map((s) => `${s.name} ($${s.price})`).join(', ') + '</p>'
+        + '<p style="text-align:center">Total: $'
+        + addons.reduce((a, b) => a + b.price, servicePrice) + '</p>' 
       },
     );
     return true;
@@ -143,22 +149,43 @@ export const SendRequestEmail = async (to, from, name, notes, time, addons, only
     return false;
   }
 };
-// export const SendTextEmail = async (to, from, htmlInput, onlyProd = false) => {
-//   if (process.env.NODE_ENV !== 'production' && onlyProd) return true;
 
-//   console.log(onlyProd);
-//   try {
-//     await sgMail.send(
-//       {
-//         to: to,
-//         from: 'attractions-salon@attractionssalon.com',
-//         subject: 'Your Booking has Been Requested',
-//         html: htmlInput,
-//       },
-//     );
-//     return true;
-//   } catch (err) {
-//     logger.error(err.toString());
-//     return false;
-//   }
-// };
+export const SendConfirmationEmail = async (to, from, name, notes, time, addons, tele, serviceName, servicePrice, serviceDescription, onlyProd = false) => {
+  if (process.env.NODE_ENV !== 'production' && onlyProd) return true;
+
+  console.log(onlyProd);
+  try {
+    await sgMail.send(
+      {
+        to: to,
+        from: 'attractions-salon@attractionssalon.com',
+        subject: 'Attractions Salon Booking Confirmed',
+        html: '<html><head><link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"></head><h1 style="text-align:center;">Appointment Confirmed!</h1><br>' +
+        '<i class="material-icons md-36" style="color:green; vertical-align:middle; font-size:30px;">check</i>' +
+        '<div style="text-align:center; vertical-align:middle;">' +
+        '<i class="material-icons md-36" style="vertical-align:middle; color:green; background:white;">check</i></div>' +
+        '<p style="text-align:center">Thank you for choosing Attractions Salon, ' +
+        name + '</p>' +
+        '<h4 style="text-align:center">Your order details: </h4>' +
+        '<p style="text-align:center">Name: ' 
+        + name + '!</p>' 
+        + '<p style="text-align:center">Phone: ' 
+        + tele + '</p>' 
+        + '<p style="text-align:center">Email: ' 
+        + to + '</p>' 
+        + '<p style="text-align:center">Service: '
+        + serviceName + '($' + servicePrice + ')' + '</p>'
+        + '<p style="text-align:center">Addons: '
+        + addons.map((s) => `${s.name} ($${s.price})`).join(', ') + '</p>'
+        + '<p style="text-align:center">Total: $'
+        + addons.reduce((a, b) => a + b.price, servicePrice) + '</p>' 
+        + '<br><p style="text-align:center">Check out our other services!</p><br>'
+        + '<form style="text-align:center" action="https://www.google.com"><input style="background:pink; border:0 none; padding:5px 15px; cursor:pointer; border-radius:5px" type="submit" value="Services" /></form></div></html>'
+      },
+    );
+    return true;
+  } catch (err) {
+    logger.error(err.toString());
+    return false;
+  }
+};
