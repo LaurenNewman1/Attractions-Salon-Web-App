@@ -48,7 +48,7 @@ const NewPayment = ({
     const [successful, res] = await getCards(
       userData._id,
     );
-    console.log('The ID of the first credit card: ', res.data[0].id);
+    // console.log('The ID of the first credit card: ', res.data[0].id);
     if (successful) {
       console.log('getCards WORKED', res);
       setHasError(!successful);
@@ -65,7 +65,7 @@ const NewPayment = ({
     const [successful, res] = await getCards(
       userData._id,
     );
-    console.log('The ID of the first credit card: ', res.data[0].id);
+    // console.log('The ID of the first credit card: ', res.data[0].id);
 
     if (successful) {
       console.log('DHRUVVVVYYYYY', res);
@@ -75,18 +75,18 @@ const NewPayment = ({
       setErrorBody(res);
     }
 
-    const myCard = res.data[0];
-    // This is the individual card
-    const [success, response] = await getCard(
-      myCard.id,
-    );
-    if (success) {
-      console.log('DHRUVVVVYYYYY11111111111', response);
-      setHasError(!success);
-    } else {
-      console.log('BADDDDDDDD33333333333', response);
-      setErrorBody(response);
-    }
+    // const myCard = res.data[0];
+    // // This is the individual card
+    // const [success, response] = await getCard(
+    //   myCard.id,
+    // );
+    // if (success) {
+    //   console.log('DHRUVVVVYYYYY11111111111', response);
+    //   setHasError(!success);
+    // } else {
+    //   console.log('BADDDDDDDD33333333333', response);
+    //   setErrorBody(response);
+    // }
   };
 
   return (

@@ -8,7 +8,7 @@ import creditCardCircles from '../images/masterCardCircles.png';
 import Loading from '../components/Loading';
 
 const ConfirmPayment = ({
-  booking, loading, updateBooking, nextPage,
+  booking, loading, updateBooking, nextPage, creditCards
 }) => {
   const classes = useStyles();
 
@@ -17,10 +17,8 @@ const ConfirmPayment = ({
     nextPage();
   };
 
-  // The link needs to be changed to something that works, rn it does not work.
-  // it needs to go to the new Credit Card Page
-  // Maybe do something like book and change the page based off of some variable(state) being true
-
+  // I need to run through the credit cards object, which has the data array of all the credit cards
+  // That this person uses, and then I need to output accordingly
   return (
     <div className={classes.page}>
       {loading ? <Loading /> : null}
@@ -86,15 +84,10 @@ ConfirmPayment.propTypes = {
     notes: PropTypes.string,
     payInStore: PropTypes.bool,
   }).isRequired,
-  creditCard: PropTypes.shape({
-    name: PropTypes.string,
-    cardNumber: PropTypes.string,
-    expMonth: PropTypes.string,
-    expYear: PropTypes.string,
-    CVV: PropTypes.string,
-    zipCode: PropTypes.string,
-  }).isRequired,
   updateBooking: PropTypes.func.isRequired,
+  creditCards: PropTypes.shape({
+    data: PropTypes.array,
+  }).isRequired,
   nextPage: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
 };

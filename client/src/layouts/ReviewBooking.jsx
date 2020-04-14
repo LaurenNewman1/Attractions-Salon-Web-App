@@ -1,10 +1,10 @@
-import React from 'react';
 import moment from 'moment';
 import {
   Card, CardMedia, Grid, CardActionArea,
   Button, Typography, Divider,
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import hairIllustration from '../images/hairIllustration.png';
 import eye from '../images/eye.png';
@@ -18,8 +18,21 @@ const ReviewBooking = ({
 }) => {
   const classes = useStyles();
   const history = useHistory();
+  const currentService = services.find((x) => x._id === booking.service);
+  const [price, setPrice] = useState(0);
+  console.log(services);
+  console.log(booking.service);
+  console.log(booking.addons);
 
+  useEffect(() => {
+    let counter = currentService.price;
+    for (let i = 0; i < booking.addons.length; i += 1) {
+      counter += booking.addons[i].price;
+    }
+    setPrice(counter);
+  }, [services]);
 
+  console.log('The price is: ', price);
   const updateBookingRequest = async () => {
     const { specialist, ...restOfBooking } = booking;
     const requestBooking = !booking.specialist ? restOfBooking : booking;
@@ -47,7 +60,6 @@ const ReviewBooking = ({
     </div>
   );
 
-  const currentService = services.find((x) => x._id === booking.service);
 
   return (
     <>
@@ -112,15 +124,15 @@ const ReviewBooking = ({
       <div style={{ marginTop: 10 }}>
         <div className={classes.spacing}>
           <Typography variant="subtitle1" color="textSecondary">Subtotal:</Typography>
-          <Typography variant="subtitle1">$$$</Typography>
+          <Typography variant="subtitle1">${price}</Typography>
         </div>
         <div className={classes.spacing}>
           <Typography variant="subtitle1" color="textSecondary">Tax:</Typography>
-          <Typography variant="subtitle1">$$$</Typography>
+          <Typography variant="subtitle1">$0 FOR NOW</Typography>
         </div>
         <div className={classes.spacing}>
           <Typography variant="h5" color="textSecondary">Total:</Typography>
-          <Typography variant="h5">$$$</Typography>
+          <Typography variant="h5">${price}</Typography>
         </div>
       </div>
       <div className={classes.buttons}>

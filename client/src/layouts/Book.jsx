@@ -17,7 +17,9 @@ import ConfirmPayment from './ConfirmPayment';
 import ReviewBooking from './ReviewBooking';
 import useBooking from '../stores/BookStore';
 
-const Book = ({ userData, newCardToUser, getCards, getCard }) => {
+const Book = ({
+  userData, newCardToUser, getCards, getCard,
+}) => {
   const params = useParams();
   const [page, setPage] = useState(0);
   const [error, setError] = useState(false);
@@ -44,6 +46,8 @@ const Book = ({ userData, newCardToUser, getCards, getCard }) => {
     CVC: '',
     zipCode: '',
   });
+  const [CCFlag, setCCFlag] = useState(false);
+  const [creditCards, setCreditCards] = useState([]);
 
   const updateBooking = (...argus) => {
     const newFields = { ...booking };
@@ -53,6 +57,21 @@ const Book = ({ userData, newCardToUser, getCards, getCard }) => {
     });
     console.log(`Try: ${newFields.name} AND ${newFields.email} AND ${newFields.payInStore} AND ${newFields.phone_number}`);
     setBooking(newFields);
+  };
+
+  const checkCC = async () => {
+    const [successful, res] = await getCards(userData._id);
+    if (successful) {
+      if (res.data.length === 0) {
+        setCCFlag(false);
+      } else {
+        setCreditCards(res.data);
+        setCCFlag(true);
+      }
+      console.log('getCards WORKED', res);
+    } else {
+      console.log('BOOK PAGE BAD GET REQUEST', res);
+    }
   };
 
 
@@ -67,6 +86,7 @@ const Book = ({ userData, newCardToUser, getCards, getCard }) => {
   };
 
   const validateNext = () => {
+    checkCC();
     switch (page) {
       case 0:
         if (booking.service.length) {
@@ -76,8 +96,13 @@ const Book = ({ userData, newCardToUser, getCards, getCard }) => {
         }
         break;
       case 1:
+        console.log('The CCFLag is: ', CCFlag);
         if (booking.name && booking.email && booking.phone_number) {
-          setPage((prev) => prev + 1);
+          if (CCFlag) {
+            setPage((prev) => prev + 2);
+          } else {
+            setPage((prev) => prev + 1);
+          }
         } else {
           setError(true);
         }
@@ -140,6 +165,7 @@ const Book = ({ userData, newCardToUser, getCards, getCard }) => {
             loading={loading}
             nextPage={() => validateNext()}
             updateBooking={(...argus) => updateBooking(...argus)}
+            creditCards={creditCards}
           />
         );
       case 4:
@@ -205,6 +231,7 @@ Book.propTypes = {
   userData: PropTypes.shape({
     email: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
+    _id: PropTypes.string.isRequired,
     phone_number: PropTypes.string.isRequired,
   }).isRequired,
   newCardToUser: PropTypes.func.isRequired,
