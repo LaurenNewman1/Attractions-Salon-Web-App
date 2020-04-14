@@ -24,7 +24,7 @@ export const updatePassword = async (req, res) => {
   const { password } = req.body;
   const { token } = req.params;
   
-  const abilities = currentUserAbilities(req);
+  const abilities = await currentUserAbilities(req);
   if(abilities.can('reset_password', 'Self')) {
     const user = await User.findOne({ forget_password_id: token });
     if (user) {
