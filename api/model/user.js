@@ -21,6 +21,9 @@ const User = new Schema({
     type: Number,
     required: true,
   },
+  title: {
+    type: String,
+  },
   forget_password_id: {
     type: String,
   },

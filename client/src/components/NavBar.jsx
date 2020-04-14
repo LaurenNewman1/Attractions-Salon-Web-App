@@ -13,6 +13,7 @@ const userOptions = [
   { name: 'Home', route: '/' },
   { name: 'Book', route: '/book' },
   { name: 'Services', route: '/services' },
+  { name: 'About', route: '/about' },
   { name: 'Contact', route: '/contact' },
 ];
 
