@@ -7,7 +7,7 @@ import { SendTextEmail } from '../lib/mail';
 export const read = async (req, res) => {
   // Find Appointment from Database and return
   try {
-    const ability = currentUserAbilities(req);
+    const ability = await currentUserAbilities(req);
     if(ability.can('read', 'Appointment')) {
       const data = await Appointment.find(req.params).exec();
       if (!data || data.length == 0) {
@@ -26,7 +26,7 @@ export const read = async (req, res) => {
 export const readall = async (req, res) => {
   // Find All Appointments from Database and return
   try {
-    const ability = currentUserAbilities(req);
+    const ability = await currentUserAbilities(req);
     if(ability.can('read', 'Appointment')) {
       const data = await Appointment.find({});
       res.status(200).send(data);
