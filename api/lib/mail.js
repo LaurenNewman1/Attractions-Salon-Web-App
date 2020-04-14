@@ -95,6 +95,8 @@ export const SendTextEmail = async (to, from, name, notes, time, addons, tele, s
         + tele + '</p>' 
         + '<p style="text-align:center">Email: ' 
         + to + '</p>' 
+        + '<p style="text-align:center">Time: ' 
+        + time + '</p>' 
         + '<p style="text-align:center">Service: '
         + serviceName + '($' + servicePrice + ')' + '</p>'
         + '<p style="text-align:center">Description: ' 
@@ -103,6 +105,8 @@ export const SendTextEmail = async (to, from, name, notes, time, addons, tele, s
         + addons.map((s) => `${s.name} ($${s.price})`).join(', ') + '</p>'
         + '<p style="text-align:center">Total: $'
         + addons.reduce((a, b) => a + b.price, servicePrice) + '</p>' 
+        + '<p style="text-align:center">Notes: ' 
+        + notes + '</p>' 
         + '<br><p style="text-align:center">Check out our other services!</p><br>'
         + '<form style="text-align:center" action="https://www.google.com"><input style="background:pink; border:0 none; padding:5px 15px; cursor:pointer; border-radius:5px" type="submit" value="Services" /></form>'
       },
@@ -133,12 +137,16 @@ export const SendRequestEmail = async (to, from, name, notes, time, addons, tele
         + tele + '</p>' 
         + '<p style="text-align:center">Email: ' 
         + to + '</p>' 
+        + '<p style="text-align:center">Time: ' 
+        + time + '</p>' 
         + '<p style="text-align:center">Service: '
         + serviceName + '($' + servicePrice + ')' + '</p>'
         + '<p style="text-align:center">Description: ' 
         + serviceDescription + '</p>' 
         + '<p style="text-align:center">Addons: '
         + addons.map((s) => `${s.name} ($${s.price})`).join(', ') + '</p>'
+        + '<p style="text-align:center">Notes: ' 
+        + notes + '</p>' 
         + '<p style="text-align:center">Total: $'
         + addons.reduce((a, b) => a + b.price, servicePrice) + '</p>' 
       },
@@ -161,8 +169,6 @@ export const SendConfirmationEmail = async (to, from, name, notes, time, addons,
         from: 'attractions-salon@attractionssalon.com',
         subject: 'Attractions Salon Booking Confirmed',
         html: '<html><head><link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"></head><h1 style="text-align:center;">Appointment Confirmed!</h1><br>' +
-        '<div style="text-align:center; vertical-align:middle;">' +
-        '<i class="material-icons md-36" style="vertical-align:middle; color:green; background:white;">check</i></div>' +
         '<p style="text-align:center">Thank you for choosing Attractions Salon, ' +
         name + '</p>' +
         '<h4 style="text-align:center">Your order details: </h4>' +
@@ -172,12 +178,18 @@ export const SendConfirmationEmail = async (to, from, name, notes, time, addons,
         + tele + '</p>' 
         + '<p style="text-align:center">Email: ' 
         + to + '</p>' 
+        + '<p style="text-align:center">Time: ' 
+        + time + '</p>' 
         + '<p style="text-align:center">Service: '
         + serviceName + '($' + servicePrice + ')' + '</p>'
+        + '<p style="text-align:center">Description: ' 
+        + serviceDescription + '</p>' 
         + '<p style="text-align:center">Addons: '
         + addons.map((s) => `${s.name} ($${s.price})`).join(', ') + '</p>'
         + '<p style="text-align:center">Total: $'
         + addons.reduce((a, b) => a + b.price, servicePrice) + '</p>' 
+        + '<p style="text-align:center">Notes: ' 
+        + notes + '</p>' 
         + '<br><p style="text-align:center">Check out our other services!</p><br>'
         + '<form style="text-align:center" action="https://www.google.com"><input style="background:pink; border:0 none; padding:5px 15px; cursor:pointer; border-radius:5px" type="submit" value="Services" /></form></div></html>'
       },
