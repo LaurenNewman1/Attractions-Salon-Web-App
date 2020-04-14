@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import {
-  Typography,
+  Typography, Grid,
 } from '@material-ui/core';
 import Alert, { TYPE_SUCCESS, TYPE_ERROR } from '../../components/Alert';
 import Page from '../../components/Page';
@@ -12,6 +12,7 @@ import EditService from '../../components/EditService';
 import NewService from '../../components/NewService';
 import useServices from '../../stores/ServiceActionsStore';
 import Confirm from '../../components/Confirm';
+import Search from '../../components/Search';
 
 const serviceCategoryLUT = {
   'hair/cut': 'Hair Cuts',
@@ -39,6 +40,7 @@ const adminServices = () => {
     text: '',
   });
   const [deleteCandidate, setDeleteCandidate] = useState({});
+  const [filters, setFilters] = useState([]);
 
   const onClickAdd = async (service) => {
     const success = await addService(service);
@@ -105,38 +107,42 @@ const adminServices = () => {
 
   const serviceSection = (serviceTypes) => serviceTypes.map((key) => {
     const categoryServices = services[key];
-    return (
-      !categoryServices || !categoryServices.length ? null
-        : (
-          <div key={key}>
-            <Typography variant="h5" className={classes.header}>{serviceCategoryLUT[key]}</Typography>
-            {categoryServices.map((service, index) => (
-              <EditService
-                key={service._id}
-                service={service}
-                index={index}
-                deleteService={() => setDelete(service)}
-                deleteAddon={(serv, addonIndex) => onDeleteAddon(serv, addonIndex)}
-                changeService={(committedService) => onClickSave(committedService)}
-                updateService={(committedService) => modifyService(committedService)}
-                group={services}
-                asdf="services"
-                types={types}
-              />
-            ))}
-          </div>
-        )
-    );
+    if (!filters.length || filters.find((f) => f === serviceCategoryLUT[key])) {
+      return (
+        !categoryServices || !categoryServices.length ? null
+          : (
+            <div key={key} style={{ marginBottom: 40 }}>
+              <Typography variant="h5">
+                {serviceCategoryLUT[key]}
+              </Typography>
+              {categoryServices.map((service, index) => (
+                <EditService
+                  key={service._id}
+                  service={service}
+                  index={index}
+                  deleteService={() => setDelete(service)}
+                  deleteAddon={(serv, addonIndex) => onDeleteAddon(serv, addonIndex)}
+                  changeService={(committedService) => onClickSave(committedService)}
+                  updateService={(committedService) => modifyService(committedService)}
+                  group={services}
+                  asdf="services"
+                  types={types}
+                />
+              ))}
+            </div>
+          )
+      );
+    }
+    return null;
   });
   const serviceSections = serviceSection(Object.keys(serviceCategoryLUT));
 
   return (
-    <Page maxWidth="md">
+    <Page maxWidth="lg">
       {loading ? <Loading disableShrink /> : null}
-      <Typography
+      <h1
         className={classes.pageHead}
         align="center"
-        variant="h4"
         display="block"
         gutterBottom
       >
@@ -145,8 +151,19 @@ const adminServices = () => {
         <NewService
           onClickAdd={(service) => onClickAdd(service)}
         />
-      </Typography>
-      {serviceSections}
+      </h1>
+      <Grid container spacing={6} style={{ width: '100%', margin: 0 }}>
+        <Grid item xs={3}>
+          <Search
+            filterOptions={Object.keys(serviceCategoryLUT).map((key) => serviceCategoryLUT[key])}
+            filters={filters}
+            setFilters={(filts) => setFilters(filts)}
+          />
+        </Grid>
+        <Grid item xs={9}>
+          {serviceSections}
+        </Grid>
+      </Grid>
       {confirmDelete
         ? (
           <Confirm

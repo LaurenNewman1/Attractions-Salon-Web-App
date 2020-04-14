@@ -18,9 +18,6 @@ const useStyles = makeStyles((theme) => ({
     right: '35%',
     fontSize: '200px',
   },
-  header: {
-    marginTop: 40,
-  },
   heading: {
     fontSize: theme.typography.pxToRem(15),
     fontWeight: theme.typography.fontWeightRegular,
