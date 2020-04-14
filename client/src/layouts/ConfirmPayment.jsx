@@ -8,7 +8,7 @@ import creditCardCircles from '../images/masterCardCircles.png';
 import Loading from '../components/Loading';
 
 const ConfirmPayment = ({
-  booking, loading, updateBooking, nextPage, creditCards
+  booking, loading, updateBooking, nextPage, creditCards,
 }) => {
   const classes = useStyles();
 
@@ -23,26 +23,35 @@ const ConfirmPayment = ({
     <div className={classes.page}>
       {loading ? <Loading /> : null}
       <h2 className={classes.header}>Confirm Payment Method</h2>
-      <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-        <Paper className={classes.paper}>
-          <img src={creditCardCircles} alt="Circles" className={classes.circles} />
-          <Typography variant="h5">
-            ....&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            ....&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            ....&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            1234
-          </Typography>
-          <div className={classes.middleSpace} />
-          <div className={classes.spaceBetween}>
-            <Typography variant="subtitle1">Name</Typography>
-            <Typography variant="subtitle1">Exp</Typography>
-          </div>
-          <div className={classes.spaceBetween}>
-            <Typography variant="subtitle2">{booking.name}</Typography>
-            <Typography variant="subtitle2">01/01</Typography>
-          </div>
-        </Paper>
-      </div>
+      {creditCards.map(({ card }) => (
+        <div style={{
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          marginBottom: 18,
+        }}
+        >
+          <Paper className={classes.paper}>
+            <img src={creditCardCircles} alt="Circles" className={classes.circles} />
+            <Typography variant="h5">
+              ....&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              ....&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              ....&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              {card.last4}
+            </Typography>
+            <div className={classes.middleSpace} />
+            <div className={classes.spaceBetween}>
+              <Typography variant="subtitle1">Name</Typography>
+              <Typography variant="subtitle1">Exp</Typography>
+            </div>
+            <div className={classes.spaceBetween}>
+              <Typography variant="subtitle2">{booking.name}</Typography>
+              <Typography variant="subtitle2">{card.exp_month}/{card.exp_year}</Typography>
+            </div>
+          </Paper>
+        </div>
+      ))}
+
       <div className={classes.link}>
         <Button
           style={{ textDecoration: 'underline' }}
@@ -85,9 +94,13 @@ ConfirmPayment.propTypes = {
     payInStore: PropTypes.bool,
   }).isRequired,
   updateBooking: PropTypes.func.isRequired,
-  creditCards: PropTypes.shape({
-    data: PropTypes.array,
-  }).isRequired,
+  creditCards: PropTypes.arrayOf(PropTypes.shape({
+    last4: PropTypes.string,
+    card: PropTypes.shape({
+      exp_month: PropTypes.string,
+      exp_year: PropTypes.string,
+    }).isRequired,
+  })).isRequired,
   nextPage: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
 };
