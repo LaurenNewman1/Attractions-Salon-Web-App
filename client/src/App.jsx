@@ -22,7 +22,6 @@ import useLogin from './stores/LoginStores';
 import Dashboard from './layouts/admin/Dashboard';
 import Users from './layouts/admin/Users';
 import AdminReviews from './layouts/admin/AdminReviews';
-import StaffDash from './layouts/admin/StaffDash';
 import About from './layouts/About';
 
 const App = () => {

@@ -169,17 +169,17 @@ const Details = ({
               value={booking.specialist}
               onChange={(e) => updateBooking(['specialist', e.target.value])}
             >
-              {booking.service ? specialists.map((specialist) => {
+              {booking.service ? specialists.map((specialist) =>
                 // if (specialist.specialties.find((s) => s === getServiceDetails().type
                 //       || s === getServiceDetails().subtype)) {
-                  return (
-                    <MenuItem key={specialist._id} value={specialist._id}>
-                      {specialist.name}
-                    </MenuItem>
-                  );
+                (
+                  <MenuItem key={specialist._id} value={specialist._id}>
+                    {specialist.name}
+                  </MenuItem>
+                ),
                 // }
                 // return null;
-              }) : null}
+              ) : null}
             </Select>
           </FormControl>
         </Grid>
