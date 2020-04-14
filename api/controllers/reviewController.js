@@ -1,4 +1,8 @@
 import Review from "../model/review";
+import currentUserAbilities from '../helpers/ability';
+import GetLogger from '../config/logger';
+
+const logger = GetLogger('Review Controller');
 
 export const create = async (req, res) => {
     try {
@@ -16,6 +20,11 @@ export const create = async (req, res) => {
 };
 
 export const update = async (req, res) => {
+    const ability = await currentUserAbilities(req);
+    if(ability.cannot('update', 'Review')) {
+        res.status(403).type('json').send({ error: 'Access Denied' });
+        return;
+    }
     try {
         const params = req.body;
         let date;
@@ -36,6 +45,11 @@ export const update = async (req, res) => {
 };
 
 export const remove = async (req, res) => {
+    const ability = await currentUserAbilities(req);
+    if(ability.cannot('remove', 'Review')) {
+        res.status(403).type('json').send({ error: 'Access Denied' });
+        return;
+    }
     try {
         let data = await Review.deleteOne({ _id: req.params.someId });
         if (data.length === 0) {

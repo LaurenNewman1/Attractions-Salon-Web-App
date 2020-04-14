@@ -1,6 +1,7 @@
 import format from 'date-fns/format';
 import Appointment from '../model/appointment';
 import User from '../model/user';
+import currentUserAbilities, { userAbilities } from '../helpers/ability';
 import { SendTextEmail } from '../lib/mail';
 
 const stripe = require('stripe')(process.env.STRIPE_API_KEY);
@@ -8,11 +9,16 @@ const stripe = require('stripe')(process.env.STRIPE_API_KEY);
 export const read = async (req, res) => {
   // Find Appointment from Database and return
   try {
-    const data = await Appointment.find(req.params).exec();
-    if (!data || data.length == 0) {
-      res.status(404).type('json').send({ error: 'Appointments not found!' });
+    const ability = await currentUserAbilities(req);
+    if(ability.can('read', 'Appointment')) {
+      const data = await Appointment.find(req.params).exec();
+      if (!data || data.length == 0) {
+        res.status(404).type('json').send({ error: 'Appointments not found!' });
+      } else {
+        res.status(200).type('json').send(data);
+      }
     } else {
-      res.status(200).type('json').send(data);
+      res.status(403).type('json').send({ error: 'Access Denied' });
     }
   } catch (err) {
     res.status(400).type('json').send(err);
@@ -22,8 +28,13 @@ export const read = async (req, res) => {
 export const readall = async (req, res) => {
   // Find All Appointments from Database and return
   try {
-    const data = await Appointment.find({});
-    res.status(200).send(data);
+    const ability = await currentUserAbilities(req);
+    if(ability.can('read', 'Appointment')) {
+      const data = await Appointment.find({});
+      res.status(200).send(data);
+    } else {
+      res.status(403).type('json').send({ error: 'Access Denied' });
+    }
   } catch (err) {
     res.status(400).type('json').send(err);
   }
@@ -31,6 +42,12 @@ export const readall = async (req, res) => {
 
 export const remove = async (req, res) => {
   // Find Appointment from Database and remove
+  const ability = await currentUserAbilities(req);
+  if(ability.cannot('remove', 'Appointment')) {
+    res.status(403).type('json').send({ error: 'Access Denied' });
+    return;
+  }
+
   try {
     let data = await Appointment.deleteOne({ _id: req.params.someId });
     if (data.n !== 1) {
@@ -47,6 +64,12 @@ export const remove = async (req, res) => {
 
 
 export const update = async (req, res) => {
+  const ability = await currentUserAbilities(req);
+  if(ability.cannot('update', 'Appointment')) {
+    res.status(403).type('json').send({ error: 'Access Denied' });
+    return;
+  }
+
   try {
     const params = req.body;
     const dateTime = new Date(params.time);
