@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import {
   Typography,
 } from '@material-ui/core';
@@ -28,20 +28,16 @@ const Users = () => {
   const [userGroupName, setUserGroupName] = useState('');
   const [subtypes, setSubtypes] = useState([]);
 
-  const [users, users1, users2,, loading, updateUsers,
+  const [users, users1, users2, newUser, loading, updateUsers,
     updateNewUser, deleteUser, addUser, saveUser, services] = useUsers();
 
   useEffect(() => {
     const changeServicesToSubTypes = Object.keys(services).map((key) => services[key]);
     const merged = changeServicesToSubTypes.flat(1);
     setSubtypes(merged);
-    // console.log(changeServicesToSubTypes);
-    // setSubtypes(changeServicesToSubTypes);
-    // console.log(subtypes);
   }, [services]);
 
   const setDelete = (userGName, group, index) => {
-    console.log(userGName, group, index);
     setUserGroup(group);
     setUserGroupName(userGName);
     setConfirmDelete(index);
@@ -57,7 +53,6 @@ const Users = () => {
   };
 
   const onClickDelete = async (_id) => {
-    console.log(_id);
     setConfirmDelete(-1);
     setOpen({ i: -1, list: '' });
     const success = await deleteUser(userGroupName, _id);
@@ -80,7 +75,8 @@ const Users = () => {
 
   const cancelChanges = (index, groupName) => {
     updateUsers(groupName, index, ['name', viewing.name], ['email', viewing.email],
-      ['phone_number', viewing.phone_number], ['password', viewing.password], ['role', Number(viewing.role)]);
+      ['phone_number', viewing.phone_number], ['specialties', viewing.specialties], ['role', Number(viewing.role)],
+      ['title', viewing.title], ['bio', viewing.bio]);
     setOpen({ i: -1, list: '' });
   };
 
@@ -112,7 +108,7 @@ const Users = () => {
 
   return (
     <Page maxWidth="md">
-      {loading ? <Loading /> : null}
+      {loading ? <Loading disableShrink /> : null}
       <div style={{ paddingTop: 5 }}>
         <h1
           className={classes.pageHead}
@@ -122,7 +118,7 @@ const Users = () => {
         >
           <div style={{ width: 40 }} />
           Users
-          <NewUser onClickAdd={onClickAdd} setAlert={setAlert} updateNewUser={updateNewUser} />
+          <NewUser onClickAdd={onClickAdd} newUser={newUser} setAlert={setAlert} updateNewUser={updateNewUser} />
         </h1>
       </div>
       <Typography variant="h4" className={classes.header}>Admins</Typography>
@@ -172,6 +168,7 @@ const Users = () => {
             saveUser={(id) => onClickSave(id)}
             updateUser={updateUsers}
             userGroup={users}
+            subtypes={subtypes}
             userGroupName="0"
             open={open}
             expandChange={(panel, list) => expandChange(panel, list)}
@@ -199,4 +196,4 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default memo(Users);

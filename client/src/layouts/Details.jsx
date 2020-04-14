@@ -138,7 +138,13 @@ const Details = ({
               renderValue={(selected) => (
                 <div className={classes.chips}>
                   {selected.map((value) => (
-                    <Chip key={value.name} label={value.name} className={classes.chip} color="secondary" />
+                    <Chip
+                      key={value.name}
+                      label={value.name}
+                      className={classes.chip}
+                      size="small"
+                      color="secondary"
+                    />
                   ))}
                 </div>
               )}

@@ -37,6 +37,9 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexWrap: 'wrap',
   },
+  chip: {
+    marginRight: 2,
+  },
 }));
 
 export default useStyles;

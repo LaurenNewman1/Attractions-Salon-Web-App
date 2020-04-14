@@ -35,7 +35,7 @@ const useStyles = makeStyles(() => ({
     flexWrap: 'wrap',
   },
   chip: {
-    margin: 2,
+    marginRight: 2,
   },
 }));
 

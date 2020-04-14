@@ -133,7 +133,11 @@ export const create = async (req, res) => {
     const params = req.body;
     const hash = await argon2.hash(params.password);
     const customer = await stripe.customers.create();
-    const finalUser = { ...params, password: hash, role: 0, customer_id: customer.id};
+    const ability = await currentUserAbilities(req);
+    const isAdmin = ability.can('manage', 'User');
+    const finalUser = isAdmin
+      ? { ...params, password: hash, customer_id: customer.id }
+      : { ...params, password: hash, role: 0, customer_id: customer.id };
     const user = await User.create(finalUser);
     res.status(200).type('json').send(user);
   } catch (err) {
