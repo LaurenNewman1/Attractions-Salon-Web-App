@@ -87,7 +87,6 @@ export const remove = async (req, res) => {
   }
   
   try {
-    const ability = await currentUserAbilities(req);
     let data = await User.deleteOne({ _id: req.params.someId });
     if (data.n !== 1) {
       data = { error: 'User not found!' };
