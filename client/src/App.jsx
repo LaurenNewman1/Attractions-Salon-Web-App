@@ -37,6 +37,8 @@ const App = () => {
   ] = useLogin();
   const [
     newCardToUser,
+    getCards,
+    getCard,
   ] = useCreditCard();
   const [fromBookPage, setFromBookPage] = useState(false);
   console.log(`Logged In: ${loggedIn}`);
@@ -78,8 +80,8 @@ const App = () => {
           />
           <Switch>
             <Route exact path="/" component={() => <Home loggedIn={loggedIn} setFromBookPage={setFromBookPage} />} />
-            <Route path="/book/:id" component={() => <Book userData={userData} newCardToUser={newCardToUser} />} />
-            <Route path="/book/" component={() => <Book userData={userData} />} />
+            <Route path="/book/:id" component={() => <Book userData={userData} />} />
+            <Route path="/book/" component={() => <Book userData={userData} newCardToUser={newCardToUser} getCards={getCards} getCard={getCard} />} />
             <Route path="/services" component={Services} />
             <Route path="/contact" component={Contact} />
             <Route path="/login" component={() => <Login login={login} fromBookPage={fromBookPage} resetPassword={requestResetPassword} />} />

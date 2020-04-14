@@ -15,18 +15,78 @@ import Loading from '../components/Loading';
 // You need to do payLater and take a look at the update functions as well as expiration date
 
 const NewPayment = ({
-  booking, updateBooking, updateCreditCard, loading, nextPage,
+  booking, updateBooking, updateCreditCard, loading, nextPage, userData, newCardToUser, creditCard, getCards, getCard,
 }) => {
   const classes = useStyles();
   const [checked, setChecked] = useState(false);
+  const [errorBody, setErrorBody] = useState({});
+  const [hasError, setHasError] = useState(false);
 
-  const rememberCard = (event) => {
+  console.log(userData);
+  console.log(creditCard);
+  const rememberCard = async (event) => {
     setChecked(event.target.checked);
+    const [successful, res] = await newCardToUser(
+      userData._id,
+      creditCard.cardNumber,
+      creditCard.expMonth,
+      creditCard.expYear,
+      creditCard.CVC,
+    );
+    if (successful) {
+      console.log(res);
+      setHasError(!successful);
+    } else {
+      console.log('BADDDDDDDD', res);
+      setErrorBody(res);
+    }
   };
 
-  const payInStore = () => {
+  const errorHelpingText = hasError ? errorBody.error : '';
+
+  const payInStore = async () => {
+    const [successful, res] = await getCards(
+      userData._id,
+    );
+    console.log('The ID of the first credit card: ', res.data[0].id);
+    if (successful) {
+      console.log('getCards WORKED', res);
+      setHasError(!successful);
+    } else {
+      console.log('BADDDDDDDD2222222', res);
+      setErrorBody(res);
+    }
     updateBooking(['payInStore', !booking.payInStore]);
     nextPage();
+  };
+
+  const getCardRequest = async () => {
+    // This returns the array of cards
+    const [successful, res] = await getCards(
+      userData._id,
+    );
+    console.log('The ID of the first credit card: ', res.data[0].id);
+
+    if (successful) {
+      console.log('DHRUVVVVYYYYY', res);
+      setHasError(!successful);
+    } else {
+      console.log('BADDDDDDDD2222222', res);
+      setErrorBody(res);
+    }
+
+    const myCard = res.data[0];
+    // This is the individual card
+    const [success, response] = await getCard(
+      myCard.id,
+    );
+    if (success) {
+      console.log('DHRUVVVVYYYYY11111111111', response);
+      setHasError(!success);
+    } else {
+      console.log('BADDDDDDDD33333333333', response);
+      setErrorBody(response);
+    }
   };
 
   return (
@@ -51,24 +111,49 @@ const NewPayment = ({
           />
         </Grid>
         <Grid item xs={12} sm={4}>
-          <KeyboardDatePicker
+          {/* <KeyboardDatePicker
             fullWidth
             style={{ paddingBottom: 6 }}
             margin="normal"
             label="Date"
             format="MM/dd/yyyy"
             onChange={(date) => updateCreditCard(['exp', date])}
+          /> */}
+          <TextField
+            fullWidth
+            type="expMonth"
+            label="Exp Month"
+            helperText="MM"
+            onChange={(event) => updateCreditCard(['expMonth', event.target.value])}
+          />
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          {/* <KeyboardDatePicker
+            fullWidth
+            style={{ paddingBottom: 6 }}
+            margin="normal"
+            label="Date"
+            format="MM/dd/yyyy"
+            onChange={(date) => updateCreditCard(['exp', date])}
+          /> */}
+          <TextField
+            fullWidth
+            type="expYear"
+            label="Exp Year"
+            helperText="YYYY"
+            onChange={(event) => updateCreditCard(['expYear', event.target.value])}
           />
         </Grid>
         <Grid item xs={12} sm={4}>
           <TextField
             fullWidth
-            type="CVV"
-            label="CVV"
-            onChange={(event) => updateCreditCard(['CVV', event.target.value])}
+            type="CVC"
+            label="CVC"
+            helperText="###"
+            onChange={(event) => updateCreditCard(['CVC', event.target.value])}
           />
         </Grid>
-        <Grid item xs={12} sm={4}>
+        {/* <Grid item xs={12} sm={4}>
           <TextField
             fullWidth
             type="Zip Code"
@@ -76,7 +161,7 @@ const NewPayment = ({
             onChange={(event) => updateCreditCard(['zipCode', event.target.value])}
 
           />
-        </Grid>
+        </Grid> */}
         <Grid item xs={12} className={classes.center}>
           <FormControlLabel
             control={(
@@ -102,7 +187,16 @@ const NewPayment = ({
             color="primary"
             onClick={() => payInStore()}
           >
-            Pay In Store
+            Pay In Store // Testing getCards
+          </Button>
+        </Grid>
+        <Grid xs={12} className={classes.button}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => getCardRequest()}
+          >
+            Get Card TESTER
           </Button>
         </Grid>
       </Grid>
@@ -114,11 +208,15 @@ NewPayment.propTypes = {
   creditCard: PropTypes.shape({
     name: PropTypes.string,
     cardNumber: PropTypes.string,
-    exp: PropTypes.string,
-    CVV: PropTypes.string,
+    expMonth: PropTypes.string,
+    expYear: PropTypes.string,
+    CVC: PropTypes.string,
     zipCode: PropTypes.string,
   }).isRequired,
   updateCreditCard: PropTypes.func.isRequired,
+  newCardToUser: PropTypes.func.isRequired,
+  getCards: PropTypes.func.isRequired,
+  getCard: PropTypes.func.isRequired,
   updateBooking: PropTypes.func.isRequired,
   booking: PropTypes.shape({
     name: PropTypes.string,
@@ -135,6 +233,13 @@ NewPayment.propTypes = {
   }).isRequired,
   loading: PropTypes.bool.isRequired,
   nextPage: PropTypes.func.isRequired,
+  userData: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    email: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    phone_number: PropTypes.string.isRequired,
+  }).isRequired,
+
 };
 
 export default NewPayment;

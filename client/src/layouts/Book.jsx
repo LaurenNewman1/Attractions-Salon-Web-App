@@ -17,7 +17,7 @@ import ConfirmPayment from './ConfirmPayment';
 import ReviewBooking from './ReviewBooking';
 import useBooking from '../stores/BookStore';
 
-const Book = ({ userData, newCardToUser }) => {
+const Book = ({ userData, newCardToUser, getCards, getCard }) => {
   const params = useParams();
   const [page, setPage] = useState(0);
   const [error, setError] = useState(false);
@@ -41,7 +41,7 @@ const Book = ({ userData, newCardToUser }) => {
     cardNumber: '',
     expMonth: '',
     expYear: '',
-    CVV: '',
+    CVC: '',
     zipCode: '',
   });
 
@@ -127,6 +127,10 @@ const Book = ({ userData, newCardToUser }) => {
             booking={booking}
             updateBooking={(...argus) => updateBooking(...argus)}
             newCardToUser={newCardToUser}
+            getCards={getCards}
+            getCard={getCard}
+            userData={userData}
+            creditCard={creditCard}
           />
         );
       case 3:
@@ -203,11 +207,9 @@ Book.propTypes = {
     name: PropTypes.string.isRequired,
     phone_number: PropTypes.string.isRequired,
   }).isRequired,
-  // newCardToUser: PropTypes.shape({
-  //   email: PropTypes.string.isRequired,
-  //   name: PropTypes.string.isRequired,
-  //   phone_number: PropTypes.string.isRequired,
-  // }).isRequired,
+  newCardToUser: PropTypes.func.isRequired,
+  getCards: PropTypes.func.isRequired,
+  getCard: PropTypes.func.isRequired,
 };
 
 

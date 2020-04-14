@@ -23,7 +23,7 @@ const router = (app) => {
   app.post('/api/users/card/:someId', users.createCard); // Save to User
   app.post('/api/card', users.createCard); // Generate Card
   app.get('/api/card/:cardId', users.getCard); // One Card
-  app.get('/api/users/card/:someId', users.getCards); // All Cards
+  app.get('/api/users/card/:someId', users.getCards); // All Cards // Do this one first
   app.delete('/api/users/card/:cardId', users.removeCard);
   app.put('/api/users/card/:someId/:cardId', users.updateCard);
 
