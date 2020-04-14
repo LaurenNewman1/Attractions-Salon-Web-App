@@ -55,7 +55,7 @@ export const update = async (req, res) => {
 
     if (appointment) {
       if (updateParams.confirmed) {
-        await SendConfirmationEmail(appointment.email, appointment.email, appointment.name, appointment.notes,
+        await SendConfirmationEmail(appointment.email, 'attractions-salon@attractionssalon.com', appointment.name, appointment.notes,
           appointment.timeOrdered, appointment.addons, appointment.phone_number, serviceData[0].name, serviceData[0].price, serviceData[0].description);
       }
       res.status(200).type('json').send(appointment);
@@ -81,13 +81,11 @@ export const create = async (req, res) => {
     // await SendTextEmail(appointment.email, 'Your Booking has been Submitted', `Appointment Requested!!!!! \n \n \n \n Hi ${appointment.name}, Attractions Salon will review your appointment
     // and notify you when your appointment has been confirmed. Have any questions? Call us at (012)-345-6789. Time Requested: ${appointment.time}
     // Service: ${appointment.service.name} Specialist: ${appointment.specialist.name} Notes: ${appointment.notes}`);
-    await SendTextEmail(appointment.email, appointment.email, appointment.name, appointment.notes, appointment.timeOrdered, appointment.addons, appointment.phone_number, serviceData[0].name, serviceData[0].description, serviceData[0].price);
-    await SendRequestEmail(appointment.email, appointment.email, appointment.name, appointment.notes,
-      appointment.timeOrdered, appointment.addons, appointment.phone_number, serviceData[0].name, serviceData[0].price, serviceData[0].description);
+    await SendTextEmail(appointment.email, 'attractions-salon@attractionssalon.com', appointment.name, appointment.notes, appointment.timeOrdered, appointment.addons, appointment.phone_number, serviceData[0].name, serviceData[0].description, serviceData[0].price);
     const owner = await User.findOne({ role: 2 }).exec();
     if (owner) {
-      await SendRequestEmail('ocvrsbytolmqsrdsgi@ttirv.net', appointment.email, appointment.name, appointment.notes,
-        appointment.timeOrdered, appointment.addons, appointment.phone_number, serviceData[0].name, serviceData[0].price);
+      await SendRequestEmail(owner.email, 'attractions-salon@attractionssalon.com', appointment.name, appointment.notes,
+        appointment.timeOrdered, appointment.addons, appointment.phone_number, serviceData[0].name, serviceData[0].price, serviceData[0].description);
       // await SendRequestEmail(owner.email, 'A Booking has been Submitted', `Hi ${owner.name}, ${appointment.name} has submitted a booking request for review.`);
     }
     res.status(200).type('json').send(appointment);

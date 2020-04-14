@@ -90,7 +90,7 @@ export const SendTextEmail = async (to, from, name, notes, time, addons, tele, s
         '<p style="text-align:center">Have any questions? Call us at (123)-456-7890.</p><br>' +
         '<h4 style="text-align:center">Your order details: </h4>' +
         '<p style="text-align:center">Name: ' 
-        + name + '!</p>' 
+        + name + '</p>' 
         + '<p style="text-align:center">Phone: ' 
         + tele + '</p>' 
         + '<p style="text-align:center">Email: ' 
@@ -161,14 +161,13 @@ export const SendConfirmationEmail = async (to, from, name, notes, time, addons,
         from: 'attractions-salon@attractionssalon.com',
         subject: 'Attractions Salon Booking Confirmed',
         html: '<html><head><link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"></head><h1 style="text-align:center;">Appointment Confirmed!</h1><br>' +
-        '<i class="material-icons md-36" style="color:green; vertical-align:middle; font-size:30px;">check</i>' +
         '<div style="text-align:center; vertical-align:middle;">' +
         '<i class="material-icons md-36" style="vertical-align:middle; color:green; background:white;">check</i></div>' +
         '<p style="text-align:center">Thank you for choosing Attractions Salon, ' +
         name + '</p>' +
         '<h4 style="text-align:center">Your order details: </h4>' +
         '<p style="text-align:center">Name: ' 
-        + name + '!</p>' 
+        + name + '</p>' 
         + '<p style="text-align:center">Phone: ' 
         + tele + '</p>' 
         + '<p style="text-align:center">Email: ' 
