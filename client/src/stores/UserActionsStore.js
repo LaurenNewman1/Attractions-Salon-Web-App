@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 
 const requestDelete = async (_id) => {
   const res = await fetch(`/api/users/${_id}`, {
@@ -14,8 +14,7 @@ const requestDelete = async (_id) => {
 };
 
 // eslint-disable-next-line camelcase
-const requestAdd = async (name, email, phone_number, password, role, title, bio) => {
-  console.log('role on add', role);
+const requestAdd = async (newUser) => {
   const res = await fetch('/api/users',
     {
       method: 'POST',
@@ -26,9 +25,7 @@ const requestAdd = async (name, email, phone_number, password, role, title, bio)
       },
       redirect: 'follow', // manual, *follow, error
       referrerPolicy: 'no-referrer', // no-referrer, *client
-      body: JSON.stringify({
-        name, email, phone_number, password, role, title, bio,
-      }),
+      body: JSON.stringify(newUser),
     });
 
   return [res.status === 200, await res.json()];
@@ -61,7 +58,7 @@ export default () => {
     email: '',
     phone_number: '',
     password: '',
-    role: null,
+    role: -1,
     title: '',
     bio: '',
   });
@@ -94,34 +91,40 @@ export default () => {
         setUsers2(allUsers);
       }
     }
-    updateNewUser(['name', ''], ['email', ''], ['phone_number', ''], ['password', ''], ['role', 0], ['title', ''], ['bio', '']);
+    updateNewUser(['name', ''], ['email', ''], ['phone_number', ''], ['password', ''], ['role', -1],
+      ['title', ''], ['bio', '']);
     setLoading(false);
     return success;
   };
 
   const addUser = async () => {
     setLoading(true);
-    const [success, rev] = await requestAdd(newUser.name, newUser.email, newUser.phone_number, newUser.password, newUser.role, newUser.title, newUser.bio);
-    console.log('newuser role', newUser.role);
+    const { title, bio, ...restOfUser } = newUser;
+    const request = newUser.role > 0 ? newUser : restOfUser;
+    const [success, res] = await requestAdd(request);
     if (success) {
       if (newUser.role === 0) {
         const allUsers = [...users];
-        allUsers.push(rev);
+        allUsers.push(res);
         setUsers(allUsers);
-        updateNewUser(['name', ''], ['email', ''], ['phone_number', ''], ['password', ''], ['role', null], ['title', ''], ['bio', '']);
+        updateNewUser(['name', ''], ['email', ''], ['phone_number', ''], ['password', ''],
+          ['role', -1], ['title', ''], ['bio', '']);
       } else if (newUser.role === 1) {
         const allUsers = [...users1];
-        allUsers.push(rev);
+        allUsers.push(res);
         setUsers1(allUsers);
-        updateNewUser(['name', ''], ['email', ''], ['phone_number', ''], ['password', ''], ['role', null], ['title', ''], ['bio', '']);
+        updateNewUser(['name', ''], ['email', ''], ['phone_number', ''], ['password', ''],
+          ['role', -1], ['title', ''], ['bio', '']);
       } else if (newUser.role === 2) {
         const allUsers = [...users2];
-        allUsers.push(rev);
+        allUsers.push(res);
         setUsers2(allUsers);
-        updateNewUser(['name', ''], ['email', ''], ['phone_number', ''], ['password', ''], ['role', null], ['title', ''], ['bio', '']);
+        updateNewUser(['name', ''], ['email', ''], ['phone_number', ''], ['password', ''],
+          ['role', -1], ['title', ''], ['bio', '']);
       }
     } else {
-      updateNewUser(['name', newUser.name], ['email', newUser.email], ['phone_number', newUser.phone_number], ['password', newUser.password], ['role', newUser.role], ['title', newUser.title], ['bio', newUser.bio]);
+      updateNewUser(['name', newUser.name], ['email', newUser.email], ['phone_number', newUser.phone_number],
+        ['password', newUser.password], ['role', newUser.role], ['title', newUser.title], ['bio', newUser.bio]);
     }
     setLoading(false);
     return success;

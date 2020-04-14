@@ -22,14 +22,18 @@ const MenuProps = {
 const NewUser = ({ onClickAdd, updateNewUser, newUser }) => {
   const [open, setOpen] = useState(false);
 
-  const addAddon = async () => {
-    if (newUser.role === '' || newUser.name === '' || newUser.password === '' || newUser.email === '' || newUser.phone_number === '') {
-      onClickAdd();
-      setOpen(true);
-    } else {
+  const addUser = async () => {
+    if (newUser.role >= 0 || newUser.name !== '' || newUser.password !== ''
+      || newUser.email !== '' || newUser.phone_number !== '') {
       setOpen(false);
       onClickAdd();
     }
+  };
+
+  const cancelNewUser = () => {
+    setOpen(false);
+    updateNewUser(['name', ''], ['email', ''], ['phone_number', ''], ['password', ''],
+      ['role', -1], ['title', ''], ['bio', '']);
   };
 
   return (
@@ -44,7 +48,6 @@ const NewUser = ({ onClickAdd, updateNewUser, newUser }) => {
                 onChange={(e) => updateNewUser(['name', e.target.value])}
                 label="Name"
                 style={{ width: '100%' }}
-                error={newUser.name === ''}
                 required
               />
             </Grid>
@@ -53,7 +56,6 @@ const NewUser = ({ onClickAdd, updateNewUser, newUser }) => {
                 onChange={(e) => updateNewUser(['email', e.target.value])}
                 label="Email"
                 style={{ width: '100%' }}
-                error={newUser.email === ''}
                 required
               />
             </Grid>
@@ -62,7 +64,6 @@ const NewUser = ({ onClickAdd, updateNewUser, newUser }) => {
                 onChange={(e) => updateNewUser(['phone_number', e.target.value])}
                 label="Phone Number"
                 style={{ width: '100%' }}
-                error={newUser.phone_number === ''}
                 required
               />
             </Grid>
@@ -71,14 +72,12 @@ const NewUser = ({ onClickAdd, updateNewUser, newUser }) => {
                 onChange={(e) => updateNewUser(['password', e.target.value])}
                 label="Password"
                 style={{ width: '100%' }}
-                error={newUser.password === ''}
                 required
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl
                 style={{ width: '100% ' }}
-                error={newUser.role === null}
                 required
               >
                 <InputLabel>Role</InputLabel>
@@ -86,7 +85,6 @@ const NewUser = ({ onClickAdd, updateNewUser, newUser }) => {
                   defaultValue=""
                   onChange={(e) => updateNewUser(['role', e.target.value])}
                   MenuProps={MenuProps}
-                  error={newUser.email === null}
                   required
                 >
                   <MenuItem value={2}>Admin</MenuItem>
@@ -95,7 +93,7 @@ const NewUser = ({ onClickAdd, updateNewUser, newUser }) => {
                 </Select>
               </FormControl>
             </Grid>
-            {newUser.role !== 0 && newUser.role !== null
+            {newUser.role >= 1
               ? (
                 <>
                   <Grid item xs={12} sm={6}>
@@ -105,7 +103,7 @@ const NewUser = ({ onClickAdd, updateNewUser, newUser }) => {
                       style={{ width: '100%' }}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid item xs={12}>
                     <TextField
                       onChange={(e) => updateNewUser(['bio', e.target.value])}
                       label="Bio"
@@ -117,8 +115,8 @@ const NewUser = ({ onClickAdd, updateNewUser, newUser }) => {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpen(false)}>Cancel</Button>
-          <Button onClick={() => addAddon()} color="primary" variant="contained">Save</Button>
+          <Button onClick={() => cancelNewUser()}>Cancel</Button>
+          <Button onClick={() => addUser()} color="primary" variant="contained">Save</Button>
         </DialogActions>
       </Dialog>
     </>
@@ -127,6 +125,12 @@ const NewUser = ({ onClickAdd, updateNewUser, newUser }) => {
 NewUser.propTypes = {
   onClickAdd: PropTypes.func.isRequired,
   updateNewUser: PropTypes.func.isRequired,
-  newUser: PropTypes.object.isRequired,
+  newUser: PropTypes.shape({
+    name: PropTypes.string,
+    phone_number: PropTypes.string,
+    role: PropTypes.number,
+    email: PropTypes.string,
+    password: PropTypes.string,
+  }).isRequired,
 };
 export default memo(NewUser);
