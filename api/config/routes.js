@@ -12,11 +12,20 @@ const router = (app) => {
   // User Routes
   app.get('/api/users', users.read);
   app.get('/api/users/roles/:role', users.readByRole);
+  app.get('/api/users/roles/:email', users.readByRole);
   app.delete('/api/users/:someId', users.remove);
   app.put('/api/users/:someId', users.update);
   app.post('/api/users', users.create);
   app.post('/api/login/reset', users.genForgetPassword);
   app.post('/api/users/password/:token', users.updatePassword);
+
+  //Card
+  app.post('/api/users/card/:someId',users.createCard); //Save to User
+  app.post('/api/card',users.createCard);               //Generate Card
+  app.get('/api/card/:cardId',users.getCard);    //One Card
+  app.get('/api/users/card/:someId',users.getCards);   //All Cards
+  app.delete('/api/users/card/:cardId',users.removeCard);
+  app.put('/api/users/card/:someId/:cardId',users.updateCard);
 
   // Service Routes
   app.post('/api/services', services.create);
