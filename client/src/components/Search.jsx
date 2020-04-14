@@ -13,8 +13,16 @@ const useStyles = makeStyles(() => ({
 }));
 
 
-const Search = ({ filterOptions, filters, setFilters }) => {
+const Search = ({
+  filterOptions, filters, setFilters, setSearchText,
+}) => {
   const classes = useStyles();
+  // const [aTimeout, setATimeout] = useState(null);
+
+  // const onChangeSearch = (text) => {
+  //   clearTimeout();
+  //   setTimeout(setSearchText(text), 1000000);
+  // };
 
   const changeFilters = (filter) => {
     const allFilters = [...filters];
@@ -26,15 +34,27 @@ const Search = ({ filterOptions, filters, setFilters }) => {
     }
     setFilters(allFilters);
   };
+  // const searchElement = document.getElementById('search');
+  // if (searchElement) {
+  //   searchElement.addEventListener('keyup', (e) => {
+  //     clearTimeout(aTimeout);
+  //     const time = setTimeout(() => {
+  //       setSearchText(e.target.value);
+  //     }, 1000);
+  //     setATimeout(time);
+  //   });
+  // }
 
   return (
     <div>
       <FormControl style={{ marginBottom: 30 }}>
         <Input
+          id="search"
           placeholder="Search"
+          onChange={(e) => setSearchText(e.target.value)}
           startAdornment={(
             <InputAdornment position="start">
-              <SearchIcon />
+              <SearchIcon color="inherit" />
             </InputAdornment>
           )}
         />
@@ -43,6 +63,7 @@ const Search = ({ filterOptions, filters, setFilters }) => {
       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
         {filterOptions.map((filter) => (
           <Chip
+            key={filter}
             color={filters.find((f) => f === filter) ? 'secondary' : 'default'}
             label={filter}
             className={classes.chip}
@@ -57,9 +78,10 @@ const Search = ({ filterOptions, filters, setFilters }) => {
 export default Search;
 
 Search.propTypes = {
-  filterOptions: PropTypes.shape([]),
-  filters: PropTypes.shape([]),
+  filterOptions: PropTypes.arrayOf(PropTypes.string),
+  filters: PropTypes.arrayOf(PropTypes.string),
   setFilters: PropTypes.func,
+  setSearchText: PropTypes.func.isRequired,
 };
 
 Search.defaultProps = {

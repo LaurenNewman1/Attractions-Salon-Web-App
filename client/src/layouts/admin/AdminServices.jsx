@@ -41,6 +41,19 @@ const adminServices = () => {
   });
   const [deleteCandidate, setDeleteCandidate] = useState({});
   const [filters, setFilters] = useState([]);
+  const [searchText, setSearchText] = useState('');
+
+  const doDisplay = (service) => {
+    const {
+      name, type, subtype, price, time, description,
+    } = service;
+    if (name.includes(searchText) || type.includes(searchText)
+      || (subtype && subtype.includes(searchText)) || (price && price.toString().includes(searchText))
+      || (time && time.toString().includes(searchText)) || description.includes(searchText)) {
+      return true;
+    }
+    return false;
+  };
 
   const onClickAdd = async (service) => {
     const success = await addService(service);
@@ -115,7 +128,7 @@ const adminServices = () => {
               <Typography variant="h5">
                 {serviceCategoryLUT[key]}
               </Typography>
-              {categoryServices.map((service, index) => (
+              {categoryServices.map((service, index) => (doDisplay(service) ? (
                 <EditService
                   key={service._id}
                   service={service}
@@ -128,7 +141,7 @@ const adminServices = () => {
                   asdf="services"
                   types={types}
                 />
-              ))}
+              ) : null))}
             </div>
           )
       );
@@ -153,14 +166,15 @@ const adminServices = () => {
         />
       </h1>
       <Grid container spacing={6} style={{ width: '100%', margin: 0 }}>
-        <Grid item xs={3}>
+        <Grid item xs={0} sm={3}>
           <Search
             filterOptions={Object.keys(serviceCategoryLUT).map((key) => serviceCategoryLUT[key])}
             filters={filters}
             setFilters={(filts) => setFilters(filts)}
+            setSearchText={(text) => setSearchText(text)}
           />
         </Grid>
-        <Grid item xs={9}>
+        <Grid item xs={12} sm={9}>
           {serviceSections}
         </Grid>
       </Grid>

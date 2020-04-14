@@ -101,10 +101,10 @@ const NavBar = ({ loggedIn, userData, setFromBookPage }) => {
           return attractionsLogo(opt);
         } if (opt.name === 'Book') {
           return (
-            <Button onClick={() => handleBook()}>{opt.name}</Button>
+            <Button key={opt.name} onClick={() => handleBook()}>{opt.name}</Button>
           );
         }
-        return <Button onClick={() => history.push(opt.route)}>{opt.name}</Button>;
+        return <Button key={opt.name} onClick={() => history.push(opt.route)}>{opt.name}</Button>;
       })}
       {options.length === 0 ? attractionsLogo({ route: '/' }) : null}
       {options.length === 0 ? null : userLogin}
