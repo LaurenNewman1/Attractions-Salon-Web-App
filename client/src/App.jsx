@@ -9,7 +9,7 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core';
 import Home from './layouts/Home';
 import Book from './layouts/Book';
 import Services from './layouts/Services';
-import Contact from './layouts/Contact';
+import Reviews from './layouts/Reviews';
 import Login from './layouts/Login';
 import Profile from './layouts/Profile';
 import ResetPassword from './layouts/ResetPassword';
@@ -81,7 +81,7 @@ const App = () => {
             <Route path="/book/" component={() => <Book userData={userData} />} />
             <Route path="/services" component={Services} />
             <Route path="/about" component={About} />
-            <Route path="/contact" component={Contact} />
+            <Route path="/reviews" component={Reviews} />
             <Route path="/login" component={() => <Login login={login} fromBookPage={fromBookPage} resetPassword={requestResetPassword} />} />
             <Route path="/resetpassword/:token" component={() => <ResetPassword attemptReset={requestPasswordUpdate} />} />
             <Route path="/signUp" component={() => <SignUp register={register} login={login} />} />

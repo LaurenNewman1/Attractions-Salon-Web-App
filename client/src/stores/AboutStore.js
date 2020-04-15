@@ -12,6 +12,7 @@ export default () => {
 
       const workers = await usersRequestFetch(1);
       const admin = await usersRequestFetch(2);
+
       setStaff(workers.concat(admin));
       setLoading(false);
     };
