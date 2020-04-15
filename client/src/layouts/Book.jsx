@@ -18,11 +18,12 @@ import ReviewBooking from './ReviewBooking';
 import useBooking from '../stores/BookStore';
 
 const Book = ({
-  userData, newCardToUser, getCards, getCard,
+  userData, newCardToUser, getCards, getCard, deleteCard, newCard,
 }) => {
   const params = useParams();
   const [page, setPage] = useState(0);
   const [error, setError] = useState(false);
+  const [checked, setChecked] = useState(false);
   const [booking, setBooking] = useState({
     name: userData ? userData.name : '',
     email: userData ? userData.email : '',
@@ -44,7 +45,7 @@ const Book = ({
     expMonth: '',
     expYear: '',
     CVC: '',
-    zipCode: '',
+    cardId: '',
   });
   const [CCFlag, setCCFlag] = useState(false);
   const [creditCards, setCreditCards] = useState([]);
@@ -85,6 +86,50 @@ const Book = ({
     setCreditCard(newFields);
   };
 
+  const postCardToUser = async () => {
+    const [successful, res] = await newCardToUser(
+      userData._id,
+      creditCard.cardNumber,
+      creditCard.expMonth,
+      creditCard.expYear,
+      creditCard.CVC,
+    );
+    const [success, response] = await getCards(userData._id);
+    if (success) {
+      setCreditCards(response.data);
+      console.log('getCards CALL WORKED', res);
+    } else {
+      console.log('BOOK PAGE BAD GET REQUEST', res);
+    }
+
+    if (successful) {
+      console.log('POST REQUEST 1 WORKED', res);
+      updateCreditCard(['cardId', res.id]);
+    } else {
+      console.log('BAD POST REQUEST', res);
+      // Checks validity of card
+      // This is temporary - talk to Lauren
+      setError(true);
+    }
+  };
+
+  const postCard = async () => {
+    const [successful, res] = await newCard(
+      creditCard.cardNumber,
+      creditCard.expMonth,
+      creditCard.expYear,
+      creditCard.CVC,
+    );
+    if (successful) {
+      console.log('POST REQUEST 2 WORKED', res);
+      updateCreditCard(['cardId', res.id]);
+    } else {
+      console.log('BAD POST REQUEST', res);
+      // This is temporary - talk to Lauren
+      setError(true);
+    }
+  };
+
   const validateNext = () => {
     checkCC();
     switch (page) {
@@ -108,7 +153,19 @@ const Book = ({
         }
         break;
       case 2:
-        setPage((prev) => prev + 1);
+        if (creditCard.name && creditCard.expMonth && creditCard.expYear && creditCard.CVC) {
+          // This checks if the remember my Card is checked, and does the appropriate post command
+          if (checked) {
+            // Saves to user
+            postCardToUser();
+          } else {
+            // Just checks if card is valid
+            postCard();
+          }
+          setPage((prev) => prev + 1);
+        } else {
+          setError(true);
+        }
         break;
       case 3:
         setPage((prev) => prev + 1);
@@ -155,17 +212,26 @@ const Book = ({
             getCards={getCards}
             getCard={getCard}
             userData={userData}
+            deleteCard={deleteCard}
             creditCard={creditCard}
+            checked={checked}
+            setChecked={setChecked}
           />
         );
       case 3:
         return (
           <ConfirmPayment
+            updateCreditCard={(...argus) => updateCreditCard(...argus)}
             booking={booking}
             loading={loading}
             nextPage={() => validateNext()}
             updateBooking={(...argus) => updateBooking(...argus)}
             creditCards={creditCards}
+            getCard={getCard}
+            userData={userData}
+            deleteCard={deleteCard}
+            creditCard={creditCard}
+            setCreditCards={setCreditCards}
           />
         );
       case 4:
@@ -237,6 +303,8 @@ Book.propTypes = {
   newCardToUser: PropTypes.func.isRequired,
   getCards: PropTypes.func.isRequired,
   getCard: PropTypes.func.isRequired,
+  deleteCard: PropTypes.func.isRequired,
+  newCard: PropTypes.func.isRequired,
 };
 
 

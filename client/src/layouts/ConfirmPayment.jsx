@@ -1,16 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Button, Typography, Divider, Paper,
+  Button, Typography, Divider, Paper, useTheme,
 } from '@material-ui/core';
 import useStyles from '../css/ConfirmPaymentStyles';
 import creditCardCircles from '../images/masterCardCircles.png';
 import Loading from '../components/Loading';
 
 const ConfirmPayment = ({
-  booking, loading, updateBooking, nextPage, creditCards,
+  booking, loading, updateBooking, nextPage, creditCards, userData, getCard, deleteCard, getCards, updateCreditCard, creditCard, setCreditCards,
 }) => {
   const classes = useStyles();
+  const theme = useTheme();
+  const [selected, setSelected] = useState(true);
+
+  console.log('Credit Card Array: ', creditCards);
+  console.log('Credit Card Array LENGTH: ', creditCards.length);
+  console.log('Credit Card: ', creditCard);
+
+  const deleteFirstCard = async () => {
+    const [successful, res] = await deleteCard(
+      creditCards[0].id,
+    );
+    if (successful) {
+      console.log('DELETE REQUEST WORKED', res);
+      setCreditCards(creditCards.filter((x) => x.id !== res.id));
+      // updateCreditCard(['cardId', res.id]);
+    } else {
+      console.log('BAD DELETE REQUEST', res);
+    }
+  };
+  // console.log('NEW CREDIT CARDS ARRAY: ', creditCards);
+
 
   const payInStore = () => {
     updateBooking(['payInStore', !booking.payInStore]);
@@ -23,7 +44,7 @@ const ConfirmPayment = ({
     <div className={classes.page}>
       {loading ? <Loading /> : null}
       <h2 className={classes.header}>Confirm Payment Method</h2>
-      {creditCards.map(({ card }) => (
+      {(creditCards.length !== 0) ? (creditCards.map(({ card }) => (
         <div style={{
           width: '100%',
           display: 'flex',
@@ -31,7 +52,10 @@ const ConfirmPayment = ({
           marginBottom: 18,
         }}
         >
-          <Paper className={classes.paper}>
+          <Paper
+            className={classes.paper}
+            style={{ borderColor: selected ? theme.palette.primary.main : 'transparent' }}
+          >
             <img src={creditCardCircles} alt="Circles" className={classes.circles} />
             <Typography variant="h5">
               ....&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -50,7 +74,38 @@ const ConfirmPayment = ({
             </div>
           </Paper>
         </div>
-      ))}
+      )))
+        : (
+          <div style={{
+            width: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+            marginBottom: 18,
+          }}
+          >
+            <Paper
+              className={classes.paper}
+              style={{ borderColor: selected ? theme.palette.primary.main : 'transparent' }}
+            >
+              <img src={creditCardCircles} alt="Circles" className={classes.circles} />
+              <Typography variant="h5">
+                ....&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                ....&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                ....&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                {creditCard.cardNumber.substr(creditCard.cardNumber.length - 4)}
+              </Typography>
+              <div className={classes.middleSpace} />
+              <div className={classes.spaceBetween}>
+                <Typography variant="subtitle1">Name</Typography>
+                <Typography variant="subtitle1">Exp</Typography>
+              </div>
+              <div className={classes.spaceBetween}>
+                <Typography variant="subtitle2">{creditCard.name}</Typography>
+                <Typography variant="subtitle2">{creditCard.expMonth}/{creditCard.expYear}</Typography>
+              </div>
+            </Paper>
+          </div>
+        )}
 
       <div className={classes.link}>
         <Button
@@ -75,6 +130,14 @@ const ConfirmPayment = ({
       >
         Pay In Store
       </Button>
+      <Button
+        style={{ marginTop: 20 }}
+        variant="contained"
+        color="primary"
+        onClick={() => deleteFirstCard()}
+      >
+        Delete First Card
+      </Button>
     </div>
   );
 };
@@ -95,6 +158,7 @@ ConfirmPayment.propTypes = {
   }).isRequired,
   updateBooking: PropTypes.func.isRequired,
   creditCards: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string,
     last4: PropTypes.string,
     card: PropTypes.shape({
       exp_month: PropTypes.string,
@@ -103,6 +167,26 @@ ConfirmPayment.propTypes = {
   })).isRequired,
   nextPage: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
+  userData: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    email: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    phone_number: PropTypes.string.isRequired,
+  }).isRequired,
+  getCards: PropTypes.func.isRequired,
+  getCard: PropTypes.func.isRequired,
+  deleteCard: PropTypes.func.isRequired,
+  creditCard: PropTypes.shape({
+    name: PropTypes.string,
+    cardNumber: PropTypes.string,
+    expMonth: PropTypes.string,
+    expYear: PropTypes.string,
+    CVC: PropTypes.string,
+    zipCode: PropTypes.string,
+  }).isRequired,
+  updateCreditCard: PropTypes.func.isRequired,
+  setCreditCards: PropTypes.func.isRequired,
+
 };
 
 export default ConfirmPayment;
