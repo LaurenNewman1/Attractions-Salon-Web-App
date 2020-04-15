@@ -1,9 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Input, InputAdornment, FormControl, Chip, Typography, makeStyles,
+  Input, InputAdornment, FormControl, Chip, Typography, makeStyles, IconButton,
 } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
+import ClearIcon from '@material-ui/icons/Clear';
+// import Loading from './Loading';
 
 const useStyles = makeStyles(() => ({
   chip: {
@@ -12,17 +14,12 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-
 const Search = ({
-  filterOptions, filters, setFilters, setSearchText,
+  filterOptions, filters, setFilters, searchText, setSearchText,
 }) => {
   const classes = useStyles();
   // const [aTimeout, setATimeout] = useState(null);
-
-  // const onChangeSearch = (text) => {
-  //   clearTimeout();
-  //   setTimeout(setSearchText(text), 1000000);
-  // };
+  // const [loading, setLoading] = useState(false);
 
   const changeFilters = (filter) => {
     const allFilters = [...filters];
@@ -34,27 +31,37 @@ const Search = ({
     }
     setFilters(allFilters);
   };
+
   // const searchElement = document.getElementById('search');
   // if (searchElement) {
   //   searchElement.addEventListener('keyup', (e) => {
   //     clearTimeout(aTimeout);
+  //     setLoading(true);
   //     const time = setTimeout(() => {
   //       setSearchText(e.target.value);
+  //       setLoading(false);
   //     }, 1000);
   //     setATimeout(time);
   //   });
   // }
 
   return (
-    <div>
-      <FormControl style={{ marginBottom: 30 }}>
+    <>
+      {/* {loading ? <Loading disableShrink /> : null} */}
+      <FormControl style={{ marginBottom: 30, width: '100%' }}>
         <Input
           id="search"
           placeholder="Search"
+          value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
           startAdornment={(
             <InputAdornment position="start">
-              <SearchIcon color="inherit" />
+              <SearchIcon />
+            </InputAdornment>
+          )}
+          endAdornment={(
+            <InputAdornment position="end">
+              <IconButton size="small" onClick={() => setSearchText('')}><ClearIcon /></IconButton>
             </InputAdornment>
           )}
         />
@@ -71,7 +78,7 @@ const Search = ({
           />
         ))}
       </div>
-    </div>
+    </>
   );
 };
 
@@ -81,6 +88,7 @@ Search.propTypes = {
   filterOptions: PropTypes.arrayOf(PropTypes.string),
   filters: PropTypes.arrayOf(PropTypes.string),
   setFilters: PropTypes.func,
+  searchText: PropTypes.string.isRequired,
   setSearchText: PropTypes.func.isRequired,
 };
 

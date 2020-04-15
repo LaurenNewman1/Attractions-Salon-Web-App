@@ -22,9 +22,6 @@ const useStyles = makeStyles((theme) => ({
     fontSize: theme.typography.pxToRem(15),
     fontWeight: theme.typography.fontWeightRegular,
   },
-  add: {
-    width: '45%',
-  },
   addonsLbl: {
     display: 'flex',
     alignItems: 'center',

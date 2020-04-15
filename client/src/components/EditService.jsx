@@ -1,6 +1,6 @@
 /* eslint-disable react/no-array-index-key */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, memo } from 'react';
 import {
   ExpansionPanel, Grid, Dialog, DialogTitle, DialogContent,
   ExpansionPanelSummary, FormControl, Select,
@@ -16,7 +16,7 @@ import PropTypes from 'prop-types';
 import useStyles from '../css/EditServiceStyles';
 import Confirm from './Confirm';
 
-const EditService = ({
+const EditService = memo(({
   index, service, deleteService, changeService, types,
   updateService, group, asdf, deleteAddon,
 }) => {
@@ -61,7 +61,6 @@ const EditService = ({
       setLocalService(localService);
       setOpen(false);
     } else {
-      console.log('service status', success);
       setOpen(true);
     }
   };
@@ -103,7 +102,7 @@ const EditService = ({
       </ExpansionPanelSummary>
       <ExpansionPanelDetails>
         <Grid container spacing={3}>
-          <Grid item xs={12} sm={6}>
+          <Grid item sm={12} md={6}>
             <Grid container spacing={1}>
               <Grid item xs={6}>
                 <FormControl style={{ width: '100%' }}>
@@ -186,7 +185,7 @@ const EditService = ({
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item sm={12} md={6}>
             <TableContainer component={Paper}>
               <h4 className={classes.addonsLbl}>
                 Addons
@@ -287,7 +286,7 @@ const EditService = ({
       </Dialog>
     </ExpansionPanel>
   );
-};
+});
 
 EditService.propTypes = {
   service: PropTypes.shape({

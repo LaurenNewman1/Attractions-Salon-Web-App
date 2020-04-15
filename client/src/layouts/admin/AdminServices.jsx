@@ -47,9 +47,12 @@ const adminServices = () => {
     const {
       name, type, subtype, price, time, description,
     } = service;
-    if (name.includes(searchText) || type.includes(searchText)
-      || (subtype && subtype.includes(searchText)) || (price && price.toString().includes(searchText))
-      || (time && time.toString().includes(searchText)) || description.includes(searchText)) {
+    if (name.toLowerCase().includes(searchText.toLowerCase())
+      || type.toLowerCase().includes(searchText.toLowerCase())
+      || (subtype && subtype.toLowerCase().includes(searchText.toLowerCase()))
+      || (price && price.toString().includes(searchText))
+      || (time && time.toString().includes(searchText))
+      || description.toLowerCase().includes(searchText.toLowerCase())) {
       return true;
     }
     return false;
@@ -125,7 +128,7 @@ const adminServices = () => {
         !categoryServices || !categoryServices.length ? null
           : (
             <div key={key} style={{ marginBottom: 40 }}>
-              <Typography variant="h5">
+              <Typography variant="h4">
                 {serviceCategoryLUT[key]}
               </Typography>
               {categoryServices.map((service, index) => (doDisplay(service) ? (
@@ -166,11 +169,12 @@ const adminServices = () => {
         />
       </h1>
       <Grid container spacing={6} style={{ width: '100%', margin: 0 }}>
-        <Grid item xs={0} sm={3}>
+        <Grid item xs={12} sm={3}>
           <Search
             filterOptions={Object.keys(serviceCategoryLUT).map((key) => serviceCategoryLUT[key])}
             filters={filters}
             setFilters={(filts) => setFilters(filts)}
+            searchText={searchText}
             setSearchText={(text) => setSearchText(text)}
           />
         </Grid>
