@@ -21,9 +21,29 @@ const requestCreditCard = async (someId, number, exp_month, exp_year, cvc) => {
 };
 
 // eslint-disable-next-line camelcase
+const requestCreditCardUpdate = async (someId, cardId, number, exp_month, exp_year, cvc) => {
+  // eslint-disable-next-line camelcase
+  const res = await fetch(`/api/users/card/${someId}/${cardId}`, {
+    method: 'PUT',
+    cache: 'no-cache',
+    credentials: 'same-origin', // include, *same-origin, omit
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    redirect: 'follow', // manual, *follow, error
+    referrerPolicy: 'no-referrer', // no-referrer, *client
+    body: JSON.stringify({
+      number, exp_month, exp_year, cvc,
+    }),
+  });
+
+  return [res.status === 200, await res.json()];
+};
+
+// eslint-disable-next-line camelcase
 const requestCreditCardCheck = async (number, exp_month, exp_year, cvc) => {
   // eslint-disable-next-line camelcase
-  const res = await fetch(`/api/card`, {
+  const res = await fetch('/api/card', {
     method: 'POST',
     cache: 'no-cache',
     credentials: 'same-origin', // include, *same-origin, omit
@@ -103,6 +123,11 @@ export default () => {
     return [success, res];
   };
 
+  const updateCardForUser = async (id, cardId, number, expMonth, expYear, cvc) => {
+    const [success, res] = await requestCreditCardUpdate(id, cardId, number, expMonth, expYear, cvc);
+    return [success, res];
+  };
+
   const newCard = async (number, expMonth, expYear, cvc) => {
     const [success, res] = await requestCreditCardCheck(number, expMonth, expYear, cvc);
     return [success, res];
@@ -123,5 +148,5 @@ export default () => {
     return [success, res];
   };
 
-  return [newCardToUser, getCards, getCard, deleteCard, newCard];
+  return [newCardToUser, updateCardForUser, getCards, getCard, deleteCard, newCard];
 };

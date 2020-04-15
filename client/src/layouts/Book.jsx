@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   MobileStepper, Button, Snackbar,
 } from '@material-ui/core';
@@ -18,7 +18,7 @@ import ReviewBooking from './ReviewBooking';
 import useBooking from '../stores/BookStore';
 
 const Book = ({
-  userData, newCardToUser, getCards, getCard, deleteCard, newCard,
+  userData, newCardToUser, updateCardForUser, getCards, getCard, deleteCard, newCard,
 }) => {
   const params = useParams();
   const [page, setPage] = useState(0);
@@ -36,6 +36,11 @@ const Book = ({
     specialist: '',
     notes: '',
     payInStore: false,
+    currency: 'USD',
+    // This is the cardId
+    method_id: '',
+    // This needs to be in pennies, so times 100
+    amount: '',
   });
   const classes = useStyles();
   const [loading, specialists, services, sendRequest] = useBooking();
@@ -46,9 +51,11 @@ const Book = ({
     expYear: '',
     CVC: '',
     cardId: '',
+    last4: '',
   });
   const [CCFlag, setCCFlag] = useState(false);
   const [creditCards, setCreditCards] = useState([]);
+
 
   const updateBooking = (...argus) => {
     const newFields = { ...booking };
@@ -60,23 +67,7 @@ const Book = ({
     setBooking(newFields);
   };
 
-  const checkCC = async () => {
-    const [successful, res] = await getCards(userData._id);
-    if (successful) {
-      if (res.data.length === 0) {
-        setCCFlag(false);
-      } else {
-        setCreditCards(res.data);
-        setCCFlag(true);
-      }
-      console.log('getCards WORKED', res);
-    } else {
-      console.log('BOOK PAGE BAD GET REQUEST', res);
-    }
-  };
-
-
-  const updateCreditCard = (...argus) => {
+  const updateCreditCard = async (...argus) => {
     const newFields = { ...creditCard };
     argus.forEach((argu) => {
       const [fieldName, val] = argu;
@@ -86,30 +77,80 @@ const Book = ({
     setCreditCard(newFields);
   };
 
-  const postCardToUser = async () => {
-    const [successful, res] = await newCardToUser(
-      userData._id,
-      creditCard.cardNumber,
-      creditCard.expMonth,
-      creditCard.expYear,
-      creditCard.CVC,
-    );
-    const [success, response] = await getCards(userData._id);
-    if (success) {
-      setCreditCards(response.data);
-      console.log('getCards CALL WORKED', res);
+  const checkCC = async () => {
+    const [successful, res] = await getCards(userData._id);
+    if (successful) {
+      if (res.data.length === 0) {
+        setCCFlag(false);
+      } else {
+        // Gets the first one, which should be the only one
+        setCreditCards(res.data[0]);
+        // creditCard.cardId = res.data[0].id;
+        // creditCard.expMonth = res.data[0].exp_month;
+        // creditCard.expYear = res.data[0].exp_year;
+        // creditCard.last4 = res.data[0].last4;
+        await updateCreditCard(['cardId', res.data[0].id], ['expMonth', res.data[0].card.exp_month], ['expYear', res.data[0].card.exp_year], ['last4', res.data[0].card.last4]);
+        setCCFlag(true);
+      }
+      console.log('getCards WORKED', res);
     } else {
       console.log('BOOK PAGE BAD GET REQUEST', res);
     }
+  };
 
-    if (successful) {
-      console.log('POST REQUEST 1 WORKED', res);
-      updateCreditCard(['cardId', res.id]);
+  useEffect(() => {
+    checkCC();
+  }, []);
+
+  const postOrPutCardToUser = async () => {
+    const [success, response] = await getCards(userData._id);
+    const savedUserCards = response.data;
+    // This is the first card ID, which should be the only ID
+    if (success) {
+      // setCreditCards(response.data);
+      console.log('getCards CALL WORKED', response);
     } else {
-      console.log('BAD POST REQUEST', res);
-      // Checks validity of card
-      // This is temporary - talk to Lauren
-      setError(true);
+      console.log('BOOK PAGE BAD GET REQUEST', response);
+    }
+    if (savedUserCards.length === 0) {
+      // Call the newCardToUser command
+      const [successful, res] = await newCardToUser(
+        userData._id,
+        creditCard.cardNumber,
+        creditCard.expMonth,
+        creditCard.expYear,
+        creditCard.CVC,
+      );
+      if (successful) {
+        console.log('POST REQUEST 1 WORKED', res);
+        updateCreditCard(['cardId', res.data[0].id]);
+      } else {
+        console.log('BAD POST REQUEST', res);
+        // Checks validity of card
+        // This is temporary - talk to Lauren
+        setError(true);
+      }
+    } else {
+      // Call the PUT command to overwrite it
+      const savedCardId = savedUserCards[0].id;
+      const [successful, res] = await updateCardForUser(
+        userData._id,
+        savedCardId,
+        creditCard.cardNumber,
+        creditCard.expMonth,
+        creditCard.expYear,
+        creditCard.CVC,
+      );
+      if (successful) {
+        console.log('PUT REQUEST WORKED', res);
+        // saves the new card id
+        updateCreditCard(['cardId', res.data[0].id]);
+      } else {
+        console.log('BAD PUT REQUEST', res);
+        // Checks validity of card
+        // This is temporary - talk to Lauren
+        setError(true);
+      }
     }
   };
 
@@ -131,7 +172,6 @@ const Book = ({
   };
 
   const validateNext = () => {
-    checkCC();
     switch (page) {
       case 0:
         if (booking.service.length) {
@@ -143,24 +183,36 @@ const Book = ({
       case 1:
         console.log('The CCFLag is: ', CCFlag);
         if (booking.name && booking.email && booking.phone_number) {
-          if (CCFlag) {
-            setPage((prev) => prev + 2);
-          } else {
-            setPage((prev) => prev + 1);
-          }
+          setPage((prev) => prev + 1);
         } else {
           setError(true);
         }
         break;
       case 2:
-        if (creditCard.name && creditCard.expMonth && creditCard.expYear && creditCard.CVC) {
+        if (creditCard.name && creditCard.expMonth && creditCard.expYear) {
           // This checks if the remember my Card is checked, and does the appropriate post command
-          if (checked) {
-            // Saves to user
-            postCardToUser();
+          if (!CCFlag) {
+            // Checks if the card is valid
+            if (checked) {
+              // Saves to user
+              console.log('MY CARD', creditCard);
+              postOrPutCardToUser();
+            } else {
+              postCard();
+            }
           } else {
-            // Just checks if card is valid
-            postCard();
+            // If they have a card in store
+            // Need a variable for this
+            if (changeCard) {
+              // if they want to change the card, and they want to remember it
+              if (rememberCard) {
+                // Saves to user
+                console.log('MY CARD', creditCard);
+                postOrPutCardToUser();
+              } else {
+                postCard();
+              }
+            }
           }
           setPage((prev) => prev + 1);
         } else {
@@ -170,10 +222,6 @@ const Book = ({
       case 3:
         setPage((prev) => prev + 1);
         break;
-        // case 4 is Temporary
-      case 4:
-        setPage((prev) => prev + 1);
-        break;
       default:
         break;
     }
@@ -181,8 +229,10 @@ const Book = ({
 
   // I changed this so that I could test NewPayment. new Payment and Calendar should be flipped
   const renderPage = () => {
+    console.log('Page #: ', page);
     switch (page) {
       case 0:
+        // if they are logged in,
         return (
           <Details
             booking={booking}
@@ -201,6 +251,24 @@ const Book = ({
           />
         );
       case 2:
+        if (CCFlag) {
+          return (
+            <ConfirmPayment
+              updateCreditCard={(...argus) => updateCreditCard(...argus)}
+              booking={booking}
+              loading={loading}
+              nextPage={() => validateNext()}
+              updateBooking={(...argus) => updateBooking(...argus)}
+              creditCards={creditCards}
+              getCard={getCard}
+              userData={userData}
+              deleteCard={deleteCard}
+              creditCard={creditCard}
+              setCreditCards={setCreditCards}
+              setPage={setPage}
+            />
+          );
+        }
         return (
           <NewPayment
             updateCreditCard={(...argus) => updateCreditCard(...argus)}
@@ -219,22 +287,6 @@ const Book = ({
           />
         );
       case 3:
-        return (
-          <ConfirmPayment
-            updateCreditCard={(...argus) => updateCreditCard(...argus)}
-            booking={booking}
-            loading={loading}
-            nextPage={() => validateNext()}
-            updateBooking={(...argus) => updateBooking(...argus)}
-            creditCards={creditCards}
-            getCard={getCard}
-            userData={userData}
-            deleteCard={deleteCard}
-            creditCard={creditCard}
-            setCreditCards={setCreditCards}
-          />
-        );
-      case 4:
         return (
           <ReviewBooking
             booking={booking}
@@ -259,12 +311,12 @@ const Book = ({
         </div>
         <div className={classes.footer}>
           <MobileStepper
-            steps={5}
+            steps={4}
             variant="dots"
             className={classes.stepper}
             activeStep={page}
             nextButton={(
-              <Button size="small" onClick={() => validateNext()} disabled={page === 4}>
+              <Button size="small" onClick={() => validateNext()} disabled={page === 3}>
                 Next
                 <KeyboardArrowRight />
               </Button>
@@ -301,6 +353,7 @@ Book.propTypes = {
     phone_number: PropTypes.string.isRequired,
   }).isRequired,
   newCardToUser: PropTypes.func.isRequired,
+  updateCardForUser: PropTypes.func.isRequired,
   getCards: PropTypes.func.isRequired,
   getCard: PropTypes.func.isRequired,
   deleteCard: PropTypes.func.isRequired,

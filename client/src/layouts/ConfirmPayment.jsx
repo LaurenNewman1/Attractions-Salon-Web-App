@@ -8,15 +8,19 @@ import creditCardCircles from '../images/masterCardCircles.png';
 import Loading from '../components/Loading';
 
 const ConfirmPayment = ({
-  booking, loading, updateBooking, nextPage, creditCards, userData, getCard, deleteCard, getCards, updateCreditCard, creditCard, setCreditCards,
+  booking, loading, updateBooking, nextPage, creditCards, userData, getCard, deleteCard, getCards, updateCreditCard, creditCard, setCreditCards, setPage,
 }) => {
   const classes = useStyles();
   const theme = useTheme();
-  const [selected, setSelected] = useState(true);
+  // const [selected, setSelected] = useState(true);
 
   console.log('Credit Card Array: ', creditCards);
   console.log('Credit Card Array LENGTH: ', creditCards.length);
   console.log('Credit Card: ', creditCard);
+
+  // const updateSelectedCard = (card) => {
+  //   updateCreditCard(['name', userData.name], ['expMonth', card.exp_month], ['expYear', card.exp_year]);
+  // };
 
   const deleteFirstCard = async () => {
     const [successful, res] = await deleteCard(
@@ -44,7 +48,7 @@ const ConfirmPayment = ({
     <div className={classes.page}>
       {loading ? <Loading /> : null}
       <h2 className={classes.header}>Confirm Payment Method</h2>
-      {(creditCards.length !== 0) ? (creditCards.map(({ card }) => (
+      {/* {(creditCards.length !== 0) ? (creditCards.map(({ card }) => (
         <div style={{
           width: '100%',
           display: 'flex',
@@ -55,6 +59,7 @@ const ConfirmPayment = ({
           <Paper
             className={classes.paper}
             style={{ borderColor: selected ? theme.palette.primary.main : 'transparent' }}
+            onClick={() => updateSelectedCard(card)}
           >
             <img src={creditCardCircles} alt="Circles" className={classes.circles} />
             <Typography variant="h5">
@@ -105,7 +110,36 @@ const ConfirmPayment = ({
               </div>
             </Paper>
           </div>
-        )}
+        )} */}
+      <div style={{
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        marginBottom: 18,
+      }}
+      >
+        <Paper
+          className={classes.paper}
+        >
+          <img src={creditCardCircles} alt="Circles" className={classes.circles} />
+          <Typography variant="h5">
+            ....&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            ....&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            ....&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            {/* {creditCard.cardNumber.substr(creditCard.cardNumber.length - 4)} */}
+            {creditCard.last4}
+          </Typography>
+          <div className={classes.middleSpace} />
+          <div className={classes.spaceBetween}>
+            <Typography variant="subtitle1">Name</Typography>
+            <Typography variant="subtitle1">Exp</Typography>
+          </div>
+          <div className={classes.spaceBetween}>
+            <Typography variant="subtitle2">{creditCard.name}</Typography>
+            <Typography variant="subtitle2">{creditCard.expMonth}/{creditCard.expYear}</Typography>
+          </div>
+        </Paper>
+      </div>
 
       <div className={classes.link}>
         <Button
@@ -178,6 +212,7 @@ ConfirmPayment.propTypes = {
   deleteCard: PropTypes.func.isRequired,
   creditCard: PropTypes.shape({
     name: PropTypes.string,
+    last4: PropTypes.string,
     cardNumber: PropTypes.string,
     expMonth: PropTypes.string,
     expYear: PropTypes.string,
@@ -186,6 +221,7 @@ ConfirmPayment.propTypes = {
   }).isRequired,
   updateCreditCard: PropTypes.func.isRequired,
   setCreditCards: PropTypes.func.isRequired,
+  setPage: PropTypes.func.isRequired,
 
 };
 
