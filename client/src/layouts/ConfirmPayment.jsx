@@ -79,7 +79,8 @@ const ConfirmPayment = ({
             ....&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             ....&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             ....&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            {!noCC ? creditCard.last4 : finalCreditCard.last4}
+            {/* {!noCC ? creditCard.last4 : finalCreditCard.last4} */}
+            {creditCard.last4}
           </Typography>
           <div className={classes.middleSpace} />
           <div className={classes.spaceBetween}>

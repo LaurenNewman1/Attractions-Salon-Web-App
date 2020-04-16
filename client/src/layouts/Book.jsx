@@ -80,7 +80,7 @@ const Book = ({
       const [fieldName, val] = argu;
       newFields[fieldName] = val;
     });
-    console.log(`Try: ${newFields.name} AND ${newFields.email} AND ${newFields.payInStore} AND ${newFields.phone_number}`);
+    console.log(`Try: ${newFields.name} AND ${newFields.email} AND ${newFields.payInStore} AND ${newFields.phone_number} AND ${newFields.amount}`);
     setBooking(newFields);
   };
 
@@ -89,7 +89,7 @@ const Book = ({
     argus.forEach((argu) => {
       const [fieldName, val] = argu;
       newFields[fieldName] = val;
-      console.log(newFields);
+      console.log('Credit Card Update', newFields);
     });
     setCreditCard(newFields);
   };
@@ -99,7 +99,7 @@ const Book = ({
     argus.forEach((argu) => {
       const [fieldName, val] = argu;
       newFields[fieldName] = val;
-      console.log(newFields);
+      console.log('FINAL card update: ', newFields);
     });
     setFinalCreditCard(newFields);
   };
@@ -246,7 +246,7 @@ const Book = ({
         ['CVC', creditCard.CVC],
         ['name', creditCard.name],
       );
-      console.log('MY FINAL CARD  POST 2', finalCreditCard);
+      // console.log('MY FINAL CARD POST 2', finalCreditCard);
     } else {
       console.log('BAD POST 2 REQUEST', res);
       // This is temporary - talk to Lauren
@@ -273,7 +273,6 @@ const Book = ({
         }
         break;
       case 2:
-        console.log('The card: ', creditCard);
         if (creditCard.name && creditCard.expMonth && creditCard.expYear) {
           // This checks if the remember my Card is checked, and does the appropriate post command
           if (!CCFlag) {

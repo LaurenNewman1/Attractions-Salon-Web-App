@@ -14,34 +14,54 @@ import Loading from '../components/Loading';
 
 
 const ReviewBooking = ({
-  booking, specialists, services, loading, sendRequest, finalCreditCard,
+  booking, specialists, services, loading, sendRequest, finalCreditCard, updateBooking,
 }) => {
   const classes = useStyles();
   const history = useHistory();
   const currentService = services.find((x) => x._id === booking.service);
   const [price, setPrice] = useState(0);
+  const [tempBool, setTempBool] = useState(true);
+  // const [amountInPennies, setAmountInPennies] = useState(0);
   // console.log(services);
   // console.log(booking.service);
   // console.log(booking.addons);
 
   useEffect(() => {
     let counter = currentService.price;
+    // if(counter === 0) -> then you need to do something for pay in store
     for (let i = 0; i < booking.addons.length; i += 1) {
       counter += booking.addons[i].price;
     }
     setPrice(counter);
-  }, [services]);
+    setTempBool(true);
+  }, []);
+
+  useEffect(() => {
+    const amountInPennies = (price * 100);
+    console.log('AMOUNT IN PENNIES', amountInPennies);
+    updateBooking(['amount', amountInPennies]);
+    setTempBool(false);
+  }, [tempBool]);
+
+  useEffect(() => {
+    updateBooking(['method_id', finalCreditCard.cardId]);
+  }, []);
 
   console.log('FINAL CARD', finalCreditCard);
+
 
   // I need to ask alen about this
   console.log('The price is: ', price);
   const updateBookingRequest = async () => {
     const { specialist, ...restOfBooking } = booking;
     const requestBooking = !booking.specialist ? restOfBooking : booking;
+    console.log('The requested BOOKING', requestBooking);
     const [success, res] = await sendRequest(requestBooking);
     if (success) {
       history.push(`/confirmation/${res._id}`);
+      console.log('BOOKING WAS A SUCCESS', res);
+    } else {
+      console.log('FAILED booking request', res);
     }
   };
 
@@ -173,12 +193,13 @@ ReviewBooking.propTypes = {
   }]).isRequired,
   loading: PropTypes.bool.isRequired,
   sendRequest: PropTypes.func.isRequired,
+  updateBooking: PropTypes.func.isRequired,
   finalCreditCard: PropTypes.shape({
     name: PropTypes.string,
     cardNumber: PropTypes.string,
-    expMonth: PropTypes.number,
-    expYear: PropTypes.number,
-    CVC: PropTypes.number,
+    expMonth: PropTypes.string,
+    expYear: PropTypes.string,
+    CVC: PropTypes.string,
     cardId: PropTypes.string,
     last4: PropTypes.string,
   }).isRequired,
