@@ -2,6 +2,7 @@ import format from 'date-fns/format';
 import Appointment from '../model/appointment';
 import User from '../model/user';
 import { SendTextEmail } from '../lib/mail';
+const Recaptcha = require('recaptcha-v2').Recaptcha;
 
 export const read = async (req, res) => {
   // Find Appointment from Database and return
@@ -68,15 +69,29 @@ export const update = async (req, res) => {
 export const create = async (req, res) => {
   try {
     const params = req.body;
-    const dateTime = new Date(params.time);
-    const finalParams = { ...params, time: dateTime };
-    const appointment = await Appointment.create(finalParams);
-    await SendTextEmail(appointment.email, 'Your Booking has been Submitted', `Hi ${appointment.name}, your booking has been submitted. You will get an email soon when Attractions Salon has confirmed your appointment time.`);
-    const owner = await User.findOne({ role: 2 }).exec();
-    if (owner) {
-      await SendTextEmail(owner.email, 'A Booking has been Submitted', `Hi ${owner.name}, ${appointment.name} has submitted a booking request for review.`);
-    }
-    res.status(200).type('json').send(appointment);
+    var data = {
+      remoteip:  req.connection,
+      response:  params.captchaResponse,
+      secret: process.env.RECAPTCHA_SECRET_KEY
+    };
+    var recaptcha = new Recaptcha(process.env.RECAPTCHA_SITE_KEY, process.env.RECAPTCHA_SECRET_KEY, data);
+
+    recaptcha.verify( async (success, error_code) => {
+      if(success) {
+        const dateTime = new Date(params.time);
+        const finalParams = { ...params, time: dateTime };
+        const appointment = await Appointment.create(finalParams);
+        await SendTextEmail(appointment.email, 'Your Booking has been Submitted', `Hi ${appointment.name}, your booking has been submitted. You will get an email soon when Attractions Salon has confirmed your appointment time.`);
+        const owner = await User.findOne({ role: 2 }).exec();
+        if (owner) {
+          await SendTextEmail(owner.email, 'A Booking has been Submitted', `Hi ${owner.name}, ${appointment.name} has submitted a booking request for review.`);
+        }
+        res.status(200).type('json').send(appointment);
+      }
+      else {
+        res.status(403).type('jsom').send({ error: 'Captcha not verified' });
+      }
+    });
   } catch (err) {
     res.status(403).type('json').send(err);
   }

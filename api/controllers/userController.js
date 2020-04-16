@@ -5,6 +5,7 @@ import currentUserAbilities, { userAbilities } from '../helpers/ability';
 import GetLogger from '../config/logger';
 import genForgetPasswordHash from '../helpers/user';
 import { SendForgetPassword } from '../lib/mail';
+const Recaptcha = require('recaptcha-v2').Recaptcha;
 
 const logger = GetLogger('User Controller');
 
@@ -130,10 +131,24 @@ export const update = async (req, res) => {
 export const create = async (req, res) => {
   try {
     const params = req.body;
-    const hash = await argon2.hash(params.password);
-    const finalUser = { ...params, password: hash, role: 0 };
-    const user = await User.create(finalUser);
-    res.status(200).type('json').send(user);
+    var data = {
+      remoteip:  req.connection,
+      response:  params.captchaResponse,
+      secret: process.env.RECAPTCHA_SECRET_KEY
+    };
+    var recaptcha = new Recaptcha(process.env.RECAPTCHA_SITE_KEY, process.env.RECAPTCHA_SECRET_KEY, data);
+
+    recaptcha.verify( async (success, error_code) => {
+      if(success) {
+        const hash = await argon2.hash(params.password);
+        const finalUser = { ...params, password: hash, role: 0 };
+        const user = await User.create(finalUser);
+        res.status(200).type('json').send(user);
+      }
+      else {
+        res.status(403).type('jsom').send({ error: 'Captcha not verified' });
+      }
+    });
   } catch (err) {
     res.status(403).type('json').send(err);
   }
