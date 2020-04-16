@@ -23,6 +23,7 @@ const Book = ({
   const params = useParams();
   const [page, setPage] = useState(0);
   const [error, setError] = useState(false);
+  const [badRequest, setBadRequest] = useState(true);
   const [checked, setChecked] = useState(false);
   const [booking, setBooking] = useState({
     name: userData ? userData.name : '',
@@ -54,14 +55,15 @@ const Book = ({
     last4: '',
   });
   const [CCFlag, setCCFlag] = useState(false);
-  const [changeCard, _setChangeCard] = useState(false);
+  const [changeCard, setChangeCard] = useState(false);
+  const [saveCard, setSaveCard] = useState(false);
   const [rememberCard, setRememberCard] = useState(false);
   const [creditCards, setCreditCards] = useState([]);
 
-  const setChangeCard = (f) => {
-    console.trace(`changing changecard to ${f}!`);
-    _setChangeCard(f);
-  };
+  // const setChangeCard = (f) => {
+  //   console.trace(`changing changecard to ${f}!`);
+  //   _setChangeCard(f);
+  // };
 
   const updateBooking = (...argus) => {
     const newFields = { ...booking };
@@ -109,6 +111,7 @@ const Book = ({
   }, []);
 
   const postOrPutCardToUser = async () => {
+    // This can be polished later to only run once and save the required id
     const [success, response] = await getCards(userData._id);
     const savedUserCards = response.data;
     // This is the first card ID, which should be the only ID
@@ -118,6 +121,7 @@ const Book = ({
     } else {
       console.log('BOOK PAGE BAD GET REQUEST', response);
     }
+    // POST command
     if (savedUserCards.length === 0) {
       // Call the newCardToUser command
       const [successful, res] = await newCardToUser(
@@ -129,12 +133,14 @@ const Book = ({
       );
       if (successful) {
         console.log('POST REQUEST 1 WORKED', res);
-        updateCreditCard(['cardId', res.data[0].id]);
+        setBadRequest(false);
+        await updateCreditCard(['cardId', res.data[0].id]);
       } else {
         console.log('BAD POST REQUEST', res);
         // Checks validity of card
         // This is temporary - talk to Lauren
         setError(true);
+        setBadRequest(true);
       }
     } else {
       // Call the PUT command to overwrite it
@@ -150,15 +156,24 @@ const Book = ({
       if (successful) {
         console.log('PUT REQUEST WORKED', res);
         // saves the new card id
-        updateCreditCard(['cardId', res.data[0].id]);
+        setBadRequest(false);
+        await updateCreditCard(['cardId', res.id]);
       } else {
         console.log('BAD PUT REQUEST', res);
         // Checks validity of card
         // This is temporary - talk to Lauren
         setError(true);
+        setBadRequest(true);
       }
     }
   };
+
+
+  // useEffect(() => {
+  //   if (saveCard) {
+  //     postOrPutCardToUser();
+  //   }
+  // }, [saveCard]);
 
   // This calls the post command to check if the card is valid, but does NOT save it to user
   const postCard = async () => {
@@ -170,11 +185,13 @@ const Book = ({
     );
     if (successful) {
       console.log('POST REQUEST 2 WORKED', res);
+      setBadRequest(false);
       updateCreditCard(['cardId', res.id]);
     } else {
       console.log('BAD POST REQUEST', res);
       // This is temporary - talk to Lauren
       setError(true);
+      setBadRequest(true);
     }
   };
 
@@ -208,7 +225,8 @@ const Book = ({
               postCard();
             }
             // IF they have a card in store
-          } else if (changeCard) {
+          } else if (saveCard) {
+            console.log('SAVE CARD PRESSED');
             // if they want to change the card, and they want to remember it
             if (rememberCard) {
               // Saves to user
@@ -233,7 +251,6 @@ const Book = ({
 
   // I changed this so that I could test NewPayment. new Payment and Calendar should be flipped
   const renderPage = () => {
-    console.log('Page #: ', page);
     switch (page) {
       case 0:
         // if they are logged in,
@@ -269,13 +286,17 @@ const Book = ({
               deleteCard={deleteCard}
               creditCard={creditCard}
               setCreditCards={setCreditCards}
-              setPage={setPage}
               changeCard={changeCard}
               setChangeCard={setChangeCard}
               rememberCard={rememberCard}
               setRememberCard={setRememberCard}
               checked={checked}
               setChecked={setChecked}
+              saveCard={saveCard}
+              setSaveCard={setSaveCard}
+              postOrPutCardToUser={postOrPutCardToUser}
+              error={error}
+              badRequest={badRequest}
             />
           );
         }
@@ -298,6 +319,9 @@ const Book = ({
             setChangeCard={setChangeCard}
             rememberCard={rememberCard}
             setRememberCard={setRememberCard}
+            saveCard={saveCard}
+            setSaveCard={setSaveCard}
+            postOrPutCardToUser={postOrPutCardToUser}
           />
         );
       case 3:

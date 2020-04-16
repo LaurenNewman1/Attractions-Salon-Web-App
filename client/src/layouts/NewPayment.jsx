@@ -16,12 +16,12 @@ import Loading from '../components/Loading';
 const NewPayment = ({
   booking, updateBooking, updateCreditCard, loading, nextPage, userData,
   creditCard, getCards, getCard, checked, setChecked, changeCard, setChangeCard,
-  rememberCard, setRememberCard,
+  rememberCard, setRememberCard, saveCard, setSaveCard,
 }) => {
   const classes = useStyles();
 
-  console.log('USER DATA: ', userData);
-  console.log('CREDIT CARD: ', creditCard);
+  // console.log('USER DATA: ', userData);
+  // console.log('CREDIT CARD: ', creditCard);
 
   const checkBoxClicked = (event) => {
     console.log(changeCard);
@@ -106,14 +106,16 @@ const NewPayment = ({
   };
 
   const printOutInfo = () => {
-    console.log('Change Card: ', changeCard);
-    console.log('Checked: ', checked);
-    console.log('Remember Card: ', rememberCard);
+    // console.log('Change Card: ', changeCard);
+    // console.log('Checked: ', checked);
+    // console.log('Remember Card: ', rememberCard);
   };
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       {loading ? <Loading /> : null}
-      <h2 className={classes.header}>Enter Payment Info</h2>
+      {!changeCard && (
+        <h2 className={classes.header}>Enter Payment Info</h2>
+      )}
       <Grid container spacing={1} style={{ display: 'flex', alignItems: 'center' }}>
         <Grid item xs={12}>
           <TextField
@@ -197,22 +199,26 @@ const NewPayment = ({
           />
         </Grid>
         {printOutInfo()}
-        <Grid item xs={12} className={classes.divider}>
-          <Divider variant="middle" style={{ flexGrow: 1 }} />
-          <Typography variant="h5">
-            OR
-          </Typography>
-          <Divider variant="middle" style={{ flexGrow: 1 }} />
-        </Grid>
-        <Grid xs={12} className={classes.button}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => payInStore()}
-          >
-            Pay In Store // Testing getCards
-          </Button>
-        </Grid>
+        {!changeCard && (
+          <>
+            <Grid item xs={12} className={classes.divider}>
+              <Divider variant="middle" style={{ flexGrow: 1 }} />
+              <Typography variant="h5">
+                OR
+              </Typography>
+              <Divider variant="middle" style={{ flexGrow: 1 }} />
+            </Grid>
+            <Grid xs={12} className={classes.button}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => payInStore()}
+              >
+                Pay In Store // Testing getCards
+              </Button>
+            </Grid>
+          </>
+        )}
         {/* <Grid xs={12} className={classes.button}>
           <Button
             variant="contained"
@@ -231,9 +237,9 @@ NewPayment.propTypes = {
   creditCard: PropTypes.shape({
     name: PropTypes.string,
     cardNumber: PropTypes.string,
-    expMonth: PropTypes.string,
-    expYear: PropTypes.string,
-    CVC: PropTypes.string,
+    expMonth: PropTypes.number,
+    expYear: PropTypes.number,
+    CVC: PropTypes.number,
     cardId: PropTypes.string,
   }).isRequired,
   updateCreditCard: PropTypes.func.isRequired,
@@ -252,7 +258,6 @@ NewPayment.propTypes = {
     payInStore: PropTypes.bool,
   }).isRequired,
   loading: PropTypes.bool.isRequired,
-  nextPage: PropTypes.func.isRequired,
   userData: PropTypes.shape({
     _id: PropTypes.string.isRequired,
     email: PropTypes.string.isRequired,
@@ -267,8 +272,9 @@ NewPayment.propTypes = {
   setChangeCard: PropTypes.func.isRequired,
   rememberCard: PropTypes.bool.isRequired,
   setRememberCard: PropTypes.func.isRequired,
-
-
+  saveCard: PropTypes.bool.isRequired,
+  setSaveCard: PropTypes.func.isRequired,
+  nextPage: PropTypes.func.isRequired,
 };
 
 export default NewPayment;

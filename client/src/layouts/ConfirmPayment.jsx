@@ -1,9 +1,8 @@
-import React from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Button, Typography, Divider, Paper, useTheme,
-  DialogActions, DialogContent, DialogTitle, Dialog, DialogContentText,
+  Button, Typography, Divider, Paper,
+  DialogActions, DialogContent, DialogTitle, Dialog,
 } from '@material-ui/core';
 import useStyles from '../css/ConfirmPaymentStyles';
 import creditCardCircles from '../images/masterCardCircles.png';
@@ -11,15 +10,17 @@ import Loading from '../components/Loading';
 import NewPayment from './NewPayment';
 
 const ConfirmPayment = ({
-  booking, loading, updateBooking, nextPage, creditCards, userData, getCard, deleteCard, getCards, updateCreditCard, creditCard,
-  setCreditCards, setPage, changeCard, setChangeCard, rememberCard, setRememberCard, checked, setChecked,
+  booking, loading, updateBooking, nextPage, creditCards, userData, getCard, deleteCard, getCards,
+  updateCreditCard, creditCard, setCreditCards, changeCard, setChangeCard, rememberCard,
+  setRememberCard, checked, setChecked, saveCard, setSaveCard, postOrPutCardToUser, error,
+  badRequest,
 }) => {
   const classes = useStyles();
   // const theme = useTheme();
   // const [selected, setSelected] = useState(true);
 
-  console.log('Credit Card Array: ', creditCards);
-  console.log('Credit Card Array LENGTH: ', creditCards.length);
+  // console.log('Credit Card Array: ', creditCards);
+  // console.log('Credit Card Array LENGTH: ', creditCards.length);
   console.log('Credit Card: ', creditCard);
 
   // const updateSelectedCard = (card) => {
@@ -29,20 +30,20 @@ const ConfirmPayment = ({
   //   setChangeCard(true);
   // };
 
-  const deleteFirstCard = async () => {
-    const [successful, res] = await deleteCard(
-      creditCards[0].id,
-    );
-    if (successful) {
-      console.log('DELETE REQUEST WORKED', res);
-      setCreditCards(creditCards.filter((x) => x.id !== res.id));
-      // updateCreditCard(['cardId', res.id]);
-    } else {
-      console.log('BAD DELETE REQUEST', res);
-    }
-  };
+  // const deleteFirstCard = async () => {
+  //   const [successful, res] = await deleteCard(
+  //     creditCards[0].id,
+  //   );
+  //   if (successful) {
+  //     console.log('DELETE REQUEST WORKED', res);
+  //     setCreditCards(creditCards.filter((x) => x.id !== res.id));
+  //     // updateCreditCard(['cardId', res.id]);
+  //   } else {
+  //     console.log('BAD DELETE REQUEST', res);
+  //   }
+  // };
   // console.log('NEW CREDIT CARDS ARRAY: ', creditCards);
-
+  
 
   const payInStore = () => {
     updateBooking(['payInStore', !booking.payInStore]);
@@ -50,8 +51,20 @@ const ConfirmPayment = ({
   };
 
   const printOutInfo = () => {
-    console.log('Change Card: ', changeCard);
-    console.log('Remember Card: ', rememberCard);
+    // console.log('Change Card: ', changeCard);
+    // console.log('Remember Card: ', rememberCard);
+    // console.log('Credit Card: ', creditCard);
+  };
+
+  useEffect(() => {
+    if (!badRequest) {
+      setChangeCard(false);
+    }
+  }, [badRequest]);
+  const savePressed = async () => {
+    setSaveCard(true);
+    await postOrPutCardToUser();
+    // This is so that the pop up closes
   };
   // I need to run through the credit cards object, which has the data array of all the credit cards
   // That this person uses, and then I need to output accordingly
@@ -186,13 +199,15 @@ const ConfirmPayment = ({
               setChangeCard={setChangeCard}
               rememberCard={rememberCard}
               setRememberCard={setRememberCard}
+              saveCard={saveCard}
+              setSaveCard={setSaveCard}
             />
           </DialogContent>
           <DialogActions>
             <Button onClick={() => setChangeCard(false)}>Cancel</Button>
-            {/* <Button onClick={() => submitNewAppointment()} color="primary" variant="contained" autoFocus>
-              Create Booking
-            </Button> */}
+            <Button onClick={() => savePressed()} color="primary" variant="contained" autoFocus>
+              Save Card
+            </Button>
           </DialogActions>
         </Dialog>
       </div>
@@ -211,14 +226,14 @@ const ConfirmPayment = ({
       >
         Pay In Store
       </Button>
-      <Button
+      {/* <Button
         style={{ marginTop: 20 }}
         variant="contained"
         color="primary"
         onClick={() => deleteFirstCard()}
       >
         Delete First Card
-      </Button>
+      </Button> */}
     </div>
   );
 };
@@ -268,11 +283,17 @@ ConfirmPayment.propTypes = {
   }).isRequired,
   updateCreditCard: PropTypes.func.isRequired,
   setCreditCards: PropTypes.func.isRequired,
-  setPage: PropTypes.func.isRequired,
   changeCard: PropTypes.bool.isRequired,
   setChangeCard: PropTypes.func.isRequired,
   rememberCard: PropTypes.bool.isRequired,
   setRememberCard: PropTypes.func.isRequired,
+  saveCard: PropTypes.bool.isRequired,
+  setSaveCard: PropTypes.func.isRequired,
+  checked: PropTypes.bool.isRequired,
+  setChecked: PropTypes.func.isRequired,
+  postOrPutCardToUser: PropTypes.func.isRequired,
+  error: PropTypes.bool.isRequired,
+  badRequest: PropTypes.bool.isRequired,
 
 };
 
