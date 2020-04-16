@@ -16,21 +16,12 @@ import Loading from '../components/Loading';
 const NewPayment = ({
   booking, updateBooking, updateCreditCard, loading, nextPage, userData,
   creditCard, getCards, getCard, checked, setChecked, changeCard, setChangeCard,
-  rememberCard, setRememberCard, saveCard, setSaveCard,
+  saveCard, setSaveCard,
 }) => {
   const classes = useStyles();
 
   // console.log('USER DATA: ', userData);
   // console.log('CREDIT CARD: ', creditCard);
-
-  const checkBoxClicked = (event) => {
-    console.log(changeCard);
-    if (changeCard) {
-      setRememberCard(event.target.checked);
-    } else {
-      setChecked(event.target.checked);
-    }
-  };
 
   // const rememberCard = async (event) => {
   //   // POST command for remebering the card
@@ -105,11 +96,11 @@ const NewPayment = ({
     // }
   };
 
-  const printOutInfo = () => {
-    // console.log('Change Card: ', changeCard);
-    // console.log('Checked: ', checked);
-    // console.log('Remember Card: ', rememberCard);
-  };
+  // const printOutInfo = () => {
+  //   // console.log('Change Card: ', changeCard);
+  //   // console.log('Checked: ', checked);
+  //   // console.log('Remember Card: ', rememberCard);
+  // };
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       {loading ? <Loading /> : null}
@@ -186,21 +177,20 @@ const NewPayment = ({
 
           />
         </Grid> */}
-        <Grid item xs={12} className={classes.center}>
-          <FormControlLabel
-            control={(
-              <Checkbox
-                checked={changeCard ? rememberCard : checked}
-                onChange={(event) => checkBoxClicked(event)}
-                name="Remember this Card"
-              />
-)}
-            label="Remember this Card"
-          />
-        </Grid>
-        {printOutInfo()}
         {!changeCard && (
           <>
+            <Grid item xs={12} className={classes.center}>
+              <FormControlLabel
+                control={(
+                  <Checkbox
+                    checked={checked}
+                    onChange={(event) => setChecked(event.target.checked)}
+                    name="Remember this Card"
+                  />
+)}
+                label="Remember this Card"
+              />
+            </Grid>
             <Grid item xs={12} className={classes.divider}>
               <Divider variant="middle" style={{ flexGrow: 1 }} />
               <Typography variant="h5">
@@ -270,8 +260,6 @@ NewPayment.propTypes = {
   checked: PropTypes.bool.isRequired,
   changeCard: PropTypes.bool.isRequired,
   setChangeCard: PropTypes.func.isRequired,
-  rememberCard: PropTypes.bool.isRequired,
-  setRememberCard: PropTypes.func.isRequired,
   saveCard: PropTypes.bool.isRequired,
   setSaveCard: PropTypes.func.isRequired,
   nextPage: PropTypes.func.isRequired,

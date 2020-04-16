@@ -14,15 +14,15 @@ import Loading from '../components/Loading';
 
 
 const ReviewBooking = ({
-  booking, specialists, services, loading, sendRequest,
+  booking, specialists, services, loading, sendRequest, finalCreditCard,
 }) => {
   const classes = useStyles();
   const history = useHistory();
   const currentService = services.find((x) => x._id === booking.service);
   const [price, setPrice] = useState(0);
-  console.log(services);
-  console.log(booking.service);
-  console.log(booking.addons);
+  // console.log(services);
+  // console.log(booking.service);
+  // console.log(booking.addons);
 
   useEffect(() => {
     let counter = currentService.price;
@@ -32,6 +32,9 @@ const ReviewBooking = ({
     setPrice(counter);
   }, [services]);
 
+  console.log('FINAL CARD', finalCreditCard);
+
+  // I need to ask alen about this
   console.log('The price is: ', price);
   const updateBookingRequest = async () => {
     const { specialist, ...restOfBooking } = booking;
@@ -55,7 +58,7 @@ const ReviewBooking = ({
       </div>
       <div className={classes.spacing}>
         <Typography variant="subtitle1" color="textSecondary">Card:</Typography>
-        <Typography variant="subtitle1">.... .... .... 1234</Typography>
+        <Typography variant="subtitle1">.... .... .... {finalCreditCard.last4}</Typography>
       </div>
     </div>
   );
@@ -170,5 +173,14 @@ ReviewBooking.propTypes = {
   }]).isRequired,
   loading: PropTypes.bool.isRequired,
   sendRequest: PropTypes.func.isRequired,
+  finalCreditCard: PropTypes.shape({
+    name: PropTypes.string,
+    cardNumber: PropTypes.string,
+    expMonth: PropTypes.number,
+    expYear: PropTypes.number,
+    CVC: PropTypes.number,
+    cardId: PropTypes.string,
+    last4: PropTypes.string,
+  }).isRequired,
 };
 export default ReviewBooking;

@@ -18,7 +18,7 @@ import ReviewBooking from './ReviewBooking';
 import useBooking from '../stores/BookStore';
 
 const Book = ({
-  userData, newCardToUser, updateCardForUser, getCards, getCard, deleteCard, newCardCheck,
+  userData, newCardToUser, updateCardForUser, getCards, getCard, deleteCard, newCardCheck, loggedIn,
 }) => {
   const params = useParams();
   const [page, setPage] = useState(0);
@@ -54,10 +54,18 @@ const Book = ({
     cardId: '',
     last4: '',
   });
+  const [finalCreditCard, setFinalCreditCard] = useState({
+    name: userData ? userData.name : '',
+    cardNumber: '',
+    expMonth: '',
+    expYear: '',
+    CVC: '',
+    cardId: '',
+    last4: '',
+  });
   const [CCFlag, setCCFlag] = useState(false);
   const [changeCard, setChangeCard] = useState(false);
   const [saveCard, setSaveCard] = useState(false);
-  const [rememberCard, setRememberCard] = useState(false);
   const [creditCards, setCreditCards] = useState([]);
 
   // const setChangeCard = (f) => {
@@ -85,24 +93,37 @@ const Book = ({
     setCreditCard(newFields);
   };
 
+  const updateFinalCreditCard = async (...argus) => {
+    const newFields = { ...finalCreditCard };
+    argus.forEach((argu) => {
+      const [fieldName, val] = argu;
+      newFields[fieldName] = val;
+      console.log(newFields);
+    });
+    setFinalCreditCard(newFields);
+  };
+
+  // This initially sets the creditCard
   const checkCC = async () => {
-    const [successful, res] = await getCards(userData._id);
-    if (successful) {
-      if (res.data.length === 0) {
-        setCCFlag(false);
-      } else {
+    if (loggedIn) {
+      const [successful, res] = await getCards(userData._id);
+      if (successful) {
+        if (res.data.length === 0) {
+          setCCFlag(false);
+        } else {
         // Gets the first one, which should be the only one
-        setCreditCards(res.data[0]);
-        // creditCard.cardId = res.data[0].id;
-        // creditCard.expMonth = res.data[0].exp_month;
-        // creditCard.expYear = res.data[0].exp_year;
-        // creditCard.last4 = res.data[0].last4;
-        await updateCreditCard(['cardId', res.data[0].id], ['expMonth', res.data[0].card.exp_month], ['expYear', res.data[0].card.exp_year], ['last4', res.data[0].card.last4]);
-        setCCFlag(true);
+          setCreditCards(res.data[0]);
+          // creditCard.cardId = res.data[0].id;
+          // creditCard.expMonth = res.data[0].exp_month;
+          // creditCard.expYear = res.data[0].exp_year;
+          // creditCard.last4 = res.data[0].last4;
+          await updateCreditCard(['cardId', res.data[0].id], ['expMonth', res.data[0].card.exp_month], ['expYear', res.data[0].card.exp_year], ['last4', res.data[0].card.last4]);
+          setCCFlag(true);
+        }
+        console.log('getCards WORKED', res);
+      } else {
+        console.log('BOOK PAGE BAD GET REQUEST', res);
       }
-      console.log('getCards WORKED', res);
-    } else {
-      console.log('BOOK PAGE BAD GET REQUEST', res);
     }
   };
 
@@ -135,6 +156,18 @@ const Book = ({
         console.log('POST REQUEST 1 WORKED', res);
         setBadRequest(false);
         await updateCreditCard(['cardId', res.data[0].id]);
+        await updateCreditCard(['last4', res.data[0].card.last4]);
+        await updateFinalCreditCard(
+          ['cardNumber', creditCard.cardNumber],
+          ['last4', res.data[0].card.last4],
+          ['cardId', res.data[0].id],
+          ['expMonth', res.data[0].card.exp_month],
+          ['expYear', res.data[0].card.exp_year],
+          ['CVC', creditCard.CVC],
+          ['name', creditCard.name],
+        );
+        // This is jsut reasserting the cardId and last4
+        console.log('MY FINAL CARD POST', finalCreditCard);
       } else {
         console.log('BAD POST REQUEST', res);
         // Checks validity of card
@@ -158,6 +191,18 @@ const Book = ({
         // saves the new card id
         setBadRequest(false);
         await updateCreditCard(['cardId', res.id]);
+        // console.log(creditCard.cardNumber.substr(creditCard.cardNumber.length - 4));
+        await updateCreditCard(['last4', res.card.last4]);
+        await updateFinalCreditCard(
+          ['cardNumber', creditCard.cardNumber],
+          ['last4', res.card.last4],
+          ['cardId', res.id],
+          ['expMonth', res.card.exp_month],
+          ['expYear', res.card.exp_year],
+          ['CVC', creditCard.CVC],
+          ['name', creditCard.name],
+        );
+        console.log('MY FINAL CARD PUT', finalCreditCard);
       } else {
         console.log('BAD PUT REQUEST', res);
         // Checks validity of card
@@ -169,11 +214,9 @@ const Book = ({
   };
 
 
-  // useEffect(() => {
-  //   if (saveCard) {
-  //     postOrPutCardToUser();
-  //   }
-  // }, [saveCard]);
+  useEffect(() => {
+    console.log('FINAL CREDIT CARD CHANGES: ', finalCreditCard);
+  }, [finalCreditCard]);
 
   // This calls the post command to check if the card is valid, but does NOT save it to user
   const postCard = async () => {
@@ -187,8 +230,19 @@ const Book = ({
       console.log('POST REQUEST 2 WORKED', res);
       setBadRequest(false);
       updateCreditCard(['cardId', res.id]);
+      setFinalCreditCard(creditCard);
+      await updateFinalCreditCard(
+        ['cardNumber', creditCard.cardNumber],
+        ['last4', res.card.last4],
+        ['cardId', res.id],
+        ['expMonth', res.card.exp_month],
+        ['expYear', res.card.exp_year],
+        ['CVC', creditCard.CVC],
+        ['name', creditCard.name],
+      );
+      console.log('MY FINAL CARD  POST 2', finalCreditCard);
     } else {
-      console.log('BAD POST REQUEST', res);
+      console.log('BAD POST 2 REQUEST', res);
       // This is temporary - talk to Lauren
       setError(true);
       setBadRequest(true);
@@ -219,7 +273,8 @@ const Book = ({
             // Checks if the card is valid
             if (checked) {
               // Saves to user
-              console.log('MY CARD', creditCard);
+              console.log('MY CARD 1', creditCard);
+              console.log('MY FINAL CARD 1', finalCreditCard);
               postOrPutCardToUser();
             } else {
               postCard();
@@ -227,14 +282,17 @@ const Book = ({
             // IF they have a card in store
           } else if (saveCard) {
             console.log('SAVE CARD PRESSED');
-            // if they want to change the card, and they want to remember it
-            if (rememberCard) {
-              // Saves to user
-              console.log('MY CARD', creditCard);
-              postOrPutCardToUser();
-            } else {
-              postCard();
-            }
+            console.log('MY CARD 2', creditCard);
+            console.log('MY FINAL CARD 2', finalCreditCard);
+            postOrPutCardToUser();
+          } else {
+            updateFinalCreditCard(
+              ['last4', creditCard.last4],
+              ['cardId', creditCard.cardId],
+              ['expMonth', creditCard.expMonth],
+              ['expYear', creditCard.expYear],
+              ['name', creditCard.name],
+            );
           }
           setPage((prev) => prev + 1);
         } else {
@@ -288,8 +346,6 @@ const Book = ({
               setCreditCards={setCreditCards}
               changeCard={changeCard}
               setChangeCard={setChangeCard}
-              rememberCard={rememberCard}
-              setRememberCard={setRememberCard}
               checked={checked}
               setChecked={setChecked}
               saveCard={saveCard}
@@ -317,8 +373,6 @@ const Book = ({
             setChecked={setChecked}
             changeCard={changeCard}
             setChangeCard={setChangeCard}
-            rememberCard={rememberCard}
-            setRememberCard={setRememberCard}
             saveCard={saveCard}
             setSaveCard={setSaveCard}
             postOrPutCardToUser={postOrPutCardToUser}
@@ -333,6 +387,7 @@ const Book = ({
             services={services}
             loading={loading}
             sendRequest={(book) => sendRequest(book)}
+            finalCreditCard={finalCreditCard}
           />
         );
       default:
@@ -396,6 +451,7 @@ Book.propTypes = {
   getCard: PropTypes.func.isRequired,
   deleteCard: PropTypes.func.isRequired,
   newCardCheck: PropTypes.func.isRequired,
+  loggedIn: PropTypes.bool.isRequired,
 };
 
 

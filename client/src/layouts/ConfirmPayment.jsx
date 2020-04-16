@@ -11,9 +11,8 @@ import NewPayment from './NewPayment';
 
 const ConfirmPayment = ({
   booking, loading, updateBooking, nextPage, creditCards, userData, getCard, deleteCard, getCards,
-  updateCreditCard, creditCard, setCreditCards, changeCard, setChangeCard, rememberCard,
-  setRememberCard, checked, setChecked, saveCard, setSaveCard, postOrPutCardToUser, error,
-  badRequest,
+  updateCreditCard, creditCard, setCreditCards, changeCard, setChangeCard, checked, setChecked,
+  saveCard, setSaveCard, postOrPutCardToUser, badRequest,
 }) => {
   const classes = useStyles();
   // const theme = useTheme();
@@ -197,8 +196,6 @@ const ConfirmPayment = ({
               setChecked={setChecked}
               changeCard={changeCard}
               setChangeCard={setChangeCard}
-              rememberCard={rememberCard}
-              setRememberCard={setRememberCard}
               saveCard={saveCard}
               setSaveCard={setSaveCard}
             />
@@ -285,14 +282,11 @@ ConfirmPayment.propTypes = {
   setCreditCards: PropTypes.func.isRequired,
   changeCard: PropTypes.bool.isRequired,
   setChangeCard: PropTypes.func.isRequired,
-  rememberCard: PropTypes.bool.isRequired,
-  setRememberCard: PropTypes.func.isRequired,
   saveCard: PropTypes.bool.isRequired,
   setSaveCard: PropTypes.func.isRequired,
   checked: PropTypes.bool.isRequired,
   setChecked: PropTypes.func.isRequired,
   postOrPutCardToUser: PropTypes.func.isRequired,
-  error: PropTypes.bool.isRequired,
   badRequest: PropTypes.bool.isRequired,
 
 };

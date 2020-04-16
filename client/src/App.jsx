@@ -84,7 +84,7 @@ const App = () => {
           <Switch>
             <Route exact path="/" component={() => <Home loggedIn={loggedIn} setFromBookPage={setFromBookPage} />} />
             <Route path="/book/:id" component={() => <Book userData={userData} />} />
-            <Route path="/book/" component={() => <Book userData={userData} newCardToUser={newCardToUser} updateCardForUser={updateCardForUser} getCards={getCards} getCard={getCard} deleteCard={deleteCard} newCardCheck={newCardCheck} />} />
+            <Route path="/book/" component={() => <Book userData={userData} newCardToUser={newCardToUser} updateCardForUser={updateCardForUser} getCards={getCards} getCard={getCard} deleteCard={deleteCard} newCardCheck={newCardCheck} loggedIn={loggedIn} />} />
             <Route path="/services" component={Services} />
             <Route path="/contact" component={Contact} />
             <Route path="/login" component={() => <Login login={login} fromBookPage={fromBookPage} resetPassword={requestResetPassword} />} />
