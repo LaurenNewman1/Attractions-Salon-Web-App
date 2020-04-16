@@ -48,7 +48,7 @@ const NavBar = ({ loggedIn, userData, setFromBookPage }) => {
         setOptions(staffOptions);
         break;
       default:
-        setOptions([]);
+        setOptions(userOptions);
         break;
     }
   }, [userData]);
