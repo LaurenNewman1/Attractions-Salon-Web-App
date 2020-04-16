@@ -1,17 +1,21 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
   Button, Typography, Divider, Paper, useTheme,
+  DialogActions, DialogContent, DialogTitle, Dialog, DialogContentText,
 } from '@material-ui/core';
 import useStyles from '../css/ConfirmPaymentStyles';
 import creditCardCircles from '../images/masterCardCircles.png';
 import Loading from '../components/Loading';
+import NewPayment from './NewPayment';
 
 const ConfirmPayment = ({
-  booking, loading, updateBooking, nextPage, creditCards, userData, getCard, deleteCard, getCards, updateCreditCard, creditCard, setCreditCards, setPage,
+  booking, loading, updateBooking, nextPage, creditCards, userData, getCard, deleteCard, getCards, updateCreditCard, creditCard,
+  setCreditCards, setPage, changeCard, setChangeCard, rememberCard, setRememberCard, checked, setChecked,
 }) => {
   const classes = useStyles();
-  const theme = useTheme();
+  // const theme = useTheme();
   // const [selected, setSelected] = useState(true);
 
   console.log('Credit Card Array: ', creditCards);
@@ -20,6 +24,9 @@ const ConfirmPayment = ({
 
   // const updateSelectedCard = (card) => {
   //   updateCreditCard(['name', userData.name], ['expMonth', card.exp_month], ['expYear', card.exp_year]);
+  // };
+  // const changeTheCard = () => {
+  //   setChangeCard(true);
   // };
 
   const deleteFirstCard = async () => {
@@ -42,6 +49,10 @@ const ConfirmPayment = ({
     nextPage();
   };
 
+  const printOutInfo = () => {
+    console.log('Change Card: ', changeCard);
+    console.log('Remember Card: ', rememberCard);
+  };
   // I need to run through the credit cards object, which has the data array of all the credit cards
   // That this person uses, and then I need to output accordingly
   return (
@@ -140,14 +151,50 @@ const ConfirmPayment = ({
           </div>
         </Paper>
       </div>
-
       <div className={classes.link}>
         <Button
           style={{ textDecoration: 'underline' }}
           target="_blank"
+          onClick={() => setChangeCard(true)}
         >
           Change Card
         </Button>
+      </div>
+      <div>
+        {printOutInfo()}
+        <Dialog
+          open={changeCard}
+          fullWidth
+          maxWidth="md"
+          onClose={() => setChangeCard(false)}
+        >
+          <DialogTitle>Change Credit Card</DialogTitle>
+          <DialogContent>
+            <NewPayment
+              updateCreditCard={(...argus) => updateCreditCard(...argus)}
+              loading={loading}
+              booking={booking}
+              updateBooking={(...argus) => updateBooking(...argus)}
+              getCards={getCards}
+              getCard={getCard}
+              userData={userData}
+              deleteCard={deleteCard}
+              creditCard={creditCard}
+              checked={checked}
+              setChecked={setChecked}
+              changeCard={changeCard}
+              setChangeCard={setChangeCard}
+              rememberCard={rememberCard}
+              setRememberCard={setRememberCard}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setChangeCard(false)}>Cancel</Button>
+            {/* <Button onClick={() => submitNewAppointment()} color="primary" variant="contained" autoFocus>
+              Create Booking
+            </Button> */}
+          </DialogActions>
+        </Dialog>
       </div>
       <div className={classes.divider}>
         <Divider variant="middle" style={{ flexGrow: 1 }} />
@@ -222,6 +269,10 @@ ConfirmPayment.propTypes = {
   updateCreditCard: PropTypes.func.isRequired,
   setCreditCards: PropTypes.func.isRequired,
   setPage: PropTypes.func.isRequired,
+  changeCard: PropTypes.bool.isRequired,
+  setChangeCard: PropTypes.func.isRequired,
+  rememberCard: PropTypes.bool.isRequired,
+  setRememberCard: PropTypes.func.isRequired,
 
 };
 

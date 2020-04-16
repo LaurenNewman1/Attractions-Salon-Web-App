@@ -18,7 +18,7 @@ import ReviewBooking from './ReviewBooking';
 import useBooking from '../stores/BookStore';
 
 const Book = ({
-  userData, newCardToUser, updateCardForUser, getCards, getCard, deleteCard, newCard,
+  userData, newCardToUser, updateCardForUser, getCards, getCard, deleteCard, newCardCheck,
 }) => {
   const params = useParams();
   const [page, setPage] = useState(0);
@@ -54,8 +54,14 @@ const Book = ({
     last4: '',
   });
   const [CCFlag, setCCFlag] = useState(false);
+  const [changeCard, _setChangeCard] = useState(false);
+  const [rememberCard, setRememberCard] = useState(false);
   const [creditCards, setCreditCards] = useState([]);
 
+  const setChangeCard = (f) => {
+    console.trace(`changing changecard to ${f}!`);
+    _setChangeCard(f);
+  };
 
   const updateBooking = (...argus) => {
     const newFields = { ...booking };
@@ -154,8 +160,9 @@ const Book = ({
     }
   };
 
+  // This calls the post command to check if the card is valid, but does NOT save it to user
   const postCard = async () => {
-    const [successful, res] = await newCard(
+    const [successful, res] = await newCardCheck(
       creditCard.cardNumber,
       creditCard.expMonth,
       creditCard.expYear,
@@ -200,18 +207,15 @@ const Book = ({
             } else {
               postCard();
             }
-          } else {
-            // If they have a card in store
-            // Need a variable for this
-            if (changeCard) {
-              // if they want to change the card, and they want to remember it
-              if (rememberCard) {
-                // Saves to user
-                console.log('MY CARD', creditCard);
-                postOrPutCardToUser();
-              } else {
-                postCard();
-              }
+            // IF they have a card in store
+          } else if (changeCard) {
+            // if they want to change the card, and they want to remember it
+            if (rememberCard) {
+              // Saves to user
+              console.log('MY CARD', creditCard);
+              postOrPutCardToUser();
+            } else {
+              postCard();
             }
           }
           setPage((prev) => prev + 1);
@@ -266,6 +270,12 @@ const Book = ({
               creditCard={creditCard}
               setCreditCards={setCreditCards}
               setPage={setPage}
+              changeCard={changeCard}
+              setChangeCard={setChangeCard}
+              rememberCard={rememberCard}
+              setRememberCard={setRememberCard}
+              checked={checked}
+              setChecked={setChecked}
             />
           );
         }
@@ -284,6 +294,10 @@ const Book = ({
             creditCard={creditCard}
             checked={checked}
             setChecked={setChecked}
+            changeCard={changeCard}
+            setChangeCard={setChangeCard}
+            rememberCard={rememberCard}
+            setRememberCard={setRememberCard}
           />
         );
       case 3:
@@ -357,7 +371,7 @@ Book.propTypes = {
   getCards: PropTypes.func.isRequired,
   getCard: PropTypes.func.isRequired,
   deleteCard: PropTypes.func.isRequired,
-  newCard: PropTypes.func.isRequired,
+  newCardCheck: PropTypes.func.isRequired,
 };
 
 

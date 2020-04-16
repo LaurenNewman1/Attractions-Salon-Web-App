@@ -14,42 +14,53 @@ import Loading from '../components/Loading';
 // You need to do payLater and take a look at the update functions as well as expiration date
 
 const NewPayment = ({
-  booking, updateBooking, updateCreditCard, loading, nextPage, userData, newCardToUser, creditCard, getCards, getCard, checked, setChecked,
+  booking, updateBooking, updateCreditCard, loading, nextPage, userData,
+  creditCard, getCards, getCard, checked, setChecked, changeCard, setChangeCard,
+  rememberCard, setRememberCard,
 }) => {
   const classes = useStyles();
 
   console.log('USER DATA: ', userData);
   console.log('CREDIT CARD: ', creditCard);
 
-  const rememberCard = async (event) => {
-    // POST command for remebering the card
-    setChecked(event.target.checked);
-    // if (event.target.checked === true) {
-    //   const [successful, res] = await newCardToUser(
-    //     userData._id,
-    //     creditCard.cardNumber,
-    //     creditCard.expMonth,
-    //     creditCard.expYear,
-    //     creditCard.CVC,
-    //   );
-    //   if (successful) {
-    //     console.log('POST REQUEST WORKED', res);
-    //     updateCreditCard(['cardId', res.id]);
-    //   } else {
-    //     console.log('BAD POST REQUEST', res);
-    //   }
-    // } else {
-    //   // Deletes the current card from being saved
-    //   const [successful, res] = await deleteCard(
-    //     creditCard.cardId,
-    //   );
-    //   if (successful) {
-    //     console.log('DELETE REQUEST WORKED', res);
-    //   } else {
-    //     console.log('BAD DELETE REQUEST', res);
-    //   }
-    // }
+  const checkBoxClicked = (event) => {
+    console.log(changeCard);
+    if (changeCard) {
+      setRememberCard(event.target.checked);
+    } else {
+      setChecked(event.target.checked);
+    }
   };
+
+  // const rememberCard = async (event) => {
+  //   // POST command for remebering the card
+  //   setChecked(event.target.checked);
+  //   // if (event.target.checked === true) {
+  //   //   const [successful, res] = await newCardToUser(
+  //   //     userData._id,
+  //   //     creditCard.cardNumber,
+  //   //     creditCard.expMonth,
+  //   //     creditCard.expYear,
+  //   //     creditCard.CVC,
+  //   //   );
+  //   //   if (successful) {
+  //   //     console.log('POST REQUEST WORKED', res);
+  //   //     updateCreditCard(['cardId', res.id]);
+  //   //   } else {
+  //   //     console.log('BAD POST REQUEST', res);
+  //   //   }
+  //   // } else {
+  //   //   // Deletes the current card from being saved
+  //   //   const [successful, res] = await deleteCard(
+  //   //     creditCard.cardId,
+  //   //   );
+  //   //   if (successful) {
+  //   //     console.log('DELETE REQUEST WORKED', res);
+  //   //   } else {
+  //   //     console.log('BAD DELETE REQUEST', res);
+  //   //   }
+  //   // }
+  // };
 
 
   const payInStore = async () => {
@@ -94,6 +105,11 @@ const NewPayment = ({
     // }
   };
 
+  const printOutInfo = () => {
+    console.log('Change Card: ', changeCard);
+    console.log('Checked: ', checked);
+    console.log('Remember Card: ', rememberCard);
+  };
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       {loading ? <Loading /> : null}
@@ -172,14 +188,15 @@ const NewPayment = ({
           <FormControlLabel
             control={(
               <Checkbox
-                checked={checked}
-                onChange={rememberCard}
+                checked={changeCard ? rememberCard : checked}
+                onChange={(event) => checkBoxClicked(event)}
                 name="Remember this Card"
               />
 )}
             label="Remember this Card"
           />
         </Grid>
+        {printOutInfo()}
         <Grid item xs={12} className={classes.divider}>
           <Divider variant="middle" style={{ flexGrow: 1 }} />
           <Typography variant="h5">
@@ -196,7 +213,7 @@ const NewPayment = ({
             Pay In Store // Testing getCards
           </Button>
         </Grid>
-        <Grid xs={12} className={classes.button}>
+        {/* <Grid xs={12} className={classes.button}>
           <Button
             variant="contained"
             color="primary"
@@ -204,7 +221,7 @@ const NewPayment = ({
           >
             Get Card TESTER
           </Button>
-        </Grid>
+        </Grid> */}
       </Grid>
     </MuiPickersUtilsProvider>
   );
@@ -220,7 +237,6 @@ NewPayment.propTypes = {
     cardId: PropTypes.string,
   }).isRequired,
   updateCreditCard: PropTypes.func.isRequired,
-  newCardToUser: PropTypes.func.isRequired,
   updateBooking: PropTypes.func.isRequired,
   booking: PropTypes.shape({
     name: PropTypes.string,
@@ -245,9 +261,12 @@ NewPayment.propTypes = {
   }).isRequired,
   getCards: PropTypes.func.isRequired,
   getCard: PropTypes.func.isRequired,
-  deleteCard: PropTypes.func.isRequired,
   setChecked: PropTypes.func.isRequired,
   checked: PropTypes.bool.isRequired,
+  changeCard: PropTypes.bool.isRequired,
+  setChangeCard: PropTypes.func.isRequired,
+  rememberCard: PropTypes.bool.isRequired,
+  setRememberCard: PropTypes.func.isRequired,
 
 
 };

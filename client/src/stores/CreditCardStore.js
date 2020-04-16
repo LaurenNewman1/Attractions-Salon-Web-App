@@ -128,7 +128,7 @@ export default () => {
     return [success, res];
   };
 
-  const newCard = async (number, expMonth, expYear, cvc) => {
+  const newCardCheck = async (number, expMonth, expYear, cvc) => {
     const [success, res] = await requestCreditCardCheck(number, expMonth, expYear, cvc);
     return [success, res];
   };
@@ -148,5 +148,5 @@ export default () => {
     return [success, res];
   };
 
-  return [newCardToUser, updateCardForUser, getCards, getCard, deleteCard, newCard];
+  return [newCardToUser, updateCardForUser, getCards, getCard, deleteCard, newCardCheck];
 };
