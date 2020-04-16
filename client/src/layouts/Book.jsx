@@ -161,14 +161,14 @@ const Book = ({
       if (successful) {
         console.log('POST REQUEST 1 WORKED', res);
         setBadRequest(false);
-        await updateCreditCard(['cardId', res.data[0].id]);
-        await updateCreditCard(['last4', res.data[0].card.last4]);
+        await updateCreditCard(['cardId', res.id]);
+        await updateCreditCard(['last4', res.card.last4]);
         await updateFinalCreditCard(
           ['cardNumber', creditCard.cardNumber],
-          ['last4', res.data[0].card.last4],
-          ['cardId', res.data[0].id],
-          ['expMonth', res.data[0].card.exp_month],
-          ['expYear', res.data[0].card.exp_year],
+          ['last4', res.card.last4],
+          ['cardId', res.id],
+          ['expMonth', res.card.exp_month],
+          ['expYear', res.card.exp_year],
           ['CVC', creditCard.CVC],
           ['name', creditCard.name],
         );
@@ -294,7 +294,7 @@ const Book = ({
             // console.log('SAVE CARD PRESSED');
             console.log('MY CARD 2', creditCard);
             console.log('MY FINAL CARD 2', finalCreditCard);
-            postOrPutCardToUser();
+            // postOrPutCardToUser();
           } else {
             setCCFlag(true);
             updateFinalCreditCard(

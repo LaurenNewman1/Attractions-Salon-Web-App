@@ -45,10 +45,8 @@ const ReviewBooking = ({
 
   useEffect(() => {
     updateBooking(['method_id', finalCreditCard.cardId]);
+    console.log('FINAL CARD', finalCreditCard);
   }, []);
-
-  console.log('FINAL CARD', finalCreditCard);
-
 
   // I need to ask alen about this
   console.log('The price is: ', price);
