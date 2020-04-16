@@ -25,6 +25,7 @@ const Book = ({
   const [error, setError] = useState(false);
   const [badRequest, setBadRequest] = useState(true);
   const [checked, setChecked] = useState(false);
+  const [noCC, setNoCC] = useState(false);
   const [booking, setBooking] = useState({
     name: userData ? userData.name : '',
     email: userData ? userData.email : '',
@@ -110,6 +111,7 @@ const Book = ({
       if (successful) {
         if (res.data.length === 0) {
           setCCFlag(false);
+          setNoCC(false);
         } else {
         // Gets the first one, which should be the only one
           setCreditCards(res.data[0]);
@@ -119,11 +121,14 @@ const Book = ({
           // creditCard.last4 = res.data[0].last4;
           await updateCreditCard(['cardId', res.data[0].id], ['expMonth', res.data[0].card.exp_month], ['expYear', res.data[0].card.exp_year], ['last4', res.data[0].card.last4]);
           setCCFlag(true);
+          setNoCC(true);
         }
         console.log('getCards WORKED', res);
       } else {
         console.log('BOOK PAGE BAD GET REQUEST', res);
       }
+    } else {
+      setNoCC(true);
     }
   };
 
@@ -131,6 +136,7 @@ const Book = ({
     checkCC();
   }, []);
 
+  // For a logged in user
   const postOrPutCardToUser = async () => {
     // This can be polished later to only run once and save the required id
     const [success, response] = await getCards(userData._id);
@@ -267,9 +273,12 @@ const Book = ({
         }
         break;
       case 2:
+        console.log('The card: ', creditCard);
         if (creditCard.name && creditCard.expMonth && creditCard.expYear) {
           // This checks if the remember my Card is checked, and does the appropriate post command
           if (!CCFlag) {
+            // This is so that new Payment goes to payment
+            setCCFlag(true);
             // Checks if the card is valid
             if (checked) {
               // Saves to user
@@ -279,13 +288,16 @@ const Book = ({
             } else {
               postCard();
             }
+            break;
             // IF they have a card in store
           } else if (saveCard) {
-            console.log('SAVE CARD PRESSED');
+            setCCFlag(true);
+            // console.log('SAVE CARD PRESSED');
             console.log('MY CARD 2', creditCard);
             console.log('MY FINAL CARD 2', finalCreditCard);
             postOrPutCardToUser();
           } else {
+            setCCFlag(true);
             updateFinalCreditCard(
               ['last4', creditCard.last4],
               ['cardId', creditCard.cardId],
@@ -353,6 +365,8 @@ const Book = ({
               postOrPutCardToUser={postOrPutCardToUser}
               error={error}
               badRequest={badRequest}
+              finalCreditCard={finalCreditCard}
+              noCC={noCC}
             />
           );
         }
@@ -376,6 +390,7 @@ const Book = ({
             saveCard={saveCard}
             setSaveCard={setSaveCard}
             postOrPutCardToUser={postOrPutCardToUser}
+            loggedIn={loggedIn}
           />
         );
       case 3:

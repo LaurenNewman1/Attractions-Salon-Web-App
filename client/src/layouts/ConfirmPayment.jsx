@@ -12,7 +12,7 @@ import NewPayment from './NewPayment';
 const ConfirmPayment = ({
   booking, loading, updateBooking, nextPage, creditCards, userData, getCard, deleteCard, getCards,
   updateCreditCard, creditCard, setCreditCards, changeCard, setChangeCard, checked, setChecked,
-  saveCard, setSaveCard, postOrPutCardToUser, badRequest,
+  saveCard, setSaveCard, postOrPutCardToUser, badRequest, noCC, finalCreditCard,
 }) => {
   const classes = useStyles();
   // const theme = useTheme();
@@ -42,18 +42,13 @@ const ConfirmPayment = ({
   //   }
   // };
   // console.log('NEW CREDIT CARDS ARRAY: ', creditCards);
-  
+
 
   const payInStore = () => {
     updateBooking(['payInStore', !booking.payInStore]);
     nextPage();
   };
 
-  const printOutInfo = () => {
-    // console.log('Change Card: ', changeCard);
-    // console.log('Remember Card: ', rememberCard);
-    // console.log('Credit Card: ', creditCard);
-  };
 
   useEffect(() => {
     if (!badRequest) {
@@ -65,75 +60,10 @@ const ConfirmPayment = ({
     await postOrPutCardToUser();
     // This is so that the pop up closes
   };
-  // I need to run through the credit cards object, which has the data array of all the credit cards
-  // That this person uses, and then I need to output accordingly
   return (
     <div className={classes.page}>
       {loading ? <Loading /> : null}
       <h2 className={classes.header}>Confirm Payment Method</h2>
-      {/* {(creditCards.length !== 0) ? (creditCards.map(({ card }) => (
-        <div style={{
-          width: '100%',
-          display: 'flex',
-          justifyContent: 'center',
-          marginBottom: 18,
-        }}
-        >
-          <Paper
-            className={classes.paper}
-            style={{ borderColor: selected ? theme.palette.primary.main : 'transparent' }}
-            onClick={() => updateSelectedCard(card)}
-          >
-            <img src={creditCardCircles} alt="Circles" className={classes.circles} />
-            <Typography variant="h5">
-              ....&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              ....&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              ....&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              {card.last4}
-            </Typography>
-            <div className={classes.middleSpace} />
-            <div className={classes.spaceBetween}>
-              <Typography variant="subtitle1">Name</Typography>
-              <Typography variant="subtitle1">Exp</Typography>
-            </div>
-            <div className={classes.spaceBetween}>
-              <Typography variant="subtitle2">{booking.name}</Typography>
-              <Typography variant="subtitle2">{card.exp_month}/{card.exp_year}</Typography>
-            </div>
-          </Paper>
-        </div>
-      )))
-        : (
-          <div style={{
-            width: '100%',
-            display: 'flex',
-            justifyContent: 'center',
-            marginBottom: 18,
-          }}
-          >
-            <Paper
-              className={classes.paper}
-              style={{ borderColor: selected ? theme.palette.primary.main : 'transparent' }}
-            >
-              <img src={creditCardCircles} alt="Circles" className={classes.circles} />
-              <Typography variant="h5">
-                ....&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                ....&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                ....&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                {creditCard.cardNumber.substr(creditCard.cardNumber.length - 4)}
-              </Typography>
-              <div className={classes.middleSpace} />
-              <div className={classes.spaceBetween}>
-                <Typography variant="subtitle1">Name</Typography>
-                <Typography variant="subtitle1">Exp</Typography>
-              </div>
-              <div className={classes.spaceBetween}>
-                <Typography variant="subtitle2">{creditCard.name}</Typography>
-                <Typography variant="subtitle2">{creditCard.expMonth}/{creditCard.expYear}</Typography>
-              </div>
-            </Paper>
-          </div>
-        )} */}
       <div style={{
         width: '100%',
         display: 'flex',
@@ -149,8 +79,7 @@ const ConfirmPayment = ({
             ....&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             ....&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             ....&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            {/* {creditCard.cardNumber.substr(creditCard.cardNumber.length - 4)} */}
-            {creditCard.last4}
+            {!noCC ? creditCard.last4 : finalCreditCard.last4}
           </Typography>
           <div className={classes.middleSpace} />
           <div className={classes.spaceBetween}>
@@ -173,7 +102,6 @@ const ConfirmPayment = ({
         </Button>
       </div>
       <div>
-        {printOutInfo()}
         <Dialog
           open={changeCard}
           fullWidth
@@ -223,14 +151,6 @@ const ConfirmPayment = ({
       >
         Pay In Store
       </Button>
-      {/* <Button
-        style={{ marginTop: 20 }}
-        variant="contained"
-        color="primary"
-        onClick={() => deleteFirstCard()}
-      >
-        Delete First Card
-      </Button> */}
     </div>
   );
 };
@@ -285,10 +205,13 @@ ConfirmPayment.propTypes = {
   saveCard: PropTypes.bool.isRequired,
   setSaveCard: PropTypes.func.isRequired,
   checked: PropTypes.bool.isRequired,
+  noCC: PropTypes.bool.isRequired,
   setChecked: PropTypes.func.isRequired,
   postOrPutCardToUser: PropTypes.func.isRequired,
   badRequest: PropTypes.bool.isRequired,
-
+  finalCreditCard: PropTypes.shape({
+    last4: PropTypes.string,
+  }).isRequired,
 };
 
 export default ConfirmPayment;

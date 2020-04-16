@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
   TextField, Button, Grid, FormControlLabel,
@@ -16,9 +16,14 @@ import Loading from '../components/Loading';
 const NewPayment = ({
   booking, updateBooking, updateCreditCard, loading, nextPage, userData,
   creditCard, getCards, getCard, checked, setChecked, changeCard, setChangeCard,
-  saveCard, setSaveCard,
+  saveCard, setSaveCard, loggedIn,
 }) => {
   const classes = useStyles();
+  useEffect(() => {
+    if (creditCard.cardNumber.length === 4) {
+      updateCreditCard(['last4', creditCard.cardNumber.substr(creditCard.cardNumber.length - 4)]);
+    }
+  }, [creditCard.cardNumber]);
 
   // console.log('USER DATA: ', userData);
   // console.log('CREDIT CARD: ', creditCard);
@@ -55,52 +60,11 @@ const NewPayment = ({
 
 
   const payInStore = async () => {
-    // const [successful, res] = await getCards(
-    //   userData._id,
-    // );
-    // // console.log('The ID of the first credit card: ', res.data[0].id);
-    // if (successful) {
-    //   console.log('getCards WORKED', res);
-    // } else {
-    //   console.log('BADDDDDDDD2222222', res);
-    // }
     updateBooking(['payInStore', !booking.payInStore]);
     nextPage();
   };
 
-  // This is for getting a card and needs to be fixed
-  const getCardRequest = async () => {
-    // This returns the array of cards
-    const [successful, res] = await getCards(
-      userData._id,
-    );
-    // console.log('The ID of the first credit card: ', res.data[0].id);
 
-    if (successful) {
-      console.log('GET REQUEST WORKED', res);
-    } else {
-      console.log('GET REQUEST FAILED', res);
-    }
-
-    // const myCard = res.data[0];
-    // // This is the individual card
-    // const [success, response] = await getCard(
-    //   myCard.id,
-    // );
-    // if (success) {
-    //   console.log('DHRUVVVVYYYYY11111111111', response);
-    //   setHasError(!success);
-    // } else {
-    //   console.log('BADDDDDDDD33333333333', response);
-    //   setErrorBody(response);
-    // }
-  };
-
-  // const printOutInfo = () => {
-  //   // console.log('Change Card: ', changeCard);
-  //   // console.log('Checked: ', checked);
-  //   // console.log('Remember Card: ', rememberCard);
-  // };
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       {loading ? <Loading /> : null}
@@ -113,7 +77,7 @@ const NewPayment = ({
             fullWidth
             type="Name"
             label="Name on Card"
-            value={booking.name}
+            // value={booking.name}
             onChange={(event) => updateCreditCard(['name', event.target.value])}
           />
         </Grid>
@@ -126,14 +90,6 @@ const NewPayment = ({
           />
         </Grid>
         <Grid item xs={12} sm={4}>
-          {/* <KeyboardDatePicker
-            fullWidth
-            style={{ paddingBottom: 6 }}
-            margin="normal"
-            label="Date"
-            format="MM/dd/yyyy"
-            onChange={(date) => updateCreditCard(['exp', date])}
-          /> */}
           <TextField
             fullWidth
             type="expMonth"
@@ -143,14 +99,6 @@ const NewPayment = ({
           />
         </Grid>
         <Grid item xs={12} sm={4}>
-          {/* <KeyboardDatePicker
-            fullWidth
-            style={{ paddingBottom: 6 }}
-            margin="normal"
-            label="Date"
-            format="MM/dd/yyyy"
-            onChange={(date) => updateCreditCard(['exp', date])}
-          /> */}
           <TextField
             fullWidth
             type="expYear"
@@ -168,29 +116,21 @@ const NewPayment = ({
             onChange={(event) => updateCreditCard(['CVC', event.target.value])}
           />
         </Grid>
-        {/* <Grid item xs={12} sm={4}>
-          <TextField
-            fullWidth
-            type="Zip Code"
-            label="Zip Code"
-            onChange={(event) => updateCreditCard(['zipCode', event.target.value])}
-
-          />
-        </Grid> */}
-        {!changeCard && (
-          <>
-            <Grid item xs={12} className={classes.center}>
-              <FormControlLabel
-                control={(
-                  <Checkbox
-                    checked={checked}
-                    onChange={(event) => setChecked(event.target.checked)}
-                    name="Remember this Card"
-                  />
-)}
-                label="Remember this Card"
+        {!changeCard && loggedIn && (
+        <Grid item xs={12} className={classes.center}>
+          <FormControlLabel
+            control={(
+              <Checkbox
+                checked={checked}
+                onChange={(event) => setChecked(event.target.checked)}
+                name="Remember this Card"
               />
-            </Grid>
+                  )}
+            label="Remember this Card"
+          />
+        </Grid>
+        )}{!changeCard && (
+          <>
             <Grid item xs={12} className={classes.divider}>
               <Divider variant="middle" style={{ flexGrow: 1 }} />
               <Typography variant="h5">
@@ -204,20 +144,11 @@ const NewPayment = ({
                 color="primary"
                 onClick={() => payInStore()}
               >
-                Pay In Store // Testing getCards
+                Pay In Store
               </Button>
             </Grid>
           </>
         )}
-        {/* <Grid xs={12} className={classes.button}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => getCardRequest()}
-          >
-            Get Card TESTER
-          </Button>
-        </Grid> */}
       </Grid>
     </MuiPickersUtilsProvider>
   );
@@ -231,6 +162,7 @@ NewPayment.propTypes = {
     expYear: PropTypes.number,
     CVC: PropTypes.number,
     cardId: PropTypes.string,
+    last4: PropTypes.string,
   }).isRequired,
   updateCreditCard: PropTypes.func.isRequired,
   updateBooking: PropTypes.func.isRequired,
@@ -261,6 +193,7 @@ NewPayment.propTypes = {
   changeCard: PropTypes.bool.isRequired,
   setChangeCard: PropTypes.func.isRequired,
   saveCard: PropTypes.bool.isRequired,
+  loggedIn: PropTypes.bool.isRequired,
   setSaveCard: PropTypes.func.isRequired,
   nextPage: PropTypes.func.isRequired,
 };
