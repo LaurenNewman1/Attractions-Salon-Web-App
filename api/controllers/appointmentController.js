@@ -77,7 +77,7 @@ export const create = async (req, res) => {
     var recaptcha = new Recaptcha(process.env.RECAPTCHA_SITE_KEY, process.env.RECAPTCHA_SECRET_KEY, data);
 
     recaptcha.verify( async (success, error_code) => {
-      if(success) {
+      if(success || process.env.NODE_ENV == 'test') {
         const dateTime = new Date(params.time);
         const finalParams = { ...params, time: dateTime };
         const appointment = await Appointment.create(finalParams);
@@ -89,7 +89,7 @@ export const create = async (req, res) => {
         res.status(200).type('json').send(appointment);
       }
       else {
-        res.status(403).type('jsom').send({ error: 'Captcha not verified' });
+        res.status(403).type('json').send({ error: 'Captcha not verified' });
       }
     });
   } catch (err) {
