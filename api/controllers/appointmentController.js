@@ -89,24 +89,26 @@ export const create = async (req, res) => {
       await SendTextEmail(owner.email, 'A Booking has been Submitted', `Hi ${owner.name}, ${appointment.name} has submitted a booking request for review.`);
     }
 
-    if(!params.payInStore) {
-      const user = await User.findOne({email: params.email}).exec();
-      if(user) {
-        const intent = await stripe.paymentIntents.create(
-            {
-              amount: params.amount,
-              currency: params.currency,
-              payment_method: params.method_id,
-              customer: user.customer_id,
-            });
-      }
-      else {
-        const intent = await stripe.paymentIntents.create(
-            {
-              amount: params.amount,
-              currency: params.currency,
-              payment_method: params.method_id,
-            });
+    if (!params.payInStore) {
+      const user = await User.findOne({ email: params.email }).exec();
+      let intent;
+      if (user) {
+        intent = await stripe.paymentIntents.create(
+          {
+            amount: params.amount,
+            currency: params.currency,
+            payment_method: params.method_id,
+            customer: user.customer_id,
+          },
+        );
+      } else {
+        intent = await stripe.paymentIntents.create(
+          {
+            amount: params.amount,
+            currency: params.currency,
+            payment_method: params.method_id,
+          },
+        );
       }
 
       const appointmentNew = await Appointment.findByIdAndUpdate(appointment._id, { intent_id: intent.id });
