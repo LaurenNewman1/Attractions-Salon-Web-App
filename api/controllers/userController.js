@@ -62,16 +62,18 @@ export const read = async (req, res) => {
 export const readByRole = async (req, res) => {
   // Find User from Database by role and return
   const ability = await currentUserAbilities(req);
-  if(ability.cannot('read', 'User')) {
-    res.status(403).type('json').send({ error: 'Access Denied' });
-    return;
-  }
 
   try {
-    const data = await User.find(req.params).exec();
+    let data = await User.find(req.params).exec();
     if (!data || data.length == 0) {
       res.status(404).type('json').send({ error: 'Users not found!' });
     } else {
+      const permittedFields = User.accessibleFieldsBy(ability);
+      logger.info(permittedFields);
+
+      data.forEach(function(part, index){
+        this[index] = _.pick(this[index], permittedFields);
+      }, data);
       res.status(200).type('json').send(data);
     }
   } catch (err) {
