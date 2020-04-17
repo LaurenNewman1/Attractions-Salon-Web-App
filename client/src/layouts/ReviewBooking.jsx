@@ -6,6 +6,7 @@ import {
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
+import Recaptcha from 'react-google-recaptcha';
 import hairIllustration from '../images/hairIllustration.png';
 import eye from '../images/eye.png';
 import hand from '../images/hand.png';
@@ -18,12 +19,13 @@ const ReviewBooking = ({
 }) => {
   const classes = useStyles();
   const history = useHistory();
+  const captchaRef = React.createRef();
 
 
   const updateBookingRequest = async () => {
     const { specialist, ...restOfBooking } = booking;
     const requestBooking = !booking.specialist ? restOfBooking : booking;
-    const [success, res] = await sendRequest(requestBooking);
+    const [success, res] = await sendRequest({ ...requestBooking, captchaResponse: captchaRef.current.getValue() });
     if (success) {
       history.push(`/confirmation/${res._id}`);
     }
@@ -122,6 +124,14 @@ const ReviewBooking = ({
           <Typography variant="h5" color="textSecondary">Total:</Typography>
           <Typography variant="h5">$$$</Typography>
         </div>
+      </div>
+      <div style={{ textAlign: 'center' }}>
+        <Recaptcha
+          sitekey="6Lde1ukUAAAAAJkNP90HjfZwFcYrtNk0CGAWb34R"
+          onChange={(e) => console.log(e)}
+          ref={captchaRef}
+          className={classes.gRecaptcha}
+        />
       </div>
       <div className={classes.buttons}>
         <Button
