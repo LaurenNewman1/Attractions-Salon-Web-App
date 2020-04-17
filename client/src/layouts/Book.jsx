@@ -464,10 +464,10 @@ const Book = ({
 
 Book.propTypes = {
   userData: PropTypes.shape({
-    email: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    _id: PropTypes.string.isRequired,
-    phone_number: PropTypes.string.isRequired,
+    email: PropTypes.string,
+    name: PropTypes.string,
+    _id: PropTypes.string,
+    phone_number: PropTypes.string,
   }).isRequired,
   newCardToUser: PropTypes.func.isRequired,
   updateCardForUser: PropTypes.func.isRequired,

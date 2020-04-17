@@ -22,7 +22,7 @@ const MenuProps = {
 };
 
 const Details = ({
-  booking, updateBooking, loading, specialists, services, compact, setNoPrice, noPrice
+  booking, updateBooking, loading, specialists, services, compact, setNoPrice,
 }) => {
   const classes = useStyles();
   const theme = useTheme();
@@ -210,7 +210,7 @@ Details.propTypes = {
     addons: PropTypes.array,
     specialist: PropTypes.string,
     notes: PropTypes.string,
-    payInStore: PropTypes.string,
+    payInStore: PropTypes.bool,
   }).isRequired,
   updateBooking: PropTypes.func.isRequired,
   setNoPrice: PropTypes.func.isRequired,
@@ -230,7 +230,6 @@ Details.propTypes = {
     addons: PropTypes.array,
   }]).isRequired,
   compact: PropTypes.bool,
-  noPrice: PropTypes.bool.isRequired,
 };
 
 Details.defaultProps = {

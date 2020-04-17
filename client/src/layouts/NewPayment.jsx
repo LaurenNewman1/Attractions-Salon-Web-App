@@ -137,7 +137,7 @@ const NewPayment = ({
               </Typography>
               <Divider variant="middle" style={{ flexGrow: 1 }} />
             </Grid>
-            <Grid xs={12} className={classes.button}>
+            <Grid item xs={12} className={classes.button}>
               <Button
                 variant="contained"
                 color="primary"
@@ -157,9 +157,9 @@ NewPayment.propTypes = {
   creditCard: PropTypes.shape({
     name: PropTypes.string,
     cardNumber: PropTypes.string,
-    expMonth: PropTypes.number,
-    expYear: PropTypes.number,
-    CVC: PropTypes.number,
+    expMonth: PropTypes.string,
+    expYear: PropTypes.string,
+    CVC: PropTypes.string,
     cardId: PropTypes.string,
     last4: PropTypes.string,
   }).isRequired,
@@ -180,7 +180,7 @@ NewPayment.propTypes = {
   }).isRequired,
   loading: PropTypes.bool.isRequired,
   userData: PropTypes.shape({
-    _id: PropTypes.string.isRequired,
+    _id: PropTypes.string,
     email: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     phone_number: PropTypes.string.isRequired,
