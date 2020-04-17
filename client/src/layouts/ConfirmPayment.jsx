@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
   Button, Typography, Divider, Paper,
   DialogActions, DialogContent, DialogTitle, Dialog,
+  Card, Grid, CardActionArea, useTheme, ButtonBase,
 } from '@material-ui/core';
 import useStyles from '../css/ConfirmPaymentStyles';
 import creditCardCircles from '../images/masterCardCircles.png';
@@ -15,39 +16,17 @@ const ConfirmPayment = ({
   saveCard, setSaveCard, postOrPutCardToUser, badRequest, noCC, finalCreditCard,
 }) => {
   const classes = useStyles();
-  // const theme = useTheme();
-  // const [selected, setSelected] = useState(true);
+  const [selected, setSelected] = useState(false);
+  const theme = useTheme();
 
   // console.log('Credit Card Array: ', creditCards);
   // console.log('Credit Card Array LENGTH: ', creditCards.length);
   console.log('Credit Card: ', creditCard);
 
-  // const updateSelectedCard = (card) => {
-  //   updateCreditCard(['name', userData.name], ['expMonth', card.exp_month], ['expYear', card.exp_year]);
+  // const payInStore = () => {
+  //   updateBooking(['payInStore', !booking.payInStore]);
+  //   nextPage();
   // };
-  // const changeTheCard = () => {
-  //   setChangeCard(true);
-  // };
-
-  // const deleteFirstCard = async () => {
-  //   const [successful, res] = await deleteCard(
-  //     creditCards[0].id,
-  //   );
-  //   if (successful) {
-  //     console.log('DELETE REQUEST WORKED', res);
-  //     setCreditCards(creditCards.filter((x) => x.id !== res.id));
-  //     // updateCreditCard(['cardId', res.id]);
-  //   } else {
-  //     console.log('BAD DELETE REQUEST', res);
-  //   }
-  // };
-  // console.log('NEW CREDIT CARDS ARRAY: ', creditCards);
-
-
-  const payInStore = () => {
-    updateBooking(['payInStore', !booking.payInStore]);
-    nextPage();
-  };
 
 
   useEffect(() => {
@@ -71,27 +50,40 @@ const ConfirmPayment = ({
         marginBottom: 18,
       }}
       >
-        <Paper
-          className={classes.paper}
-        >
-          <img src={creditCardCircles} alt="Circles" className={classes.circles} />
-          <Typography variant="h5">
-            ....&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            ....&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            ....&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            {/* {!noCC ? creditCard.last4 : finalCreditCard.last4} */}
-            {creditCard.last4}
-          </Typography>
-          <div className={classes.middleSpace} />
-          <div className={classes.spaceBetween}>
-            <Typography variant="subtitle1">Name</Typography>
-            <Typography variant="subtitle1">Exp</Typography>
-          </div>
-          <div className={classes.spaceBetween}>
-            <Typography variant="subtitle2">{creditCard.name}</Typography>
-            <Typography variant="subtitle2">{creditCard.expMonth}/{creditCard.expYear}</Typography>
-          </div>
-        </Paper>
+        {/* <Card
+          className={classes.card}
+          >
+          <CardActionArea onClick={() => setSelected(!selected)}> */}
+        <ButtonBase
+          className={classes.btnBase}
+          onClick={() => setSelected(!selected)}
+          >
+          <Paper
+            style={{ borderColor: selected ? theme.palette.primary.main : 'transparent' }}
+            className={classes.paper}
+          >
+            <img src={creditCardCircles} alt="Circles" className={classes.circles} />
+            <Typography variant="h5">
+              ....&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              ....&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              ....&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              {/* {!noCC ? creditCard.last4 : finalCreditCard.last4} */}
+              {creditCard.last4}
+            </Typography>
+            <div className={classes.middleSpace} />
+            <div className={classes.spaceBetween}>
+              <Typography variant="subtitle1">Name</Typography>
+              <Typography variant="subtitle1">Exp</Typography>
+            </div>
+            <div className={classes.spaceBetween}>
+              <Typography variant="subtitle2">{creditCard.name}</Typography>
+              <Typography variant="subtitle2">{creditCard.expMonth}/{creditCard.expYear}</Typography>
+            </div>
+          </Paper>
+        </ButtonBase>
+
+          {/* </CardActionArea>
+        </Card> */}
       </div>
       <div className={classes.link}>
         <Button
@@ -137,7 +129,7 @@ const ConfirmPayment = ({
           </DialogActions>
         </Dialog>
       </div>
-      <div className={classes.divider}>
+      {/* <div className={classes.divider}>
         <Divider variant="middle" style={{ flexGrow: 1 }} />
         <Typography variant="h5">
           OR
@@ -151,7 +143,7 @@ const ConfirmPayment = ({
         onClick={() => payInStore()}
       >
         Pay In Store
-      </Button>
+      </Button> */}
     </div>
   );
 };

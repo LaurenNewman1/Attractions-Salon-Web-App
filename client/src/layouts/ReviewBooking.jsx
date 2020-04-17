@@ -75,8 +75,13 @@ const ReviewBooking = ({
         </Typography>
       </div>
       <div className={classes.spacing}>
-        <Typography variant="subtitle1" color="textSecondary">Card:</Typography>
-        <Typography variant="subtitle1">.... .... .... {finalCreditCard.last4}</Typography>
+        {price
+          && (
+          <>
+            <Typography variant="subtitle1" color="textSecondary">Card:</Typography>
+            <Typography variant="subtitle1">.... .... .... {price ? finalCreditCard.last4 : ''}</Typography>
+          </>
+          )}
       </div>
     </div>
   );
@@ -124,7 +129,8 @@ const ReviewBooking = ({
           <div style={{ display: 'flex' }}>
             <Typography variant="subtitle1" color="textSecondary">Service:&nbsp;</Typography>
             <Typography variant="subtitle1">
-              {currentService.type.split('').map((x, i) => (i === 0 ? x.toUpperCase() : x)).join('')}
+              {currentService.name}
+              {/* {currentService.type.split('').map((x, i) => (i === 0 ? x.toUpperCase() : x)).join('')} */}
             </Typography>
           </div>
           <div style={{ display: 'flex' }}>
@@ -135,7 +141,10 @@ const ReviewBooking = ({
                 : 'TBD' }
             </Typography>
           </div>
-          <Typography variant="subtitle1">{moment(booking.time).format('MMMM Do YYYY, h:mm a')}</Typography>
+          <div style={{ display: 'flex' }}>
+            <Typography variant="subtitle1" color="textSecondary">Date:&nbsp;</Typography>
+            <Typography variant="subtitle1">{moment(booking.time).format('MMMM Do YYYY, h:mm a')}</Typography>
+          </div>
         </Grid>
         <Grid item xs={12}>
           <Typography variant="subtitle1" color="textSecondary">Notes: {booking.notes}</Typography>
@@ -145,7 +154,7 @@ const ReviewBooking = ({
       <div style={{ marginTop: 10 }}>
         <div className={classes.spacing}>
           <Typography variant="subtitle1" color="textSecondary">Subtotal:</Typography>
-          <Typography variant="subtitle1">${price}</Typography>
+          <Typography variant="subtitle1">${price || 'TBD'}</Typography>
         </div>
         <div className={classes.spacing}>
           <Typography variant="subtitle1" color="textSecondary">Tax:</Typography>
@@ -153,7 +162,7 @@ const ReviewBooking = ({
         </div>
         <div className={classes.spacing}>
           <Typography variant="h5" color="textSecondary">Total:</Typography>
-          <Typography variant="h5">${price}</Typography>
+          <Typography variant="h5">${price || 'TBD'}</Typography>
         </div>
       </div>
       <div className={classes.buttons}>

@@ -60,10 +60,9 @@ const NewPayment = ({
 
 
   const payInStore = async () => {
-    updateBooking(['payInStore', !booking.payInStore]);
+    updateBooking(['payInStore', true]);
     nextPage();
   };
-
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>

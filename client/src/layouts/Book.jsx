@@ -14,6 +14,7 @@ import Details from './Details';
 import Calendar from './Calendar';
 import NewPayment from './NewPayment';
 import ConfirmPayment from './ConfirmPayment';
+import ServiceUnavailable from './ServiceUnavailable';
 import ReviewBooking from './ReviewBooking';
 import useBooking from '../stores/BookStore';
 
@@ -67,6 +68,7 @@ const Book = ({
   const [CCFlag, setCCFlag] = useState(false);
   const [changeCard, setChangeCard] = useState(false);
   const [saveCard, setSaveCard] = useState(false);
+  const [noPrice, setNoPrice] = useState(false);
   const [creditCards, setCreditCards] = useState([]);
 
   // const setChangeCard = (f) => {
@@ -115,10 +117,6 @@ const Book = ({
         } else {
         // Gets the first one, which should be the only one
           setCreditCards(res.data[0]);
-          // creditCard.cardId = res.data[0].id;
-          // creditCard.expMonth = res.data[0].exp_month;
-          // creditCard.expYear = res.data[0].exp_year;
-          // creditCard.last4 = res.data[0].last4;
           await updateCreditCard(['cardId', res.data[0].id], ['expMonth', res.data[0].card.exp_month], ['expYear', res.data[0].card.exp_year], ['last4', res.data[0].card.last4]);
           setCCFlag(true);
           setNoCC(true);
@@ -135,6 +133,10 @@ const Book = ({
   useEffect(() => {
     checkCC();
   }, []);
+
+  useEffect(() => {
+    console.log('FINAL CREDIT CARD CHANGES: ', finalCreditCard);
+  }, [finalCreditCard]);
 
   // For a logged in user
   const postOrPutCardToUser = async () => {
@@ -219,11 +221,6 @@ const Book = ({
     }
   };
 
-
-  useEffect(() => {
-    console.log('FINAL CREDIT CARD CHANGES: ', finalCreditCard);
-  }, [finalCreditCard]);
-
   // This calls the post command to check if the card is valid, but does NOT save it to user
   const postCard = async () => {
     const [successful, res] = await newCardCheck(
@@ -258,7 +255,9 @@ const Book = ({
   const validateNext = () => {
     switch (page) {
       case 0:
-        if (booking.service.length) {
+        console.log('PRICE TEMP: ', noPrice);
+        console.log('TEMP: ', booking.service);
+        if (booking.service) {
           setPage((prev) => prev + 1);
         } else {
           setError(true);
@@ -330,6 +329,7 @@ const Book = ({
             loading={loading}
             specialists={specialists}
             services={services}
+            setNoPrice={setNoPrice}
           />
         );
       case 1:
@@ -341,6 +341,16 @@ const Book = ({
           />
         );
       case 2:
+        if (noPrice) {
+          return (
+            <ServiceUnavailable
+              updateBooking={(...argus) => updateBooking(...argus)}
+              nextPage={() => validateNext()}
+              noPrice={noPrice}
+              setPage={setPage}
+            />
+          );
+        }
         if (CCFlag) {
           return (
             <ConfirmPayment

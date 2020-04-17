@@ -22,7 +22,7 @@ const MenuProps = {
 };
 
 const Details = ({
-  booking, updateBooking, loading, specialists, services, compact,
+  booking, updateBooking, loading, specialists, services, compact, setNoPrice, noPrice
 }) => {
   const classes = useStyles();
   const theme = useTheme();
@@ -60,11 +60,18 @@ const Details = ({
     setAddOnOptions([]);
   };
 
-  const changeService = (newService) => {
-    updateBooking(['service', newService], ['addons', []], ['specialist', '']);
+  const changeService = async (newService) => {
+    console.log('Service: ', newService);
+    await updateBooking(['service', newService], ['addons', []], ['specialist', '']);
     setAddOnOptions(serviceOptions.find((s) => s._id === newService).addons);
+    // const temp = (serviceOptions.find((s) => s._id === newService).price);
+    // console.log('PRICE', serviceOptions.find((s) => s._id === newService).price);
+    if (!(serviceOptions.find((s) => s._id === newService).price)) {
+      setNoPrice(true);
+    } else {
+      setNoPrice(false);
+    }
   };
-
   const getServiceDetails = () => serviceOptions.find((s) => s._id === booking.service) || '';
 
   return (
@@ -120,7 +127,7 @@ const Details = ({
                   {serv.name}
                   {' '}
                   ($
-                  {serv.price}
+                  {serv.price === 0 ? '' : serv.price}
                   )
                 </MenuItem>
               ))}
@@ -163,17 +170,17 @@ const Details = ({
               value={booking.specialist}
               onChange={(e) => updateBooking(['specialist', e.target.value])}
             >
-              {booking.service ? specialists.map((specialist) => {
+              {booking.service ? specialists.map((specialist) =>
                 // if (specialist.specialties.find((s) => s === getServiceDetails().type
                 //       || s === getServiceDetails().subtype)) {
-                  return (
-                    <MenuItem key={specialist._id} value={specialist._id}>
-                      {specialist.name}
-                    </MenuItem>
-                  );
+                (
+                  <MenuItem key={specialist._id} value={specialist._id}>
+                    {specialist.name}
+                  </MenuItem>
+                ),
                 // }
                 // return null;
-              }) : null}
+              ) : null}
             </Select>
           </FormControl>
         </Grid>
@@ -203,8 +210,10 @@ Details.propTypes = {
     addons: PropTypes.array,
     specialist: PropTypes.string,
     notes: PropTypes.string,
+    payInStore: PropTypes.string,
   }).isRequired,
   updateBooking: PropTypes.func.isRequired,
+  setNoPrice: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   specialists: PropTypes.shape([{
     name: PropTypes.string,
@@ -221,6 +230,7 @@ Details.propTypes = {
     addons: PropTypes.array,
   }]).isRequired,
   compact: PropTypes.bool,
+  noPrice: PropTypes.bool.isRequired,
 };
 
 Details.defaultProps = {
