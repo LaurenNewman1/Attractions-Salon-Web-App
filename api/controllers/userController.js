@@ -24,7 +24,7 @@ export const updatePassword = async (req, res) => {
   const { password } = req.body;
   const { token } = req.params;
   
-  const abilities = currentUserAbilities(req);
+  const abilities = await currentUserAbilities(req);
   if(abilities.can('reset_password', 'Self')) {
     const user = await User.findOne({ forget_password_id: token });
     if (user) {
@@ -87,7 +87,6 @@ export const remove = async (req, res) => {
   }
   
   try {
-    const ability = await currentUserAbilities(req);
     let data = await User.deleteOne({ _id: req.params.someId });
     if (data.n !== 1) {
       data = { error: 'User not found!' };
