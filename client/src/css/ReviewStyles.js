@@ -34,6 +34,9 @@ const useStyles = makeStyles(() => ({
   media: {
     height: 90,
   },
+  gRecaptcha: {
+    display: 'inline-block',
+  },
   cardContent: {
     margin: 5,
     display: 'flex',
