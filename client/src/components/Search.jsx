@@ -12,6 +12,10 @@ const useStyles = makeStyles(() => ({
     marginRight: 5,
     marginBottom: 8,
   },
+  sticky: {
+    position: 'sticky',
+    top: 30,
+  },
 }));
 
 const Search = ({
@@ -46,7 +50,7 @@ const Search = ({
   // }
 
   return (
-    <>
+    <div className={classes.sticky}>
       {/* {loading ? <Loading disableShrink /> : null} */}
       <FormControl style={{ marginBottom: 30, width: '100%' }}>
         <Input
@@ -78,7 +82,7 @@ const Search = ({
           />
         ))}
       </div>
-    </>
+    </div>
   );
 };
 
