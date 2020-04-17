@@ -1,30 +1,26 @@
 /* eslint-disable max-len */
 import React, { useState } from 'react';
 import {
-  Button, TextField, Typography, Fab,
+  Button, TextField, Typography, Fab, Grid,
   Dialog, DialogActions, DialogContent, DialogTitle, InputAdornment,
 } from '@material-ui/core';
 import {
   Schedule, Add,
 } from '@material-ui/icons';
 import PropTypes from 'prop-types';
-import useStyles from '../css/EditServiceStyles';
 
 const EMPTY_SERVICE = {
   name: '',
   type: '',
   subtype: '',
-  time: 0,
-  price: 0,
+  time: undefined,
+  price: undefined,
   description: '',
   banner: '',
   addons: [],
 };
 
-const NewService = ({
-  onClickAdd,
-}) => {
-  const classes = useStyles();
+const NewService = ({ onClickAdd }) => {
   const [open, setOpen] = useState(false);
   const [newService, setNewService] = useState(EMPTY_SERVICE);
 
@@ -34,12 +30,9 @@ const NewService = ({
     setNewService(updatedNewService);
   };
 
-  const handleClose = () => {
+  const cancelNewService = () => {
     setOpen(false);
-  };
-
-  const handleClickOpen = () => {
-    setOpen(true);
+    setNewService(EMPTY_SERVICE);
   };
 
   const saveNewService = async () => {
@@ -50,46 +43,88 @@ const NewService = ({
 
   return (
     <>
-      <Fab color="primary" size="small" onClick={handleClickOpen}>
+      <Fab color="primary" size="small" onClick={() => setOpen(true)}>
         <Add />
       </Fab>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={open} onClose={() => cancelNewService()}>
         <DialogTitle>New Service</DialogTitle>
         <DialogContent>
-          <form className={classes.textfield}>
-            <TextField value={newService.name} onChange={(e) => updateNewService(['name', e.target.value])} label="Name" required />
-            <TextField value={newService.type} onChange={(e) => updateNewService(['type', e.target.value])} label="Type" required />
-            <TextField value={newService.subtype} onChange={(e) => updateNewService(['subtype', e.target.value])} label="subtype" />
-            <TextField value={newService.price} onChange={(e) => updateNewService(['price', Number.parseFloat(e.target.value)])} label="Price" type="number" />
-            <TextField
-              label="Time"
-              className={classes.add}
-              onChange={(e) => updateNewService(['time', Number.parseFloat(e.target.value)])}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Schedule />
-                  </InputAdornment>
-                ),
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <Typography>mins</Typography>
-                  </InputAdornment>
-                ),
-              }}
-            />
-            <TextField onChange={(e) => updateNewService(['banner', e.target.value])} label="Banner" />
-            <TextField
-              required
-              onChange={(e) => updateNewService(['description', e.target.value])}
-              multiline
-              style={{ width: '88%' }}
-              label="Description"
-            />
-          </form>
+          <Grid container spacing={2} style={{ display: 'flex', alignItems: 'center' }}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                style={{ width: '100%' }}
+                value={newService.name}
+                onChange={(e) => updateNewService(['name', e.target.value])}
+                label="Name"
+                required
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                style={{ width: '100%' }}
+                value={newService.type}
+                onChange={(e) => updateNewService(['type', e.target.value])}
+                label="Type"
+                required
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                style={{ width: '100%' }}
+                value={newService.subtype}
+                onChange={(e) => updateNewService(['subtype', e.target.value])}
+                label="subtype"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                style={{ width: '100%' }}
+                value={newService.price}
+                onChange={(e) => updateNewService(['price', Number.parseFloat(e.target.value)])}
+                label="Price"
+                type="number"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Time"
+                style={{ width: '100%' }}
+                onChange={(e) => updateNewService(['time', Number.parseFloat(e.target.value)])}
+                type="number"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Schedule />
+                    </InputAdornment>
+                  ),
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Typography>mins</Typography>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                onChange={(e) => updateNewService(['banner', e.target.value])}
+                label="Banner"
+                style={{ width: '100%' }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                required
+                onChange={(e) => updateNewService(['description', e.target.value])}
+                multiline
+                style={{ width: '100%' }}
+                label="Description"
+              />
+            </Grid>
+          </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>
+          <Button onClick={() => cancelNewService()}>
             Cancel
           </Button>
           <Button onClick={() => saveNewService()} color="primary" variant="contained">

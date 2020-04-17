@@ -49,7 +49,7 @@ const EditUser = ({
       </ExpansionPanelSummary>
       <ExpansionPanelDetails>
         <Grid container spacing={2} style={{ display: 'flex', alignItems: 'center' }}>
-          <Grid item xs={12} sm={6}>
+          <Grid item sm={12} md={6}>
             <TextField
               label="Email"
               value={user.email}
@@ -57,7 +57,7 @@ const EditUser = ({
               style={{ width: '100% ' }}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item sm={12} md={6}>
             <TextField
               label="Phone"
               value={user.phone_number}
@@ -66,7 +66,7 @@ const EditUser = ({
             />
           </Grid>
           {user.role > 0 ? (
-            <Grid item xs={12} sm={6}>
+            <Grid item sm={12} md={6}>
               <TextField
                 label="Title"
                 value={user.title}
@@ -75,7 +75,7 @@ const EditUser = ({
               />
             </Grid>
           ) : null}
-          <Grid item xs={12} sm={6}>
+          <Grid item sm={12} md={6}>
             <FormControl style={{ width: '100% ' }}>
               <InputLabel>Role</InputLabel>
               <Select
@@ -90,7 +90,7 @@ const EditUser = ({
             </FormControl>
           </Grid>
           {subtypes && user.role > 0 ? (
-            <Grid item xs={12} sm={6}>
+            <Grid item sm={12} md={6}>
               <FormControl style={{ minWidth: '100%' }}>
                 <InputLabel>Specialties</InputLabel>
                 <Select
@@ -118,7 +118,7 @@ const EditUser = ({
             </Grid>
           ) : null}
           {user.role > 0 ? (
-            <Grid item xs={12} sm={6}>
+            <Grid item sm={12} md={6}>
               <TextField
                 label="Bio"
                 value={user.bio}
@@ -128,7 +128,6 @@ const EditUser = ({
             </Grid>
           ) : null}
         </Grid>
-
       </ExpansionPanelDetails>
       <DialogActions>
         <Button variant="contained" onClick={() => deleteUser(userGroupName, userGroup, index)}>
@@ -169,6 +168,10 @@ EditUser.propTypes = {
   cancelChanges: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   subtypes: PropTypes.array,
+};
+
+EditUser.defaultProps = {
+  subtypes: [],
 };
 
 

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
   Typography, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
   TextField, ExpansionPanelActions, Button, Fab, Dialog, DialogActions,
-  DialogContent, DialogTitle,
+  DialogContent, DialogTitle, Grid,
 } from '@material-ui/core';
 import {
   ExpandMore, Add,
@@ -14,6 +14,7 @@ import useReviews from '../../stores/ReviewsStore';
 import Loading from '../../components/Loading';
 import HeartRating from '../../components/HeartRating';
 import Alert, { TYPE_SUCCESS, TYPE_ERROR } from '../../components/Alert';
+import Search from '../../components/Search';
 
 const AdminReviews = () => {
   const classes = useStyles();
@@ -26,9 +27,32 @@ const AdminReviews = () => {
     type: '',
     text: '',
   });
+  const [filters, setFilters] = useState([]);
+  const [searchText, setSearchText] = useState('');
 
   const [reviews, loading, newReview, updateReviews,
     updateNewReview, deleteReview, addReview, saveReview] = useReviews();
+
+  const filterOptions = ['5 stars', '4+ stars', '3+ stars', '2+ stars', '1+ stars', 'has content'];
+
+  const doDisplay = (review) => {
+    if (searchText.length && (review.reviewer.toLowerCase().includes(searchText.toLowerCase())
+      || (review.review && review.review.toLowerCase().includes(searchText.toLowerCase())))) {
+      return true;
+    }
+    if (searchText.length) {
+      return false;
+    }
+    for (let i = 0; i < filters.length; i += 1) {
+      if (filters[i] === 'has content' && (!review.review || !review.review.length)) {
+        return false;
+      }
+      if (filters[i] !== 'has content' && Number(filters[i].charAt(0)) > review.rating) {
+        return false;
+      }
+    }
+    return true;
+  };
 
   const onClickAdd = async () => {
     setDialog(false);
@@ -96,7 +120,7 @@ const AdminReviews = () => {
   };
 
   return (
-    <Page maxWidth="md">
+    <Page maxWidth="lg">
       {loading ? <Loading disableShrink /> : null}
       <div style={{ paddingTop: 5 }}>
         <h1
@@ -112,45 +136,60 @@ const AdminReviews = () => {
           </Fab>
         </h1>
       </div>
-      {!reviews || !reviews.length ? null
-        : (reviews.map((review, index) => (
-          <ExpansionPanel
-            key={review._id}
-            expanded={open === index}
-            onChange={expandChange(index)}
-          >
-            <ExpansionPanelSummary expandIcon={<ExpandMore />}>
-              {renderName(review.reviewer, index)}
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails style={{ display: 'block' }}>
-              <HeartRating
-                onChange={(val) => updateReviews(index, ['rating', val])}
-                defaultValue={review.rating}
-                edit
-              />
-              <TextField
-                className={classes.content}
-                label="Content"
-                multiline
-                value={review.review}
-                onChange={(event) => updateReviews(index, ['review', event.target.value])}
-              />
-            </ExpansionPanelDetails>
-            <ExpansionPanelActions>
-              <Button variant="contained" onClick={() => setConfirmDelete(index)}>Delete</Button>
-              <div className={classes.grow} />
-              <Button onClick={() => cancelChanges(index)}>Cancel</Button>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => onClickSave(index)}
-              >
-                Save
-              </Button>
-            </ExpansionPanelActions>
-          </ExpansionPanel>
-        ))
-        )}
+      <Grid container spacing={6} style={{ width: '100%', margin: 0 }}>
+        <Grid item xs={12} sm={3}>
+          <Search
+            filterOptions={filterOptions}
+            filters={filters}
+            setFilters={(filts) => setFilters(filts)}
+            searchText={searchText}
+            setSearchText={(text) => setSearchText(text)}
+          />
+        </Grid>
+        <Grid item xs={12} sm={9}>
+          {!reviews || !reviews.length ? null
+            : (reviews.map((review, index) => (doDisplay(review)
+              ? (
+                <ExpansionPanel
+                  key={review._id}
+                  expanded={open === index}
+                  onChange={expandChange(index)}
+                >
+                  <ExpansionPanelSummary expandIcon={<ExpandMore />}>
+                    {renderName(review.reviewer, index)}
+                  </ExpansionPanelSummary>
+                  <ExpansionPanelDetails style={{ display: 'block' }}>
+                    <HeartRating
+                      onChange={(val) => updateReviews(index, ['rating', val])}
+                      defaultValue={review.rating}
+                      edit
+                    />
+                    <TextField
+                      className={classes.content}
+                      label="Content"
+                      multiline
+                      value={review.review}
+                      onChange={(event) => updateReviews(index, ['review', event.target.value])}
+                    />
+                  </ExpansionPanelDetails>
+                  <ExpansionPanelActions>
+                    <Button variant="contained" onClick={() => setConfirmDelete(index)}>Delete</Button>
+                    <div className={classes.grow} />
+                    <Button onClick={() => cancelChanges(index)}>Cancel</Button>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => onClickSave(index)}
+                    >
+                      Save
+                    </Button>
+                  </ExpansionPanelActions>
+                </ExpansionPanel>
+              )
+              : null))
+            )}
+        </Grid>
+      </Grid>
       <Dialog open={dialog} onClose={() => setDialog(false)}>
         <DialogTitle>Add a Review</DialogTitle>
         <DialogContent>

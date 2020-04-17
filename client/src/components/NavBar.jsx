@@ -14,7 +14,7 @@ const userOptions = [
   { name: 'Book', route: '/book' },
   { name: 'Services', route: '/services' },
   { name: 'About', route: '/about' },
-  { name: 'Contact', route: '/contact' },
+  { name: 'Reviews', route: '/reviews' },
 ];
 
 const adminOptions = [
@@ -38,9 +38,6 @@ const NavBar = ({ loggedIn, userData, setFromBookPage }) => {
 
   useEffect(() => {
     switch (userData.role) {
-      case 0:
-        setOptions(userOptions);
-        break;
       case 2:
         setOptions(adminOptions);
         break;
@@ -101,13 +98,12 @@ const NavBar = ({ loggedIn, userData, setFromBookPage }) => {
           return attractionsLogo(opt);
         } if (opt.name === 'Book') {
           return (
-            <Button onClick={() => handleBook()}>{opt.name}</Button>
+            <Button key={opt.name} onClick={() => handleBook()}>{opt.name}</Button>
           );
         }
-        return <Button onClick={() => history.push(opt.route)}>{opt.name}</Button>;
+        return <Button key={opt.name} onClick={() => history.push(opt.route)}>{opt.name}</Button>;
       })}
-      {options.length === 0 ? attractionsLogo({ route: '/' }) : null}
-      {options.length === 0 ? null : userLogin}
+      {userLogin}
     </>
   );
 

@@ -1,9 +1,6 @@
 import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    padding: 30,
-  },
   container: {
     width: '100%',
   },
@@ -36,9 +33,6 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 5,
     marginRight: 5,
     backgroundColor: theme.palette.secondary.main,
-  },
-  header: {
-    marginTop: 40,
   },
   truncateOverflow: {
     overflow: 'hidden',
