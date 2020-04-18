@@ -151,7 +151,7 @@ const ReviewBooking = ({
           <Typography variant="subtitle1" color="textSecondary">Notes: {booking.notes}</Typography>
         </Grid>
       </Grid>
-      {price && (
+      {price ? (
         <>
           <Divider variant="middle" className={classes.divider} />
           <div style={{ marginTop: 10 }}>
@@ -169,7 +169,15 @@ const ReviewBooking = ({
             </div>
           </div>
         </>
-      )}
+      ) : null}
+      <div style={{ textAlign: 'center' }}>
+        <Recaptcha
+          sitekey="6Lde1ukUAAAAAJkNP90HjfZwFcYrtNk0CGAWb34R"
+          onChange={(e) => console.log(e)}
+          ref={captchaRef}
+          className={classes.gRecaptcha}
+        />
+      </div>
       <div className={classes.buttons}>
         <Button
           variant="contained"
