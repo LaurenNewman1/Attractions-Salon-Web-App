@@ -9,7 +9,7 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core';
 import Home from './layouts/Home';
 import Book from './layouts/Book';
 import Services from './layouts/Services';
-import Contact from './layouts/Contact';
+import Reviews from './layouts/Reviews';
 import Login from './layouts/Login';
 import Profile from './layouts/Profile';
 import ResetPassword from './layouts/ResetPassword';
@@ -23,6 +23,7 @@ import useCreditCard from './stores/CreditCardStore';
 import Dashboard from './layouts/admin/Dashboard';
 import Users from './layouts/admin/Users';
 import AdminReviews from './layouts/admin/AdminReviews';
+import About from './layouts/About';
 
 const App = () => {
   const [
@@ -34,6 +35,7 @@ const App = () => {
     changeProfile,
     requestResetPassword,
     requestPasswordUpdate,
+    loading,
   ] = useLogin();
   const [
     newCardToUser,
@@ -76,6 +78,7 @@ const App = () => {
         <Router>
           <NavBar
             loggedIn={loggedIn}
+            loading={loading}
             logout={() => logout()}
             userData={userData}
             fromBookPage={fromBookPage}
@@ -86,7 +89,8 @@ const App = () => {
             <Route path="/book/:id" component={() => <Book userData={userData} />} />
             <Route path="/book/" component={() => <Book userData={userData} newCardToUser={newCardToUser} updateCardForUser={updateCardForUser} getCards={getCards} getCard={getCard} deleteCard={deleteCard} newCardCheck={newCardCheck} loggedIn={loggedIn} />} />
             <Route path="/services" component={Services} />
-            <Route path="/contact" component={Contact} />
+            <Route path="/about" component={About} />
+            <Route path="/reviews" component={Reviews} />
             <Route path="/login" component={() => <Login login={login} fromBookPage={fromBookPage} resetPassword={requestResetPassword} />} />
             <Route path="/resetpassword/:token" component={() => <ResetPassword attemptReset={requestPasswordUpdate} />} />
             <Route path="/signUp" component={() => <SignUp register={register} login={login} />} />

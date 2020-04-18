@@ -1,18 +1,25 @@
 import format from 'date-fns/format';
 import Appointment from '../model/appointment';
 import User from '../model/user';
+import currentUserAbilities, { userAbilities } from '../helpers/ability';
 import { SendTextEmail } from '../lib/mail';
+const Recaptcha = require('recaptcha-v2').Recaptcha;
 
 const stripe = require('stripe')(process.env.STRIPE_API_KEY);
 
 export const read = async (req, res) => {
   // Find Appointment from Database and return
   try {
-    const data = await Appointment.find(req.params).exec();
-    if (!data || data.length == 0) {
-      res.status(404).type('json').send({ error: 'Appointments not found!' });
+    const ability = await currentUserAbilities(req);
+    if(ability.can('read', 'Appointment')) {
+      const data = await Appointment.find(req.params).exec();
+      if (!data || data.length == 0) {
+        res.status(404).type('json').send({ error: 'Appointments not found!' });
+      } else {
+        res.status(200).type('json').send(data);
+      }
     } else {
-      res.status(200).type('json').send(data);
+      res.status(403).type('json').send({ error: 'Access Denied' });
     }
   } catch (err) {
     res.status(400).type('json').send(err);
@@ -22,8 +29,13 @@ export const read = async (req, res) => {
 export const readall = async (req, res) => {
   // Find All Appointments from Database and return
   try {
-    const data = await Appointment.find({});
-    res.status(200).send(data);
+    const ability = await currentUserAbilities(req);
+    if(ability.can('read', 'Appointment')) {
+      const data = await Appointment.find({});
+      res.status(200).send(data);
+    } else {
+      res.status(403).type('json').send({ error: 'Access Denied' });
+    }
   } catch (err) {
     res.status(400).type('json').send(err);
   }
@@ -31,6 +43,12 @@ export const readall = async (req, res) => {
 
 export const remove = async (req, res) => {
   // Find Appointment from Database and remove
+  const ability = await currentUserAbilities(req);
+  if(ability.cannot('remove', 'Appointment')) {
+    res.status(403).type('json').send({ error: 'Access Denied' });
+    return;
+  }
+
   try {
     let data = await Appointment.deleteOne({ _id: req.params.someId });
     if (data.n !== 1) {
@@ -47,6 +65,12 @@ export const remove = async (req, res) => {
 
 
 export const update = async (req, res) => {
+  const ability = await currentUserAbilities(req);
+  if(ability.cannot('update', 'Appointment')) {
+    res.status(403).type('json').send({ error: 'Access Denied' });
+    return;
+  }
+
   try {
     const params = req.body;
     const dateTime = new Date(params.time);
@@ -79,43 +103,50 @@ export const update = async (req, res) => {
 export const create = async (req, res) => {
   try {
     const params = req.body;
-    const dateTime = new Date(params.time);
-    const finalParams = { ...params, time: dateTime };
-    const appointment = await Appointment.create(finalParams);
-    console.log('email', appointment.email);
-    await SendTextEmail(appointment.email, 'Your Booking has been Submitted', `Hi ${appointment.name}, your booking has been submitted. You will get an email soon when Attractions Salon has confirmed your appointment time.`);
-    const owner = await User.findOne({ role: 2 }).exec();
-    if (owner) {
-      await SendTextEmail(owner.email, 'A Booking has been Submitted', `Hi ${owner.name}, ${appointment.name} has submitted a booking request for review.`);
-    }
+    const data = {
+      remoteip: req.connection,
+      response: params.captchaResponse,
+      secret: process.env.RECAPTCHA_SECRET_KEY,
+    };
 
-    if (!params.payInStore) {
-      const user = await User.findOne({ email: params.email }).exec();
-      let intent;
-      if (user) {
-        intent = await stripe.paymentIntents.create(
-          {
-            amount: params.amount,
-            currency: params.currency,
-            payment_method: params.method_id,
-            customer: user.customer_id,
-          },
-        );
+    const recaptcha = new Recaptcha(
+      process.env.RECAPTCHA_SITE_KEY,
+      process.env.RECAPTCHA_SECRET_KEY,
+      data,
+    );
+
+    recaptcha.verify(async (success) => {
+      if (success || process.env.NODE_ENV === 'test') {
+        const dateTime = new Date(params.time);
+        const finalParams = { ...params, time: dateTime };
+        const appointment = await Appointment.create(finalParams);
+        await SendTextEmail(appointment.email, 'Your Booking has been Submitted', `Hi ${appointment.name}, your booking has been submitted. You will get an email soon when Attractions Salon has confirmed your appointment time.`);
+        const owner = await User.findOne({ role: 2 }).exec();
+        if (owner) {
+          await SendTextEmail(owner.email, 'A Booking has been Submitted', `Hi ${owner.name}, ${appointment.name} has submitted a booking request for review.`);
+        }
+
+        if (!params.payInStore) {
+          const user = await User.findOne({email: params.email}).exec();
+          const intent = await stripe.paymentIntents.create(
+            {
+              amount: params.amount,
+              currency: params.currency,
+              customer: user.customer_id,
+              payment_method: params.method_id,
+            },
+          );
+
+          // eslint-disable-next-line max-len
+          const appointmentNew = await Appointment.findByIdAndUpdate(appointment._id, { intent_id: intent.id });
+          res.status(200).type('json').send(appointmentNew);
+        } else {
+          res.status(200).type('json').send(appointment);
+        }
       } else {
-        intent = await stripe.paymentIntents.create(
-          {
-            amount: params.amount,
-            currency: params.currency,
-            payment_method: params.method_id,
-          },
-        );
+        res.status(403).type('json').send({ error: 'Captcha not verified' });
       }
-
-      const appointmentNew = await Appointment.findByIdAndUpdate(appointment._id, { intent_id: intent.id });
-      res.status(200).type('json').send(appointmentNew);
-    } else {
-      res.status(200).type('json').send(appointment);
-    }
+    });
   } catch (err) {
     res.status(403).type('json').send(err);
   }

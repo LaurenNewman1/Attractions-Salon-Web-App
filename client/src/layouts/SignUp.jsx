@@ -7,6 +7,7 @@ import {
 } from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import Recaptcha from 'react-google-recaptcha';
 import useStyles from '../css/LoginStyles';
 import Page from '../components/Page';
 import signUpImg from '../images/signUpImg.jpg';
@@ -20,6 +21,9 @@ const SignUp = ({ register, login }) => {
   const [number, setNumber] = useState('');
   const [errorBody, setErrorBody] = useState({});
   const [hasError, setHasError] = useState(false);
+
+  const captchaRef = React.createRef();
+
 
   const validationTable = {
     email: {
@@ -39,7 +43,7 @@ const SignUp = ({ register, login }) => {
   };
 
   const attemptRegister = async () => {
-    const [successful, errors] = await register(name, email, number, password);
+    const [successful, errors] = await register(name, email, number, password, captchaRef.current.getValue());
     setErrorBody({});
     setHasError(!successful);
     if (successful) {
@@ -131,6 +135,14 @@ const SignUp = ({ register, login }) => {
                 ),
               }}
             />
+            <div style={{ textAlign: 'center' }}>
+              <Recaptcha
+                sitekey="6Lde1ukUAAAAAJkNP90HjfZwFcYrtNk0CGAWb34R"
+                onChange={(e) => console.log(e)}
+                ref={captchaRef}
+                className={classes.gRecaptcha}
+              />
+            </div>
             <div className={classes.buttons}>
               <Button
                 variant="contained"

@@ -161,6 +161,7 @@ const Requests = () => {
                           key={value._id}
                           label={value.name}
                           className={classes.chip}
+                          size="small"
                           color="secondary"
                         />
                       ))}

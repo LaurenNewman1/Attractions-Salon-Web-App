@@ -16,6 +16,9 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: '5%',
     paddingRight: '5%',
   },
+  gRecaptcha: {
+    display: 'inline-block',
+  },
   imgContainer: {
     height: '100%',
     display: 'flex',

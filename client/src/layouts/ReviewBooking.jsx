@@ -6,6 +6,7 @@ import {
 import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
+import Recaptcha from 'react-google-recaptcha';
 import hairIllustration from '../images/hairIllustration.png';
 import eye from '../images/eye.png';
 import hand from '../images/hand.png';
@@ -18,6 +19,7 @@ const ReviewBooking = ({
 }) => {
   const classes = useStyles();
   const history = useHistory();
+  const captchaRef = React.createRef();
   const currentService = services.find((x) => x._id === booking.service);
   const [price, setPrice] = useState(0);
   const [tempBool, setTempBool] = useState(true);
@@ -52,7 +54,7 @@ const ReviewBooking = ({
   const updateBookingRequest = async () => {
     const { specialist, ...restOfBooking } = booking;
     const requestBooking = !booking.specialist ? restOfBooking : booking;
-    const [success, res] = await sendRequest(requestBooking);
+    const [success, res] = await sendRequest({ ...requestBooking, captchaResponse: captchaRef.current.getValue() });
     if (success) {
       history.push(`/confirmation/${res._id}`);
     } else {
@@ -161,6 +163,14 @@ const ReviewBooking = ({
           <Typography variant="h5" color="textSecondary">Total:</Typography>
           <Typography variant="h5">${(total / 100).toFixed(2) || 'TBD'}</Typography>
         </div>
+      </div>
+      <div style={{ textAlign: 'center' }}>
+        <Recaptcha
+          sitekey="6Lde1ukUAAAAAJkNP90HjfZwFcYrtNk0CGAWb34R"
+          onChange={(e) => console.log(e)}
+          ref={captchaRef}
+          className={classes.gRecaptcha}
+        />
       </div>
       <div className={classes.buttons}>
         <Button

@@ -5,12 +5,14 @@
       "phone_number": "placeholderPhone",
       "password": "$argon2i$v=19$m=4096,t=3,p=1$QX54WvPgwUGjYrRtvBm4SQ$0yhjBcAcTHYcyvDXlrPGfQYyPffPqIv7hAELUbBH3iw",
       "role": 1,
+      "title": "Nail Technician",
       "specialties": [
         "manicure",
         "pedicure",
         "full set",
         "fills"
-      ]
+      ],
+      "bio": "Lea is a nail technician at Attractions Salon."
     },
     {
       "name": "Shamira",
@@ -18,10 +20,12 @@
       "phone_number": "placeholderPhone2",
       "password": "$argon2i$v=19$m=4096,t=3,p=1$QX54WvPgwUGjYrRtvBm4SQ$0yhjBcAcTHYcyvDXlrPGfQYyPffPqIv7hAELUbBH3iw",
       "role": 1,
+      "title": "Hair Stylist",
       "specialties": [
         "styling",
         "extension"
-      ]
+      ],
+      "bio": "Shamira is a hair stylist at Attractions Salon."
     },
     {
       "name": "Brandi",
@@ -43,13 +47,15 @@
       "phone_number": "placeholderPhone4",
       "password": "$argon2i$v=19$m=4096,t=3,p=1$QX54WvPgwUGjYrRtvBm4SQ$0yhjBcAcTHYcyvDXlrPGfQYyPffPqIv7hAELUbBH3iw",
       "role": 1,
+      "title": "Hair Stylist",
       "specialties": [
         "cut",
         "dye",
         "treatment",
         "wash",
         "wax"
-      ]
+      ],
+      "bio": "Emily is a hair stylist at Attractions Salon."
     },
     {
       "name": "Bonnie",
@@ -57,13 +63,15 @@
       "phone_number": "placeholderPhone5",
       "password": "$argon2i$v=19$m=4096,t=3,p=1$QX54WvPgwUGjYrRtvBm4SQ$0yhjBcAcTHYcyvDXlrPGfQYyPffPqIv7hAELUbBH3iw",
       "role": 1,
+      "title": "Hair Stylist",
       "specialties": [
         "cut",
         "dye",
         "treatment",
         "wash",
         "wax"
-      ]
+      ],
+      "bio": "Bonnie is a hair stylist at Attractions Salon."
     },
     {
       "name": "Connie",
@@ -71,13 +79,15 @@
       "phone_number": "placeholderPhone6",
       "password": "$argon2i$v=19$m=4096,t=3,p=1$QX54WvPgwUGjYrRtvBm4SQ$0yhjBcAcTHYcyvDXlrPGfQYyPffPqIv7hAELUbBH3iw",
       "role": 1,
+      "title": "Hair Stylist",
       "specialties": [
         "cut",
         "dye",
         "treatment",
         "wash",
         "wax"
-      ]
+      ],
+      "bio": "Connie is a hair stylist at Attractions Salon."
     },
     {
       "name": "Mary",
@@ -85,12 +95,14 @@
       "phone_number": "placeholderPhone7",
       "password": "$argon2i$v=19$m=4096,t=3,p=1$QX54WvPgwUGjYrRtvBm4SQ$0yhjBcAcTHYcyvDXlrPGfQYyPffPqIv7hAELUbBH3iw",
       "role": 1,
+      "title": "Hair Stylist",
       "specialties": [
         "cut",
         "dye",
         "treatment",
         "wash",
         "wax"
-      ]
+      ],
+      "bio": "Mary is a hair stylist at Attractions Salon."
     }
   ]

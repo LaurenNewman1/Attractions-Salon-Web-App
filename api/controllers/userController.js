@@ -5,6 +5,7 @@ import currentUserAbilities, { userAbilities } from '../helpers/ability';
 import GetLogger from '../config/logger';
 import genForgetPasswordHash from '../helpers/user';
 import { SendForgetPassword } from '../lib/mail';
+const Recaptcha = require('recaptcha-v2').Recaptcha;
 
 const logger = GetLogger('User Controller');
 const stripe = require('stripe')(process.env.STRIPE_API_KEY);
@@ -24,16 +25,21 @@ export const genForgetPassword = async (req, res) => {
 export const updatePassword = async (req, res) => {
   const { password } = req.body;
   const { token } = req.params;
-
-  const user = await User.findOne({ forget_password_id: token });
-  if (user) {
-    const hash = await argon2.hash(password);
-    user.password = hash;
-    user.forget_password_id = undefined;
-    await user.save();
-    res.sendStatus(200);
+  
+  const abilities = await currentUserAbilities(req);
+  if(abilities.can('reset_password', 'Self')) {
+    const user = await User.findOne({ forget_password_id: token });
+    if (user) {
+      const hash = await argon2.hash(password);
+      user.password = hash;
+      user.forget_password_id = undefined;
+      await user.save();
+      res.sendStatus(200);
+    } else {
+      res.sendStatus(401);
+    }
   } else {
-    res.sendStatus(401);
+    res.status(403).type('json').send({ error: 'Access Denied' });
   }
 };
 
@@ -56,11 +62,19 @@ export const read = async (req, res) => {
 
 export const readByRole = async (req, res) => {
   // Find User from Database by role and return
+  const ability = await currentUserAbilities(req);
+
   try {
-    const data = await User.find(req.params).exec();
+    let data = await User.find(req.params).exec();
     if (!data || data.length == 0) {
       res.status(404).type('json').send({ error: 'Users not found!' });
     } else {
+      const permittedFields = User.accessibleFieldsBy(ability);
+      logger.info(permittedFields);
+
+      data.forEach(function(part, index){
+        this[index] = _.pick(this[index], permittedFields);
+      }, data);
       res.status(200).type('json').send(data);
     }
   } catch (err) {
@@ -70,6 +84,12 @@ export const readByRole = async (req, res) => {
 
 export const remove = async (req, res) => {
   // Find User from Database and remove
+  const ability = await currentUserAbilities(req);
+  if(ability.cannot('remove', 'User')) {
+    res.status(403).type('json').send({ error: 'Access Denied' });
+    return;
+  }
+  
   try {
     let data = await User.deleteOne({ _id: req.params.someId });
     if (data.n !== 1) {
@@ -131,13 +151,38 @@ export const update = async (req, res) => {
 export const create = async (req, res) => {
   try {
     const params = req.body;
-    const hash = await argon2.hash(params.password);
-    const customer = await stripe.customers.create();
-    const finalUser = {
-      ...params, password: hash, role: 0, customer_id: customer.id,
+    const data = {
+      remoteip: req.connection,
+      response: params.captchaResponse,
+      secret: process.env.RECAPTCHA_SECRET_KEY,
     };
-    const user = await User.create(finalUser);
-    res.status(200).type('json').send(user);
+
+    const recaptcha = new Recaptcha(
+      process.env.RECAPTCHA_SITE_KEY,
+      process.env.RECAPTCHA_SECRET_KEY,
+      data,
+    );
+
+    recaptcha.verify(async (success) => {
+      if (success || process.env.NODE_ENV === 'test') {
+        const hash = await argon2.hash(params.password);
+        const customer = await stripe.customers.create();
+        const ability = await currentUserAbilities(req);
+        const isAdmin = ability.can('manage', 'User');
+        const finalUser = isAdmin
+          ? { ...params, password: hash, customer_id: customer.id }
+          : {
+            ...params,
+            password: hash,
+            role: 0,
+            customer_id: customer.id,
+          };
+        const user = await User.create(finalUser);
+        res.status(200).type('json').send(user);
+      } else {
+        res.status(403).type('json').send({ error: 'Captcha not verified' });
+      }
+    });
   } catch (err) {
     res.status(403).type('json').send(err);
   }

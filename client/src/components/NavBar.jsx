@@ -13,7 +13,8 @@ const userOptions = [
   { name: 'Home', route: '/' },
   { name: 'Book', route: '/book' },
   { name: 'Services', route: '/services' },
-  { name: 'Contact', route: '/contact' },
+  { name: 'About', route: '/about' },
+  { name: 'Reviews', route: '/reviews' },
 ];
 
 const adminOptions = [
@@ -81,24 +82,26 @@ const NavBar = ({ loggedIn, userData, setFromBookPage }) => {
     history.push(route);
   };
 
+  const attractionsLogo = (opt) => (
+    <>
+      <Button onClick={() => history.push(opt.route)} aria-label="logo">
+        <img src={logo} alt="logo" style={{ width: '150px' }} />
+      </Button>
+      <div className={classes.grow} />
+    </>
+  );
+
   const renderBar = () => (
     <>
       {options.map((opt, index) => {
         if (index === 0) {
-          return (
-            <>
-              <Button onClick={() => history.push(opt.route)} aria-label="logo">
-                <img src={logo} alt="logo" style={{ width: '150px' }} />
-              </Button>
-              <div className={classes.grow} />
-            </>
-          );
+          return attractionsLogo(opt);
         } if (opt.name === 'Book') {
           return (
-            <Button onClick={() => handleBook()}>{opt.name}</Button>
+            <Button key={opt.name} onClick={() => handleBook()}>{opt.name}</Button>
           );
         }
-        return <Button onClick={() => history.push(opt.route)}>{opt.name}</Button>;
+        return <Button key={opt.name} onClick={() => history.push(opt.route)}>{opt.name}</Button>;
       })}
       {userLogin}
     </>

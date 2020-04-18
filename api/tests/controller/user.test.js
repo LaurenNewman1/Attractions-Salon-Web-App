@@ -1,8 +1,8 @@
 import User from '../../model/user';
 import argon2 from 'argon2';
 
-import { getParams, SetupTesting, CleanUp } from '../helpers/test_helper'
-import { userParams as validUser, MakeUser } from '../factories/user'
+import { getParams, SetupTesting, CleanUp, SignIn } from '../helpers/test_helper'
+import { userParams as validUser, ownerParams, MakeUser, MakeOwner, workerParams, MakeWorker } from '../factories/user'
 
 describe('User Controller', () => {
   let agent, disconnectDB, refreshAgent;
@@ -110,6 +110,7 @@ describe('User Controller', () => {
   describe('DELETE /users/:someId', () => {
     beforeEach(async (done) => {
       await CleanUp();
+      refreshAgent();
       done()
     });
 
@@ -118,17 +119,38 @@ describe('User Controller', () => {
       done()
     });
 
-    it ('should return 200 (OK) if given a valid user to delete', async () => {
-      const res = await agent.post('/api/users').send(getParams(validUser)).set('Accept', 'application/json');
-      await agent.delete('/api/users/' + res.body._id).send(getParams(validUser)).set('Accept', 'application/json').expect(200);
+    describe('as Owner', () => {
+      beforeEach(async (done) => {
+        await MakeOwner();
+        await SignIn(agent, ownerParams);
+        done();
+      });
+
+      it ('should return 200 (OK) if given a valid user to delete', async () => {
+        const res = await agent.post('/api/users').send(getParams(validUser)).set('Accept', 'application/json');
+        await agent.delete('/api/users/' + res.body._id).send(getParams(validUser)).set('Accept', 'application/json').expect(200);
+      });
+  
+      it ('should return 404 (Not Found) if given an invalid user to delete', async () => {
+        await agent.delete('/api/users/5e5b0129be7a7430e036ee9a').send(getParams(validUser)).set('Accept', 'application/json').expect(404);
+      });
+  
+      it ('should return 400 (Bad Request) if given an invalid path', async () => {
+        await agent.delete('/api/users/random').send(getParams(validUser)).set('Accept', 'application/json').expect(400);
+      });
     });
 
-    it ('should return 404 (Not Found) if given an invalid user to delete', async () => {
-      await agent.delete('/api/users/5e5b0129be7a7430e036ee9a').send(getParams(validUser)).set('Accept', 'application/json').expect(404);
-    });
+    describe('not as Owner', () => {
+      beforeEach(async (done) => {
+        await MakeWorker();
+        await SignIn(agent, workerParams);
+        done();
+      });
 
-    it ('should return 400 (Bad Request) if given an invalid path', async () => {
-      await agent.delete('/api/users/random').send(getParams(validUser)).set('Accept', 'application/json').expect(400);
+      it ('should return 403 (Forbidden) when trying to remove a user', async () => {
+        const res = await agent.post('/api/users').send(getParams(validUser)).set('Accept', 'application/json');
+        await agent.delete('/api/users/' + res.body._id).send(getParams(validUser)).set('Accept', 'application/json').expect(403);
+      });
     });
   });
 });
