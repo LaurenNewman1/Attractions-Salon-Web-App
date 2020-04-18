@@ -16,7 +16,7 @@ const requestLogin = async (email, password) => {
   return [res.status === 200, await res.json()];
 };
 
-const requestRegister = async (name, email, number, password) => {
+const requestRegister = async (name, email, number, password, captchaRes) => {
   const res = await fetch('/api/users',
     {
       method: 'POST',
@@ -28,7 +28,7 @@ const requestRegister = async (name, email, number, password) => {
       redirect: 'follow', // manual, *follow, error
       referrerPolicy: 'no-referrer', // no-referrer, *client
       body: JSON.stringify({
-        name, email, phone_number: number, password,
+        name, email, phone_number: number, password, captchaResponse: captchaRes,
       }),
     });
 
@@ -117,7 +117,7 @@ export default () => {
   // Call to register
   // const register = requestRegister;
   // eslint-disable-next-line max-len
-  const register = async (name, email, number, password) => requestRegister(name, email, number, password);
+  const register = async (name, email, number, password, captchaRes) => requestRegister(name, email, number, password, captchaRes);
 
   const changeProfile = async (userId, params) => {
     const result = await requestProfileChange(userId, params);
