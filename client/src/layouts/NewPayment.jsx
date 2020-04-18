@@ -16,7 +16,7 @@ import Loading from '../components/Loading';
 const NewPayment = ({
   booking, updateBooking, updateCreditCard, loading, nextPage, userData,
   creditCard, getCards, getCard, checked, setChecked, changeCard, setChangeCard,
-  saveCard, setSaveCard, loggedIn, services,
+  loggedIn, services,
 }) => {
   const classes = useStyles();
   useEffect(() => {
@@ -37,42 +37,8 @@ const NewPayment = ({
       const tax = 0.07;
       const total = Number(amountBeforeTax + (amountBeforeTax * tax));
       updateBooking(['amount', total]);
-      console.log('IT IS CHANGING --------------------------', total);
     }
   }, []);
-
-  // console.log('USER DATA: ', userData);
-  // console.log('CREDIT CARD: ', creditCard);
-
-  // const rememberCard = async (event) => {
-  //   // POST command for remebering the card
-  //   setChecked(event.target.checked);
-  //   // if (event.target.checked === true) {
-  //   //   const [successful, res] = await newCardToUser(
-  //   //     userData._id,
-  //   //     creditCard.cardNumber,
-  //   //     creditCard.expMonth,
-  //   //     creditCard.expYear,
-  //   //     creditCard.CVC,
-  //   //   );
-  //   //   if (successful) {
-  //   //     console.log('POST REQUEST WORKED', res);
-  //   //     updateCreditCard(['cardId', res.id]);
-  //   //   } else {
-  //   //     console.log('BAD POST REQUEST', res);
-  //   //   }
-  //   // } else {
-  //   //   // Deletes the current card from being saved
-  //   //   const [successful, res] = await deleteCard(
-  //   //     creditCard.cardId,
-  //   //   );
-  //   //   if (successful) {
-  //   //     console.log('DELETE REQUEST WORKED', res);
-  //   //   } else {
-  //   //     console.log('BAD DELETE REQUEST', res);
-  //   //   }
-  //   // }
-  // };
 
   const payInStore = async () => {
     await updateBooking(['payInStore', true]);
@@ -206,9 +172,7 @@ NewPayment.propTypes = {
   checked: PropTypes.bool.isRequired,
   changeCard: PropTypes.bool.isRequired,
   setChangeCard: PropTypes.func.isRequired,
-  saveCard: PropTypes.bool.isRequired,
   loggedIn: PropTypes.bool.isRequired,
-  setSaveCard: PropTypes.func.isRequired,
   nextPage: PropTypes.func.isRequired,
   services: PropTypes.shape([{
     type: PropTypes.string,

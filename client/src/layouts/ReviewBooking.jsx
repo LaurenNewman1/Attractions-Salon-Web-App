@@ -23,7 +23,7 @@ const ReviewBooking = ({
   const [tempBool, setTempBool] = useState(true);
   const amountBeforeTax = price * 100;
   const tax = 0.07;
-  const total = Number(amountBeforeTax + (amountBeforeTax * tax))
+  const total = Number(amountBeforeTax + (amountBeforeTax * tax));
   // const [amountInPennies, setAmountInPennies] = useState(0);
   // console.log(services);
   // console.log(booking.service);

@@ -12,7 +12,7 @@ import NewPayment from './NewPayment';
 const ConfirmPayment = ({
   booking, loading, updateBooking, userData, getCard, deleteCard, getCards,
   updateCreditCard, creditCard, finalCreditCard, changeCard, setChangeCard, checked, setChecked,
-  saveCard, setSaveCard, postOrPutCardToUser, loggedIn, cardSelected, setCardSelected, nextPage,
+  postOrPutCardToUser, loggedIn, cardSelected, setCardSelected, nextPage, setChangeClicked, setCancelPressed,
 }) => {
   const classes = useStyles();
   const theme = useTheme();
@@ -23,16 +23,21 @@ const ConfirmPayment = ({
   };
 
   const savePressed = async () => {
-    setSaveCard(true);
     const success = await postOrPutCardToUser();
     if (success) {
       setChangeCard(false);
+      setChangeClicked(true);
     }
   };
 
   const payInStore = async () => {
     updateBooking(['payInStore', true]);
     nextPage();
+  };
+
+  const cancelGotPressed = () => {
+    setChangeCard(false);
+    setCancelPressed(true);
   };
 
   return (
@@ -76,8 +81,6 @@ const ConfirmPayment = ({
       </div>
       {loggedIn && (
         <>
-          {console.log('B4 change Card', creditCard)}
-          {console.log('B4 FINAL change Card', finalCreditCard)}
           <div className={classes.link}>
             <Button
               style={{ textDecoration: 'underline' }}
@@ -110,14 +113,10 @@ const ConfirmPayment = ({
                   setChecked={setChecked}
                   changeCard={changeCard}
                   setChangeCard={setChangeCard}
-                  saveCard={saveCard}
-                  setSaveCard={setSaveCard}
                 />
               </DialogContent>
               <DialogActions>
-                <Button onClick={() => setChangeCard(false)}>Cancel</Button>
-                {console.log('Credit card b4 SAVE: ', creditCard)}
-                {console.log(' FINAL Credit card b4 SAVE: ', finalCreditCard)}
+                <Button onClick={() => cancelGotPressed()}>Cancel</Button>
                 <Button onClick={() => savePressed()} color="primary" variant="contained" autoFocus>
                   Save Card
                 </Button>
@@ -185,14 +184,14 @@ ConfirmPayment.propTypes = {
   updateCreditCard: PropTypes.func.isRequired,
   changeCard: PropTypes.bool.isRequired,
   setChangeCard: PropTypes.func.isRequired,
-  saveCard: PropTypes.bool.isRequired,
   loggedIn: PropTypes.bool.isRequired,
-  setSaveCard: PropTypes.func.isRequired,
   checked: PropTypes.bool.isRequired,
   setChecked: PropTypes.func.isRequired,
   cardSelected: PropTypes.bool.isRequired,
   setCardSelected: PropTypes.func.isRequired,
   postOrPutCardToUser: PropTypes.func.isRequired,
+  setChangeClicked: PropTypes.func.isRequired,
+  setCancelPressed: PropTypes.func.isRequired,
   nextPage: PropTypes.func.isRequired,
   finalCreditCard: PropTypes.shape({
     last4: PropTypes.string,

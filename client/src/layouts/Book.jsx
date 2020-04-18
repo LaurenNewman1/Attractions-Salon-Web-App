@@ -25,8 +25,9 @@ const Book = ({
   const [cardSelected, setCardSelected] = useState(false);
   const [page, setPage] = useState(0);
   const [error, setError] = useState(false);
-  const [badRequest, setBadRequest] = useState(true);
   const [checked, setChecked] = useState(false);
+  const [changeClicked, setChangeClicked] = useState(false); // This is for the edge case so that booking.method_id does not get overriden in review booking
+  const [cancelPressed, setCancelPressed] = useState(false); // This is for the edge case so that if a person puts in bad info and cancels, it doesn't get updated
   const [noCC, setNoCC] = useState(false);
   const [booking, setBooking] = useState({
     name: userData ? userData.name : '',
@@ -68,7 +69,6 @@ const Book = ({
   });
   const [CCFlag, setCCFlag] = useState(false);
   const [changeCard, setChangeCard] = useState(false);
-  const [saveCard, setSaveCard] = useState(false);
   const [noPrice, setNoPrice] = useState(false);
   const [creditCards, setCreditCards] = useState([]);
 
@@ -78,7 +78,7 @@ const Book = ({
       const [fieldName, val] = argu;
       newFields[fieldName] = val;
     });
-    console.log(`Try: ${newFields.name} AND ${newFields.email} AND ${newFields.payInStore} AND ${newFields.phone_number} AND ${newFields.amount}`);
+    console.log(`Try: ${newFields.name} AND ${newFields.email} AND ${newFields.payInStore} AND ${newFields.phone_number} AND ${newFields.amount} AND ${newFields.method_id}`);
     setBooking(newFields);
   };
 
@@ -97,8 +97,8 @@ const Book = ({
     argus.forEach((argu) => {
       const [fieldName, val] = argu;
       newFields[fieldName] = val;
-      // console.log('FINAL card update: ', newFields);
     });
+    console.log('FINAL card update: ', newFields);
     setFinalCreditCard(newFields);
   };
 
@@ -140,6 +140,7 @@ const Book = ({
     // This can be polished later to only run once and save the required id
     const [success, response] = await getCards(userData._id);
     const savedUserCards = response.data;
+    console.log('savedUserCards: ', savedUserCards);
     // This is the first card ID, which should be the only ID
     if (success) {
       // setCreditCards(response.data);
@@ -150,8 +151,8 @@ const Book = ({
     // POST command
     if (savedUserCards.length === 0) {
       // Call the newCardToUser command
-      // console.log('CC POST', creditCard);
-      // console.log('FINAL CC POST: ', finalCreditCard);
+      console.log('CC POST', creditCard);
+      console.log('FINAL CC POST: ', finalCreditCard);
       const [successful, res] = await newCardToUser(
         userData._id,
         creditCard.cardNumber,
@@ -161,7 +162,6 @@ const Book = ({
       );
       if (successful) {
         console.log('POST REQUEST 1 WORKED', res);
-        setBadRequest(false);
         await updateCreditCard(['cardId', res.id]);
         await updateCreditCard(['last4', res.card.last4]);
         await updateFinalCreditCard(
@@ -177,14 +177,13 @@ const Book = ({
       } else {
         console.log('BAD POST REQUEST', res);
         setError(true);
-        setBadRequest(true);
       }
       return successful;
     }
     // Call the PUT command to overwrite it
     const savedCardId = savedUserCards[0].id;
-    // console.log('CC PUT: ', creditCard);
-    // console.log('FINAL CC PUT: ', finalCreditCard);
+    console.log('CC PUT: ', creditCard);
+    console.log('FINAL CC PUT: ', finalCreditCard);
     const [successful, res] = await updateCardForUser(
       userData._id,
       savedCardId,
@@ -196,7 +195,6 @@ const Book = ({
     if (successful) {
       console.log('PUT REQUEST WORKED', res);
       // saves the new card id
-      setBadRequest(false);
       await updateCreditCard(['cardId', res.id]);
       // console.log(creditCard.cardNumber.substr(creditCard.cardNumber.length - 4));
       await updateCreditCard(['last4', res.card.last4]);
@@ -209,16 +207,29 @@ const Book = ({
         ['CVC', creditCard.CVC],
         ['name', creditCard.name],
       );
-      updateBooking(['method_id', res.id]);
-      // console.log('MY FINAL CARD PUT', finalCreditCard);
+      console.log('NEW CARD ID', res.id);
+      await updateBooking(['method_id', res.id]);
     } else {
       console.log('BAD PUT REQUEST', res);
       // Checks validity of card
       // This is temporary - talk to Lauren
       setError(true);
-      setBadRequest(true);
     }
     return successful;
+  };
+
+  const getCardAndUpdate = async () => {
+    const [success, response] = await getCards(userData._id);
+    const savedUserCards = response.data;
+    console.log('savedUserCards: ', savedUserCards);
+    updateFinalCreditCard(
+      ['last4', savedUserCards[0].card.last4],
+      ['cardId', savedUserCards[0].id],
+      ['expMonth', savedUserCards[0].card.exp_month],
+      ['expYear', savedUserCards[0].card.exp_year],
+      ['name', booking.name],
+    );
+    return success;
   };
 
   // This calls the post command to check if the card is valid, but does NOT save it to user
@@ -231,7 +242,6 @@ const Book = ({
     );
     if (successful) {
       console.log('POST REQUEST 2 WORKED', res);
-      setBadRequest(false);
       updateCreditCard(['cardId', res.id]);
       setFinalCreditCard(creditCard);
       await updateFinalCreditCard(
@@ -248,11 +258,11 @@ const Book = ({
     } else {
       console.log('BAD POST 2 REQUEST', res);
       setError(true);
-      setBadRequest(true);
     }
+    return successful;
   };
 
-  const validateNext = (setPayInStore = undefined) => {
+  const validateNext = async (setPayInStore = undefined) => {
     const trustedPayInStore = setPayInStore || booking.payInStore;
     switch (page) {
       case 0:
@@ -279,36 +289,32 @@ const Book = ({
           // This checks if the remember my Card is checked, and does the appropriate post command
           if (!CCFlag) {
             // This is so that new Payment goes to payment
-            setCCFlag(true);
             if (checked) {
               // Saves to user
-              // console.log('MY CARD 1', creditCard);
-              // console.log('MY FINAL CARD 1', finalCreditCard);
-              postOrPutCardToUser(); // Checks if the card is valid
+              const success = await postOrPutCardToUser(); // Checks if the card is valid
+              if (success) {
+                setPage((prev) => prev + 1);
+              } else {
+                setError(true);
+              }
             } else {
-              postCard();
+              const success = await postCard();
+              if (success) {
+                setPage((prev) => prev + 1);
+              } else {
+                setError(true);
+              }
             }
-            setPage((prev) => prev + 1);
             break;
             // IF they have a card in store
-          } else if (saveCard) {
-            setCCFlag(true);
-            // console.log('SAVE CARD PRESSED');
-            // console.log('MY CARD 2', creditCard);
-            // console.log('MY FINAL CARD 2', finalCreditCard);
-            // postOrPutCardToUser();
-          } else {
-            setCCFlag(true);
-            if (!checked) {
-              updateFinalCreditCard(
-                ['last4', creditCard.last4],
-                ['cardId', creditCard.cardId],
-                ['expMonth', creditCard.expMonth],
-                ['expYear', creditCard.expYear],
-                ['name', creditCard.name],
-              );
+          } else if (!checked) {
+            // This updates when you do regular payment - logged in and straight to confirm
+            if (!changeClicked || !cancelPressed) { // Change Clicked is true when you change the card and it saves
+              const success = await getCardAndUpdate();
+              console.log('GUMBA', success);
             }
           }
+          setCCFlag(true);
           setPage((prev) => prev + 1);
         } else {
           setError(true);
@@ -372,18 +378,17 @@ const Book = ({
               setCreditCards={setCreditCards}
               changeCard={changeCard}
               setChangeCard={setChangeCard}
+              setChangeClicked={setChangeClicked}
               checked={checked}
               setChecked={setChecked}
-              saveCard={saveCard}
-              setSaveCard={setSaveCard}
               postOrPutCardToUser={postOrPutCardToUser}
               error={error}
-              badRequest={badRequest}
               finalCreditCard={finalCreditCard}
               noCC={noCC}
               loggedIn={loggedIn}
               cardSelected={cardSelected}
               setCardSelected={setCardSelected}
+              setCancelPressed={setCancelPressed}
             />
           );
         }
@@ -404,8 +409,6 @@ const Book = ({
             setChecked={setChecked}
             changeCard={changeCard}
             setChangeCard={setChangeCard}
-            saveCard={saveCard}
-            setSaveCard={setSaveCard}
             postOrPutCardToUser={postOrPutCardToUser}
             loggedIn={loggedIn}
             services={services}
