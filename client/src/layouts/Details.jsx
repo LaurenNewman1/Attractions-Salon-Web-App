@@ -31,6 +31,7 @@ const Details = ({
   const [type, setType] = useState(services.find((s) => s._id === booking.service)
     ? services.find((s) => s._id === booking.service).type : '');
 
+  const getServiceDetails = () => serviceOptions.find((s) => s._id === booking.service) || '';
 
   useEffect(() => {
     // If user is going back
@@ -172,11 +173,17 @@ const Details = ({
               value={booking.specialist}
               onChange={(e) => updateBooking(['specialist', e.target.value])}
             >
-              {booking.service ? specialists.map((specialist) => (
-                <MenuItem key={specialist._id} value={specialist._id}>
-                  {specialist.name}
-                </MenuItem>
-              )) : null}
+              {booking.service ? specialists.map((specialist) => {
+                if (specialist.specialties.find((s) => s === getServiceDetails().type
+                      || s === getServiceDetails().subtype)) {
+                  return (
+                    <MenuItem key={specialist._id} value={specialist._id}>
+                      {specialist.name}
+                    </MenuItem>
+                  );
+                }
+                return null;
+              }) : null}
             </Select>
           </FormControl>
         </Grid>

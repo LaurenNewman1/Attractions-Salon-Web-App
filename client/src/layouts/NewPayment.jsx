@@ -112,14 +112,14 @@ const NewPayment = ({
         </Grid>
         )}{!changeCard && (
           <>
-            <Grid item xs={12} className={classes.divider}>
+            <Grid item xs={12} className={classes.divider} style={{ marginTop: 20 }}>
               <Divider variant="middle" style={{ flexGrow: 1 }} />
               <Typography variant="h5">
                 OR
               </Typography>
               <Divider variant="middle" style={{ flexGrow: 1 }} />
             </Grid>
-            <Grid item xs={12} className={classes.button}>
+            <Grid item xs={12} className={classes.button} style={{ marginTop: 20 }}>
               <Button
                 variant="contained"
                 color="primary"

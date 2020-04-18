@@ -54,7 +54,9 @@ const ReviewBooking = ({
   const updateBookingRequest = async () => {
     const { specialist, ...restOfBooking } = booking;
     const requestBooking = !booking.specialist ? restOfBooking : booking;
-    const [success, res] = await sendRequest({ ...requestBooking, captchaResponse: captchaRef.current.getValue() });
+    const [success, res] = await sendRequest({
+      ...requestBooking, captchaResponse: captchaRef.current.getValue(),
+    });
     if (success) {
       history.push(`/confirmation/${res._id}`);
     } else {

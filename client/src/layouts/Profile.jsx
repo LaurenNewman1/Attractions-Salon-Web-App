@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 import React, { useState, useEffect } from 'react';
 import {
-  Grid, Button, Input, IconButton, useTheme, useMediaQuery,
+  Grid, Button, Input, IconButton,
 } from '@material-ui/core';
 import { AccountCircle, Edit as EditIcon, Delete } from '@material-ui/icons';
 import Typography from '@material-ui/core/Typography';
@@ -17,8 +17,6 @@ const Profile = ({ userData, logout, changeProfile, getCards, deleteCard }) => {
   const [textBoxValues, setTextBoxValues] = useState({});
   const history = useHistory();
   const classes = useStyles();
-  const theme = useTheme();
-  const isSmall = useMediaQuery(theme.breakpoints.down('sm'));
   const [editMode, setEditMode] = useState(false);
   const [cardId, setCardId] = useState('');
   const [last4, setLast4] = useState('');
@@ -109,7 +107,7 @@ const Profile = ({ userData, logout, changeProfile, getCards, deleteCard }) => {
   const renderTextFields = () => {
     if (!editMode) {
       return (
-        <div style={{ textAlign: isSmall ? 'center' : undefined }}>
+        <div>
           <Typography variant="h6" gutterBottom>
             Email:
             {' '}
@@ -129,7 +127,7 @@ const Profile = ({ userData, logout, changeProfile, getCards, deleteCard }) => {
       );
     }
     return (
-      <div style={{ textAlign: isSmall ? 'center' : undefined }}>
+      <div>
         <Typography variant="h6" gutterBottom style={{ display: 'flex', alignItems: 'center' }}>
           Email:
           {' '}
@@ -161,7 +159,7 @@ const Profile = ({ userData, logout, changeProfile, getCards, deleteCard }) => {
   };
 
   return (
-    <Page>
+    <Page maxWidth="sm">
       <div style={{ paddingTop: 5 }}>
         <h1
           className={classes.header}
@@ -179,36 +177,29 @@ const Profile = ({ userData, logout, changeProfile, getCards, deleteCard }) => {
             )}
         </h1>
       </div>
-      <div>
-        <Grid container spacing={8} className={classes.container}>
-          <Grid
-            item
-            xs={12}
-            md={6}
-            className={isSmall ? classes.leftContainerSmall : classes.leftContainer}
-          >
-            <div>
-              <AccountCircle style={{ fontSize: 120 }} />
-              <Typography variant="h6" gutterBottom style={{ textAlign: 'center' }}>{name}</Typography>
-            </div>
-          </Grid>
-          <Grid item xs={12} md={6}>
-            {renderTextFields()}
-          </Grid>
-          <Grid item xs={12} className={classes.logout}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => { logout(); history.push('/'); }}
-            >
-              Log Out
-            </Button>
-          </Grid>
-          <Grid item xs={12} md={6} style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            {renderEditablePage()}
-          </Grid>
+      <Grid container className={classes.align}>
+        <Grid item xs={12} sm={6} style={{ textAlign: 'center' }}>
+          <AccountCircle style={{ fontSize: 120 }} />
+          <Typography variant="h6" gutterBottom style={{ textAlign: 'center' }}>{name}</Typography>
         </Grid>
-      </div>
+        <Grid item xs={12} sm={6} className={classes.justify}>
+          <div>
+            {renderTextFields()}
+          </div>
+        </Grid>
+        <Grid item xs={12} className={classes.justify} style={{ marginTop: 20 }}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => { logout(); history.push('/'); }}
+          >
+            Log Out
+          </Button>
+        </Grid>
+        <Grid item xs={12} sm={6} style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          {renderEditablePage()}
+        </Grid>
+      </Grid>
       <Alert
         open={alert.open}
         type={alert.type}
