@@ -62,8 +62,8 @@ const NewPayment = ({
         <Grid item xs={12}>
           <TextField
             fullWidth
-            type="Card Number"
             label="Card Number"
+            inputProps={{ maxLength: 16 }}
             onChange={(event) => updateCreditCard(['cardNumber', event.target.value])}
           />
         </Grid>
@@ -73,6 +73,7 @@ const NewPayment = ({
             type="expMonth"
             label="Exp Month"
             helperText="MM"
+            inputProps={{ maxLength: 2 }}
             onChange={(event) => updateCreditCard(['expMonth', event.target.value])}
           />
         </Grid>
@@ -82,6 +83,7 @@ const NewPayment = ({
             type="expYear"
             label="Exp Year"
             helperText="YYYY"
+            inputProps={{ maxLength: 4 }}
             onChange={(event) => updateCreditCard(['expYear', event.target.value])}
           />
         </Grid>
@@ -91,6 +93,7 @@ const NewPayment = ({
             type="CVC"
             label="CVC"
             helperText="###"
+            inputProps={{ maxLength: 3 }}
             onChange={(event) => updateCreditCard(['CVC', event.target.value])}
           />
         </Grid>
