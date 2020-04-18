@@ -19,6 +19,7 @@ import Confirmation from './layouts/Confirmation';
 import Requests from './layouts/admin/Requests';
 import AdminServices from './layouts/admin/AdminServices';
 import useLogin from './stores/LoginStores';
+import useCreditCard from './stores/CreditCardStore';
 import Dashboard from './layouts/admin/Dashboard';
 import Users from './layouts/admin/Users';
 import AdminReviews from './layouts/admin/AdminReviews';
@@ -36,6 +37,14 @@ const App = () => {
     requestPasswordUpdate,
     loading,
   ] = useLogin();
+  const [
+    newCardToUser,
+    updateCardForUser,
+    getCards,
+    getCard,
+    deleteCard,
+    newCardCheck,
+  ] = useCreditCard();
   const [fromBookPage, setFromBookPage] = useState(false);
   console.log(`Logged In: ${loggedIn}`);
   console.log(`Book Variable: ${fromBookPage} `);
@@ -78,7 +87,7 @@ const App = () => {
           <Switch>
             <Route exact path="/" component={() => <Home loggedIn={loggedIn} setFromBookPage={setFromBookPage} />} />
             <Route path="/book/:id" component={() => <Book userData={userData} />} />
-            <Route path="/book/" component={() => <Book userData={userData} />} />
+            <Route path="/book/" component={() => <Book userData={userData} newCardToUser={newCardToUser} updateCardForUser={updateCardForUser} getCards={getCards} getCard={getCard} deleteCard={deleteCard} newCardCheck={newCardCheck} loggedIn={loggedIn} />} />
             <Route path="/services" component={Services} />
             <Route path="/about" component={About} />
             <Route path="/reviews" component={Reviews} />
@@ -90,6 +99,8 @@ const App = () => {
               component={() => (
                 <Profile
                   userData={userData}
+                  getCards={getCards}
+                  deleteCard={deleteCard}
                   logout={() => logout()}
                   changeProfile={changeProfile}
                 />

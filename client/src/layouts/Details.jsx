@@ -22,7 +22,7 @@ const MenuProps = {
 };
 
 const Details = ({
-  booking, updateBooking, loading, specialists, services, compact,
+  booking, updateBooking, loading, specialists, services, compact, setNoPrice,
 }) => {
   const classes = useStyles();
   const theme = useTheme();
@@ -31,6 +31,7 @@ const Details = ({
   const [type, setType] = useState(services.find((s) => s._id === booking.service)
     ? services.find((s) => s._id === booking.service).type : '');
 
+  const getServiceDetails = () => serviceOptions.find((s) => s._id === booking.service) || '';
 
   useEffect(() => {
     // If user is going back
@@ -60,12 +61,15 @@ const Details = ({
     setAddOnOptions([]);
   };
 
-  const changeService = (newService) => {
-    updateBooking(['service', newService], ['addons', []], ['specialist', '']);
+  const changeService = async (newService) => {
+    await updateBooking(['service', newService], ['addons', []], ['specialist', '']);
     setAddOnOptions(serviceOptions.find((s) => s._id === newService).addons);
+    if (!(serviceOptions.find((s) => s._id === newService).price)) {
+      setNoPrice(true);
+    } else {
+      setNoPrice(false);
+    }
   };
-
-  const getServiceDetails = () => serviceOptions.find((s) => s._id === booking.service) || '';
 
   return (
     <>
@@ -120,7 +124,7 @@ const Details = ({
                   {serv.name}
                   {' '}
                   ($
-                  {serv.price}
+                  {serv.price === 0 ? '' : serv.price}
                   )
                 </MenuItem>
               ))}
@@ -169,17 +173,17 @@ const Details = ({
               value={booking.specialist}
               onChange={(e) => updateBooking(['specialist', e.target.value])}
             >
-              {booking.service ? specialists.map((specialist) =>
-                // if (specialist.specialties.find((s) => s === getServiceDetails().type
-                //       || s === getServiceDetails().subtype)) {
-                (
-                  <MenuItem key={specialist._id} value={specialist._id}>
-                    {specialist.name}
-                  </MenuItem>
-                ),
-                // }
-                // return null;
-              ) : null}
+              {booking.service ? specialists.map((specialist) => {
+                if (specialist.specialties.find((s) => s === getServiceDetails().type
+                      || s === getServiceDetails().subtype)) {
+                  return (
+                    <MenuItem key={specialist._id} value={specialist._id}>
+                      {specialist.name}
+                    </MenuItem>
+                  );
+                }
+                return null;
+              }) : null}
             </Select>
           </FormControl>
         </Grid>
@@ -209,8 +213,10 @@ Details.propTypes = {
     addons: PropTypes.array,
     specialist: PropTypes.string,
     notes: PropTypes.string,
+    payInStore: PropTypes.bool,
   }).isRequired,
   updateBooking: PropTypes.func.isRequired,
+  setNoPrice: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   specialists: PropTypes.shape([{
     name: PropTypes.string,

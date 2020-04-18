@@ -85,7 +85,7 @@ export const update = async (req, res) => {
           const intent = await stripe.paymentIntents.confirm(appointment.intent_id);
 
           if (intent.status != 'succeeded') {
-            await Appointment.findByIdAndUpdate(req.params.someId, {confirmed: false}).exec();
+            await Appointment.findByIdAndUpdate(req.params.someId, { confirmed: false }).exec();
             res.status(400).type('json').send({ error: 'Payment Failed' });
             return;
           }
@@ -93,7 +93,7 @@ export const update = async (req, res) => {
         await SendConfirmationEmail(appointment.email, 'attractions-salon@attractionssalon.com', appointment.name, appointment.notes,
           appointment.timeOrdered, appointment.addons, appointment.phone_number, serviceData[0].name, serviceData[0].price, serviceData[0].description);
       }
-        res.status(200).type('json').send(appointment);
+      res.status(200).type('json').send(appointment);
     } else {
       res.status(404).type('json').send({ error: 'Appointment not found' });
     }

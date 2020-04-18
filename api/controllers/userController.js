@@ -192,25 +192,23 @@ export const createCard = async (req, res) => {
   try {
     const params = req.body;
     const card = await stripe.paymentMethods.create(
-        {
-          type: 'card',
-          card: params,
-        }
+      {
+        type: 'card',
+        card: params,
+      },
     );
 
-    if(req.params.someId != undefined) {
-      const {someId} = req.params;
+    if (req.params.someId !== undefined) {
+      const { someId } = req.params;
       const user = await User.findById(someId).exec();
 
       if (!user) {
-        res.status(404).type('json').send({error: 'User not found'});
-      }
-      else {
-        await stripe.paymentMethods.attach(card.id, {customer: user.customer_id});
+        res.status(404).type('json').send({ error: 'User not found' });
+      } else {
+        await stripe.paymentMethods.attach(card.id, { customer: user.customer_id });
         res.status(200).type('json').send(card);
       }
-    }
-    else {
+    } else {
       res.status(200).type('json').send(card);
     }
   } catch (err) {
@@ -225,9 +223,8 @@ export const getCards = async (req, res) => {
 
     if (!user) {
       res.status(404).type('json').send({ error: 'User not found' });
-    }
-    else {
-      const methods = await stripe.paymentMethods.list({customer: user.customer_id, type: 'card'});
+    } else {
+      const methods = await stripe.paymentMethods.list({ customer: user.customer_id, type: 'card' });
 
       res.status(200).type('json').send(methods);
     }
@@ -240,10 +237,9 @@ export const getCard = async (req, res) => {
   try {
     const card = await stripe.paymentMethods.retrieve(req.params.cardId);
 
-    if(!card) {
+    if (!card) {
       res.status(404).type('json').send({ error: 'Card not found' });
-    }
-    else {
+    } else {
       res.status(200).type('json').send(card);
     }
   } catch (err) {
@@ -255,10 +251,9 @@ export const removeCard = async (req, res) => {
   try {
     const card = await stripe.paymentMethods.detach(req.params.cardId);
 
-    if(!card) {
+    if (!card) {
       res.status(404).type('json').send({ error: 'Card not found' });
-    }
-    else {
+    } else {
       res.status(200).type('json').send(card);
     }
   } catch (err) {
@@ -272,23 +267,21 @@ export const updateCard = async (req, res) => {
 
     if (!user) {
       res.status(404).type('json').send({ error: 'User not found' });
-    }
-    else {
+    } else {
       const params = req.body;
       const newCard = await stripe.paymentMethods.create(
-          {
-            type: 'card',
-            card: params,
-          }
+        {
+          type: 'card',
+          card: params,
+        },
       );
 
-      if(!newCard) {
+      if (!newCard) {
         res.status(404).type('json').send({ error: 'Card not valid' });
-      }
-      else {
-        await stripe.paymentMethods.detach(req.params.cardId)
-        await stripe.paymentMethods.attach(newCard.id, {customer: user.customer_id});
-        
+      } else {
+        await stripe.paymentMethods.detach(req.params.cardId);
+        await stripe.paymentMethods.attach(newCard.id, { customer: user.customer_id });
+
         res.status(200).type('json').send(newCard);
       }
     }

@@ -151,11 +151,11 @@ const NavBar = ({ loggedIn, userData, setFromBookPage }) => {
 NavBar.propTypes = {
   loggedIn: PropTypes.bool.isRequired,
   userData: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    role: PropTypes.number.isRequired,
-    email: PropTypes.string.isRequired,
-    phone_number: PropTypes.string.isRequired,
-    password: PropTypes.string.isRequired,
+    name: PropTypes.string,
+    role: PropTypes.number,
+    email: PropTypes.string,
+    phone_number: PropTypes.string,
+    password: PropTypes.string,
   }),
   setFromBookPage: PropTypes.func.isRequired,
 };

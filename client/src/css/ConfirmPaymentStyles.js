@@ -17,7 +17,18 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     width: '100%',
   },
+  btnBase: {
+    borderRadius: 20,
+    overflow: 'hidden',
+  },
   paper: {
+    borderRadius: 20,
+    height: 190,
+    width: 380,
+    backgroundColor: theme.palette.secondary.main,
+    margin: 0,
+  },
+  card: {
     padding: 20,
     textAlign: 'center',
     borderRadius: 20, // "20px"
@@ -27,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'stretch',
     height: 150,
     width: 350,
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: theme.palette.primary.main,
 
   },
   middleSpace: {
@@ -48,6 +59,10 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'space-between',
     width: '100%',
+  },
+  button: {
+    textAlign: 'center',
+    marginTop: 10,
   },
 }));
 
