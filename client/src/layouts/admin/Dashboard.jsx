@@ -40,6 +40,7 @@ const Dashboard = ({ userData }) => {
   const captchaRef = React.createRef();
 
   const submitNewAppointment = async () => {
+    // eslint-disable-next-line max-len
     const fullAppointment = { ...clientInfo, ...requestInfo, captchaResponse: captchaRef.current.getValue() };
     const [success, res] = await sendRequest(fullAppointment);
     if (success) {

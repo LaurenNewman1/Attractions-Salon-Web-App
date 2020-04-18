@@ -1,5 +1,3 @@
-import { useState, useEffect } from 'react';
-
 // eslint-disable-next-line camelcase
 const requestCreditCard = async (someId, number, exp_month, exp_year, cvc) => {
   // eslint-disable-next-line camelcase
@@ -124,6 +122,7 @@ export default () => {
   };
 
   const updateCardForUser = async (id, cardId, number, expMonth, expYear, cvc) => {
+    // eslint-disable-next-line max-len
     const [success, res] = await requestCreditCardUpdate(id, cardId, number, expMonth, expYear, cvc);
     return [success, res];
   };

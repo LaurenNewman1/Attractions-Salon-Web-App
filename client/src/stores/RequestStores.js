@@ -124,5 +124,6 @@ export default (unconformed = true) => {
     }
   }, []);
 
+  // eslint-disable-next-line max-len
   return [requests, services, specialists, loading, updateRequests, confirm, deleteRequest, refreshBookings];
 };

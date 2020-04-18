@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -153,6 +154,7 @@ const DashboardCalendar = ({
         <ToolBarContents>{allToolBarChildren}</ToolBarContents>
         <Appointments />
         <AppointmentTooltip
+          // eslint-disable-next-line react/prop-types
           headerComponent={(props) => <ToolTipHeader onEditClick={() => editAppointment(props.appointmentData)} {...props} />}
           contentComponent={TooptipContent}
           showCloseButton
