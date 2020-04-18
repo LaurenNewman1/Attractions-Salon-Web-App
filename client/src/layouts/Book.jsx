@@ -22,6 +22,7 @@ const Book = ({
   userData, newCardToUser, updateCardForUser, getCards, getCard, deleteCard, newCardCheck, loggedIn,
 }) => {
   const params = useParams();
+  const [cardSelected, setCardSelected] = useState(false);
   const [page, setPage] = useState(0);
   const [error, setError] = useState(false);
   const [badRequest, setBadRequest] = useState(true);
@@ -70,11 +71,6 @@ const Book = ({
   const [saveCard, setSaveCard] = useState(false);
   const [noPrice, setNoPrice] = useState(false);
   const [creditCards, setCreditCards] = useState([]);
-
-  // const setChangeCard = (f) => {
-  //   console.trace(`changing changecard to ${f}!`);
-  //   _setChangeCard(f);
-  // };
 
   const updateBooking = (...argus) => {
     const newFields = { ...booking };
@@ -135,8 +131,9 @@ const Book = ({
   }, []);
 
   useEffect(() => {
-    console.log('FINAL CREDIT CARD CHANGES: ', finalCreditCard);
-  }, [finalCreditCard]);
+    // console.log('CREDIT CARD CHANGES: ', creditCard);
+    // console.log('FINAL CREDIT CARD CHANGES: ', finalCreditCard);
+  }, [finalCreditCard, creditCard]);
 
   // For a logged in user
   const postOrPutCardToUser = async () => {
@@ -153,6 +150,8 @@ const Book = ({
     // POST command
     if (savedUserCards.length === 0) {
       // Call the newCardToUser command
+      // console.log('CC POST', creditCard);
+      // console.log('FINAL CC POST: ', finalCreditCard);
       const [successful, res] = await newCardToUser(
         userData._id,
         creditCard.cardNumber,
@@ -174,51 +173,52 @@ const Book = ({
           ['CVC', creditCard.CVC],
           ['name', creditCard.name],
         );
-        // This is jsut reasserting the cardId and last4
-        // console.log('MY FINAL CARD POST', finalCreditCard);
+        await updateBooking(['method_id', res.id]);
       } else {
         console.log('BAD POST REQUEST', res);
-        // Checks validity of card
-        // This is temporary - talk to Lauren
         setError(true);
         setBadRequest(true);
       }
-    } else {
-      // Call the PUT command to overwrite it
-      const savedCardId = savedUserCards[0].id;
-      const [successful, res] = await updateCardForUser(
-        userData._id,
-        savedCardId,
-        creditCard.cardNumber,
-        creditCard.expMonth,
-        creditCard.expYear,
-        creditCard.CVC,
-      );
-      if (successful) {
-        console.log('PUT REQUEST WORKED', res);
-        // saves the new card id
-        setBadRequest(false);
-        await updateCreditCard(['cardId', res.id]);
-        // console.log(creditCard.cardNumber.substr(creditCard.cardNumber.length - 4));
-        await updateCreditCard(['last4', res.card.last4]);
-        await updateFinalCreditCard(
-          ['cardNumber', creditCard.cardNumber],
-          ['last4', res.card.last4],
-          ['cardId', res.id],
-          ['expMonth', res.card.exp_month],
-          ['expYear', res.card.exp_year],
-          ['CVC', creditCard.CVC],
-          ['name', creditCard.name],
-        );
-        console.log('MY FINAL CARD PUT', finalCreditCard);
-      } else {
-        console.log('BAD PUT REQUEST', res);
-        // Checks validity of card
-        // This is temporary - talk to Lauren
-        setError(true);
-        setBadRequest(true);
-      }
+      return successful;
     }
+    // Call the PUT command to overwrite it
+    const savedCardId = savedUserCards[0].id;
+    // console.log('CC PUT: ', creditCard);
+    // console.log('FINAL CC PUT: ', finalCreditCard);
+    const [successful, res] = await updateCardForUser(
+      userData._id,
+      savedCardId,
+      creditCard.cardNumber,
+      creditCard.expMonth,
+      creditCard.expYear,
+      creditCard.CVC,
+    );
+    if (successful) {
+      console.log('PUT REQUEST WORKED', res);
+      // saves the new card id
+      setBadRequest(false);
+      await updateCreditCard(['cardId', res.id]);
+      // console.log(creditCard.cardNumber.substr(creditCard.cardNumber.length - 4));
+      await updateCreditCard(['last4', res.card.last4]);
+      await updateFinalCreditCard(
+        ['cardNumber', creditCard.cardNumber],
+        ['last4', res.card.last4],
+        ['cardId', res.id],
+        ['expMonth', res.card.exp_month],
+        ['expYear', res.card.exp_year],
+        ['CVC', creditCard.CVC],
+        ['name', creditCard.name],
+      );
+      updateBooking(['method_id', res.id]);
+      // console.log('MY FINAL CARD PUT', finalCreditCard);
+    } else {
+      console.log('BAD PUT REQUEST', res);
+      // Checks validity of card
+      // This is temporary - talk to Lauren
+      setError(true);
+      setBadRequest(true);
+    }
+    return successful;
   };
 
   // This calls the post command to check if the card is valid, but does NOT save it to user
@@ -243,20 +243,19 @@ const Book = ({
         ['CVC', creditCard.CVC],
         ['name', creditCard.name],
       );
+      await updateBooking(['method_id', res.id]);
       // console.log('MY FINAL CARD POST 2', finalCreditCard);
     } else {
       console.log('BAD POST 2 REQUEST', res);
-      // This is temporary - talk to Lauren
       setError(true);
       setBadRequest(true);
     }
   };
 
-  const validateNext = () => {
+  const validateNext = (setPayInStore = undefined) => {
+    const trustedPayInStore = setPayInStore || booking.payInStore;
     switch (page) {
       case 0:
-        console.log('PRICE TEMP: ', noPrice);
-        console.log('TEMP: ', booking.service);
         if (booking.service) {
           setPage((prev) => prev + 1);
         } else {
@@ -264,7 +263,7 @@ const Book = ({
         }
         break;
       case 1:
-        console.log('The CCFLag is: ', CCFlag);
+        // console.log('The CCFLag is: ', CCFlag);
         if (booking.name && booking.email && booking.phone_number) {
           setPage((prev) => prev + 1);
         } else {
@@ -272,27 +271,31 @@ const Book = ({
         }
         break;
       case 2:
+        if (trustedPayInStore) {
+          setPage((prev) => prev + 1);
+          break;
+        }
         if (creditCard.name && creditCard.expMonth && creditCard.expYear) {
           // This checks if the remember my Card is checked, and does the appropriate post command
           if (!CCFlag) {
             // This is so that new Payment goes to payment
             setCCFlag(true);
-            // Checks if the card is valid
             if (checked) {
               // Saves to user
-              console.log('MY CARD 1', creditCard);
-              console.log('MY FINAL CARD 1', finalCreditCard);
-              postOrPutCardToUser();
+              // console.log('MY CARD 1', creditCard);
+              // console.log('MY FINAL CARD 1', finalCreditCard);
+              postOrPutCardToUser(); // Checks if the card is valid
             } else {
               postCard();
             }
+            setPage((prev) => prev + 1);
             break;
             // IF they have a card in store
           } else if (saveCard) {
             setCCFlag(true);
             // console.log('SAVE CARD PRESSED');
-            console.log('MY CARD 2', creditCard);
-            console.log('MY FINAL CARD 2', finalCreditCard);
+            // console.log('MY CARD 2', creditCard);
+            // console.log('MY FINAL CARD 2', finalCreditCard);
             // postOrPutCardToUser();
           } else {
             setCCFlag(true);
@@ -378,6 +381,9 @@ const Book = ({
               badRequest={badRequest}
               finalCreditCard={finalCreditCard}
               noCC={noCC}
+              loggedIn={loggedIn}
+              cardSelected={cardSelected}
+              setCardSelected={setCardSelected}
             />
           );
         }
@@ -385,7 +391,7 @@ const Book = ({
           <NewPayment
             updateCreditCard={(...argus) => updateCreditCard(...argus)}
             loading={loading}
-            nextPage={() => validateNext()}
+            nextPage={(setPayInStore = undefined) => validateNext(setPayInStore)}
             booking={booking}
             updateBooking={(...argus) => updateBooking(...argus)}
             newCardToUser={newCardToUser}
@@ -402,6 +408,7 @@ const Book = ({
             setSaveCard={setSaveCard}
             postOrPutCardToUser={postOrPutCardToUser}
             loggedIn={loggedIn}
+            services={services}
           />
         );
       case 3:

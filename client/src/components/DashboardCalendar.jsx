@@ -5,7 +5,7 @@ import { startOfWeek, addDays, addHours } from 'date-fns';
 import {
   Paper, Grid, Chip, Button, IconButton,
 } from '@material-ui/core';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import {
   ListAlt, Person, Notes, Edit,
 } from '@material-ui/icons';
@@ -15,7 +15,6 @@ import {
   WeekView,
   Appointments,
   AppointmentTooltip,
-  AppointmentForm,
   Toolbar,
   DateNavigator,
   TodayButton,

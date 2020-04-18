@@ -16,7 +16,7 @@ import Loading from '../components/Loading';
 const NewPayment = ({
   booking, updateBooking, updateCreditCard, loading, nextPage, userData,
   creditCard, getCards, getCard, checked, setChecked, changeCard, setChangeCard,
-  saveCard, setSaveCard, loggedIn,
+  saveCard, setSaveCard, loggedIn, services,
 }) => {
   const classes = useStyles();
   useEffect(() => {
@@ -24,6 +24,22 @@ const NewPayment = ({
       updateCreditCard(['last4', creditCard.cardNumber.substr(creditCard.cardNumber.length - 4)]);
     }
   }, [creditCard.cardNumber]);
+
+  useEffect(() => {
+    if (!changeCard) {
+      const currentService = services.find((x) => x._id === booking.service);
+      let counter = currentService.price;
+      // if(counter === 0) -> then you need to do something for pay in store
+      for (let i = 0; i < booking.addons.length; i += 1) {
+        counter += booking.addons[i].price;
+      }
+      const amountBeforeTax = counter * 100;
+      const tax = 0.07;
+      const total = Number(amountBeforeTax + (amountBeforeTax * tax));
+      updateBooking(['amount', total]);
+      console.log('IT IS CHANGING --------------------------', total);
+    }
+  }, []);
 
   // console.log('USER DATA: ', userData);
   // console.log('CREDIT CARD: ', creditCard);
@@ -58,10 +74,9 @@ const NewPayment = ({
   //   // }
   // };
 
-
   const payInStore = async () => {
-    updateBooking(['payInStore', true]);
-    nextPage();
+    await updateBooking(['payInStore', true]);
+    nextPage(true);
   };
 
   return (
@@ -195,6 +210,10 @@ NewPayment.propTypes = {
   loggedIn: PropTypes.bool.isRequired,
   setSaveCard: PropTypes.func.isRequired,
   nextPage: PropTypes.func.isRequired,
+  services: PropTypes.shape([{
+    type: PropTypes.string,
+    services: PropTypes.array,
+  }]).isRequired,
 };
 
 export default NewPayment;

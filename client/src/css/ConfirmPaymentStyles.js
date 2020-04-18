@@ -67,6 +67,10 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'space-between',
     width: '100%',
   },
+  button: {
+    textAlign: 'center',
+    marginTop: 10,
+  },
 }));
 
 export default useStyles;

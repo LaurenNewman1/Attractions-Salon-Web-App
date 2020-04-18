@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import {
   Button, Typography, Divider, Paper,
-  DialogActions, DialogContent, DialogTitle, Dialog,
-  Card, Grid, CardActionArea, useTheme, ButtonBase,
+  DialogActions, DialogContent, DialogTitle, Dialog, Grid, useTheme, ButtonBase,
 } from '@material-ui/core';
 import useStyles from '../css/ConfirmPaymentStyles';
 import creditCardCircles from '../images/masterCardCircles.png';
@@ -11,39 +10,31 @@ import Loading from '../components/Loading';
 import NewPayment from './NewPayment';
 
 const ConfirmPayment = ({
-  booking, loading, updateBooking, nextPage, creditCards, userData, getCard, deleteCard, getCards,
-  updateCreditCard, creditCard, setCreditCards, changeCard, setChangeCard, checked, setChecked,
-  saveCard, setSaveCard, postOrPutCardToUser, badRequest, noCC, finalCreditCard,
+  booking, loading, updateBooking, userData, getCard, deleteCard, getCards,
+  updateCreditCard, creditCard, finalCreditCard, changeCard, setChangeCard, checked, setChecked,
+  saveCard, setSaveCard, postOrPutCardToUser, loggedIn, cardSelected, setCardSelected, nextPage,
 }) => {
   const classes = useStyles();
-  const [selected, setSelected] = useState(false);
   const theme = useTheme();
 
-  // console.log('Credit Card Array: ', creditCards);
-  // console.log('Credit Card Array LENGTH: ', creditCards.length);
-  // console.log('Credit Card: ', creditCard);
-
-  // const payInStore = () => {
-  //   updateBooking(['payInStore', !booking.payInStore]);
-  //   nextPage();
-  // };
-
-  // useEffect(() => {
-  //   if (!badRequest) {
-  //     setChangeCard(false);
-  //   }
-  // }, [badRequest]);
+  const goToNextPage = () => {
+    setCardSelected(!cardSelected);
+    nextPage();
+  };
 
   const savePressed = async () => {
     setSaveCard(true);
-    // console.log('Variable', badRequest);
-    await postOrPutCardToUser();
-    // console.log('Variable', badRequest);
-    // if (!badRequest) {
-    //   setChangeCard(false);
-    // }
-    // This is so that the pop up closes
+    const success = await postOrPutCardToUser();
+    if (success) {
+      setChangeCard(false);
+    }
   };
+
+  const payInStore = async () => {
+    updateBooking(['payInStore', true]);
+    nextPage();
+  };
+
   return (
     <div className={classes.page}>
       {loading ? <Loading /> : null}
@@ -57,10 +48,10 @@ const ConfirmPayment = ({
       >
         <ButtonBase
           className={classes.btnBase}
-          onClick={() => setSelected(!selected)}
+          onClick={() => goToNextPage()}
         >
           <Paper
-            style={{ borderColor: selected ? theme.palette.primary.main : 'transparent' }}
+            style={{ borderColor: cardSelected ? theme.palette.primary.main : 'transparent' }}
             className={classes.paper}
           >
             <img src={creditCardCircles} alt="Circles" className={classes.circles} />
@@ -83,49 +74,75 @@ const ConfirmPayment = ({
           </Paper>
         </ButtonBase>
       </div>
-      <div className={classes.link}>
-        <Button
-          style={{ textDecoration: 'underline' }}
-          target="_blank"
-          onClick={() => setChangeCard(true)}
-        >
-          Change Card
-        </Button>
-      </div>
-      <div>
-        <Dialog
-          open={changeCard}
-          fullWidth
-          maxWidth="md"
-          onClose={() => setChangeCard(false)}
-        >
-          <DialogTitle>Change Credit Card</DialogTitle>
-          <DialogContent>
-            <NewPayment
-              updateCreditCard={(...argus) => updateCreditCard(...argus)}
-              loading={loading}
-              booking={booking}
-              updateBooking={(...argus) => updateBooking(...argus)}
-              getCards={getCards}
-              getCard={getCard}
-              userData={userData}
-              deleteCard={deleteCard}
-              creditCard={creditCard}
-              checked={checked}
-              setChecked={setChecked}
-              changeCard={changeCard}
-              setChangeCard={setChangeCard}
-              saveCard={saveCard}
-              setSaveCard={setSaveCard}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => setChangeCard(false)}>Cancel</Button>
-            <Button onClick={() => savePressed()} color="primary" variant="contained" autoFocus>
-              Save Card
+      {loggedIn && (
+        <>
+          {console.log('B4 change Card', creditCard)}
+          {console.log('B4 FINAL change Card', finalCreditCard)}
+          <div className={classes.link}>
+            <Button
+              style={{ textDecoration: 'underline' }}
+              target="_blank"
+              onClick={() => setChangeCard(true)}
+            >
+              Change Card
             </Button>
-          </DialogActions>
-        </Dialog>
+          </div>
+          <div>
+            <Dialog
+              open={changeCard}
+              fullWidth
+              maxWidth="md"
+              onClose={() => setChangeCard(false)}
+            >
+              <DialogTitle>Change Credit Card</DialogTitle>
+              <DialogContent>
+                <NewPayment
+                  updateCreditCard={(...argus) => updateCreditCard(...argus)}
+                  loading={loading}
+                  booking={booking}
+                  updateBooking={(...argus) => updateBooking(...argus)}
+                  getCards={getCards}
+                  getCard={getCard}
+                  userData={userData}
+                  deleteCard={deleteCard}
+                  creditCard={creditCard}
+                  checked={checked}
+                  setChecked={setChecked}
+                  changeCard={changeCard}
+                  setChangeCard={setChangeCard}
+                  saveCard={saveCard}
+                  setSaveCard={setSaveCard}
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={() => setChangeCard(false)}>Cancel</Button>
+                {console.log('Credit card b4 SAVE: ', creditCard)}
+                {console.log(' FINAL Credit card b4 SAVE: ', finalCreditCard)}
+                <Button onClick={() => savePressed()} color="primary" variant="contained" autoFocus>
+                  Save Card
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </div>
+        </>
+      )}
+      <div>
+        <Grid item xs={12} className={classes.divider}>
+          <Divider variant="middle" style={{ flexGrow: 1 }} />
+          <Typography variant="h5">
+            OR
+          </Typography>
+          <Divider variant="middle" style={{ flexGrow: 1 }} />
+        </Grid>
+        <Grid item xs={12} className={classes.button}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => payInStore()}
+          >
+            Pay In Store
+          </Button>
+        </Grid>
       </div>
     </div>
   );
@@ -146,15 +163,6 @@ ConfirmPayment.propTypes = {
     payInStore: PropTypes.bool,
   }).isRequired,
   updateBooking: PropTypes.func.isRequired,
-  creditCards: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.string,
-    last4: PropTypes.string,
-    card: PropTypes.shape({
-      exp_month: PropTypes.string,
-      exp_year: PropTypes.string,
-    }).isRequired,
-  })).isRequired,
-  nextPage: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   userData: PropTypes.shape({
     _id: PropTypes.string.isRequired,
@@ -175,16 +183,17 @@ ConfirmPayment.propTypes = {
     zipCode: PropTypes.string,
   }).isRequired,
   updateCreditCard: PropTypes.func.isRequired,
-  setCreditCards: PropTypes.func.isRequired,
   changeCard: PropTypes.bool.isRequired,
   setChangeCard: PropTypes.func.isRequired,
   saveCard: PropTypes.bool.isRequired,
+  loggedIn: PropTypes.bool.isRequired,
   setSaveCard: PropTypes.func.isRequired,
   checked: PropTypes.bool.isRequired,
-  noCC: PropTypes.bool.isRequired,
   setChecked: PropTypes.func.isRequired,
+  cardSelected: PropTypes.bool.isRequired,
+  setCardSelected: PropTypes.func.isRequired,
   postOrPutCardToUser: PropTypes.func.isRequired,
-  badRequest: PropTypes.bool.isRequired,
+  nextPage: PropTypes.func.isRequired,
   finalCreditCard: PropTypes.shape({
     last4: PropTypes.string,
   }).isRequired,

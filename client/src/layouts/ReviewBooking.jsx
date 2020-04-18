@@ -21,6 +21,9 @@ const ReviewBooking = ({
   const currentService = services.find((x) => x._id === booking.service);
   const [price, setPrice] = useState(0);
   const [tempBool, setTempBool] = useState(true);
+  const amountBeforeTax = price * 100;
+  const tax = 0.07;
+  const total = Number(amountBeforeTax + (amountBeforeTax * tax))
   // const [amountInPennies, setAmountInPennies] = useState(0);
   // console.log(services);
   // console.log(booking.service);
@@ -37,9 +40,8 @@ const ReviewBooking = ({
   }, []);
 
   useEffect(() => {
-    const amountInPennies = (price * 100);
-    console.log('AMOUNT IN PENNIES', amountInPennies);
-    updateBooking(['amount', amountInPennies]);
+    updateBooking(['amount', total]);
+    console.log('AMOUNT IN PENNIES', total);
     setTempBool(false);
   }, [tempBool]);
 
@@ -158,11 +160,11 @@ const ReviewBooking = ({
         </div>
         <div className={classes.spacing}>
           <Typography variant="subtitle1" color="textSecondary">Tax:</Typography>
-          <Typography variant="subtitle1">$0 FOR NOW</Typography>
+          <Typography variant="subtitle1">${(tax * price).toFixed(2)}</Typography>
         </div>
         <div className={classes.spacing}>
           <Typography variant="h5" color="textSecondary">Total:</Typography>
-          <Typography variant="h5">${price || 'TBD'}</Typography>
+          <Typography variant="h5">${(total / 100).toFixed(2) || 'TBD'}</Typography>
         </div>
       </div>
       <div className={classes.buttons}>
