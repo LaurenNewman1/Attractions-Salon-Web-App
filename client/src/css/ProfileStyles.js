@@ -8,12 +8,14 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
   },
   header: {
-    textAlign: 'center',
+    display: 'flex',
+    justifyContent: 'space-around',
   },
   container: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    width: '100%',
   },
   leftContainerSmall: {
     display: 'flex',
