@@ -1,17 +1,24 @@
+/* eslint-disable max-len */
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { startOfWeek, addDays, addHours } from 'date-fns';
-import { Paper, Grid, Chip } from '@material-ui/core';
+import {
+  Paper, Grid, Chip, Button, IconButton,
+} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import { ListAlt, Person, Notes } from '@material-ui/icons';
+import {
+  ListAlt, Person, Notes, Edit,
+} from '@material-ui/icons';
 import { ViewState } from '@devexpress/dx-react-scheduler';
 import {
   Scheduler,
   WeekView,
   Appointments,
   AppointmentTooltip,
-  AppointmentForm,
+  Toolbar,
+  DateNavigator,
+  TodayButton,
 } from '@devexpress/dx-react-scheduler-material-ui';
 
 const style = ({ palette }) => ({
@@ -21,7 +28,29 @@ const style = ({ palette }) => ({
   textCenter: {
     textAlign: 'center',
   },
+  chip: {
+    backgroundColor: palette.secondary.main,
+  },
+  chipGrid: {
+    textAlign: 'center',
+  },
 });
+
+const ToolTipHeader = withStyles(style, { name: 'Header' })(({
+  children, appointmentData, classes, onEditClick, ...restProps
+}) => (
+  <AppointmentTooltip.Header
+    {...restProps}
+    appointmentData={appointmentData}
+  >
+    <IconButton
+      /* eslint-disable-next-line no-alert */
+      onClick={() => onEditClick()}
+    >
+      <Edit />
+    </IconButton>
+  </AppointmentTooltip.Header>
+));
 
 const TooptipContent = withStyles(style, { name: 'Content' })(({
   children, appointmentData, classes, ...restProps
@@ -51,15 +80,26 @@ const TooptipContent = withStyles(style, { name: 'Content' })(({
         <span>{appointmentData.service.name}</span>
       </Grid>
     </Grid>
-    <Grid container alignItems="center">
+    <Grid container alignItems="stretch">
       {appointmentData.addons.map((addon) => (
-        <Grid key={addon._id} item xs={4}>
-          <Chip label={addon.name} />
+        <Grid key={addon._id} item xs={3} className={classes.chipGrid}>
+          <Chip className={classes.chip} label={addon.name} />
         </Grid>
       ))}
     </Grid>
   </AppointmentTooltip.Content>
 ));
+
+const ToolBarContents = ({ children }) => (
+  <Toolbar.Root>
+    {children}
+  </Toolbar.Root>
+);
+
+ToolBarContents.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  children: PropTypes.object.isRequired,
+};
 
 const DashboardCalendar = ({
   numOfDays,
@@ -67,12 +107,15 @@ const DashboardCalendar = ({
   hoursPerDay,
   beginningOfWeek,
   appointments,
+  buttons,
+  OnButtonPress,
+  editAppointment,
 }) => {
   const appointmentEvents = appointments.map((a) => (
     {
       startDate: a.time,
       endDate: addHours(a.time, 1),
-      title: a.name,
+      title: a.name + (a.payInStore ? '\n[PAY IN STORE]' : ''),
       specialist: a.specialist,
       service: a.service,
       addons: a.addons,
@@ -83,13 +126,21 @@ const DashboardCalendar = ({
   const daysWorked = [...Array(numOfDays).keys()].map((i) => i + beginningOfWeek.getDay());
   const excludedDays = [...Array(7).keys()].filter((i) => !daysWorked.includes(i));
 
+  const mappedButtons = buttons.map(({ name, color }, i) => (
+    <Button key={name} color={color} variant="contained" onClick={() => OnButtonPress(i)}>{name}</Button>
+  ));
+
+  const allToolBarChildren = [
+    ...mappedButtons,
+  ];
+
   return (
     <Paper>
       <Scheduler
         data={appointmentEvents}
       >
         <ViewState
-          currentDate={new Date()}
+          defaultCurrentDate={new Date()}
         />
         <WeekView
           startDayHour={startingHour}
@@ -97,13 +148,16 @@ const DashboardCalendar = ({
           excludedDays={excludedDays}
           cellDuration={30}
         />
+        <Toolbar />
+        <DateNavigator />
+        <TodayButton />
+        <ToolBarContents>{allToolBarChildren}</ToolBarContents>
         <Appointments />
         <AppointmentTooltip
-          showCloseButton
+          // eslint-disable-next-line react/prop-types
+          headerComponent={(props) => <ToolTipHeader onEditClick={() => editAppointment(props.appointmentData)} {...props} />}
           contentComponent={TooptipContent}
-        />
-        <AppointmentForm
-          readOnly
+          showCloseButton
         />
       </Scheduler>
     </Paper>
@@ -130,12 +184,21 @@ const APPOINTMENT_SHAPE = PropTypes.shape({
   notes: PropTypes.string,
 });
 
+const BUTTON_SHAPE = PropTypes.shape({
+  name: PropTypes.string,
+  onClick: PropTypes.func,
+  color: PropTypes.string,
+});
+
 DashboardCalendar.propTypes = {
   numOfDays: PropTypes.number,
   beginningOfWeek: PropTypes.instanceOf(Date),
   startingHour: PropTypes.number,
   hoursPerDay: PropTypes.number,
   appointments: PropTypes.arrayOf(APPOINTMENT_SHAPE).isRequired,
+  buttons: PropTypes.arrayOf(BUTTON_SHAPE),
+  OnButtonPress: PropTypes.func.isRequired,
+  editAppointment: PropTypes.func.isRequired,
 };
 
 DashboardCalendar.defaultProps = {
@@ -143,6 +206,7 @@ DashboardCalendar.defaultProps = {
   startingHour: 10,
   hoursPerDay: 9,
   beginningOfWeek: addDays(startOfWeek(new Date()), 2),
+  buttons: [],
 };
 
 export default DashboardCalendar;

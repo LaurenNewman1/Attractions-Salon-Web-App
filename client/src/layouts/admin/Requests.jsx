@@ -42,7 +42,7 @@ const Requests = () => {
 
   const validateConfirm = async (index) => {
     const req = requests[index];
-    if (req.name.length && req.specialist.length && Date.parse(req.time) > Date.now()) {
+    if (req.name.length && Date.parse(req.time) > Date.now()) {
       const success = await confirm(index);
       setAlert({
         open: true,
@@ -113,13 +113,15 @@ const Requests = () => {
                   onChange={(e) => updateRequests(index, ['specialist', e.target.value])}
                 >
                   {specialists.map((specialist) => {
-                    if (specialist.specialties.find((s) => s === serviceDetails.type
+                    if (specialist.specialties) {
+                      if (specialist.specialties.find((s) => s === serviceDetails.type
                       || s === serviceDetails.subtype)) {
-                      return (
-                        <MenuItem key={specialist._id} value={specialist._id}>
-                          {specialist.name}
-                        </MenuItem>
-                      );
+                        return (
+                          <MenuItem key={specialist._id} value={specialist._id}>
+                            {specialist.name}
+                          </MenuItem>
+                        );
+                      }
                     }
                     return null;
                   })}
@@ -158,6 +160,7 @@ const Requests = () => {
                           key={value._id}
                           label={value.name}
                           className={classes.chip}
+                          size="small"
                           color="secondary"
                         />
                       ))}

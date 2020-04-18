@@ -52,7 +52,7 @@ const ServiceCard = ({ service }) => {
           variant="contained"
           color="primary"
           size="small"
-          onClick={() => history.push('/book')}
+          onClick={() => history.push(`/book/${service._id}`)}
         >
           Request Booking
         </Button>
@@ -63,6 +63,7 @@ const ServiceCard = ({ service }) => {
 
 ServiceCard.propTypes = {
   service: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     price: PropTypes.number,
     time: PropTypes.number.isRequired,

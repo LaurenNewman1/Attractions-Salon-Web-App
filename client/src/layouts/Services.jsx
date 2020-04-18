@@ -1,158 +1,103 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Typography, Grid,
 } from '@material-ui/core';
 import Page from '../components/Page';
-import useStyles from '../css/ServiceStyles';
 import ServiceCard from '../components/ServiceCard';
-import fetchServicesByType from '../stores/ServicesStore';
+import useServices from '../stores/ServiceActionsStore';
 import Loading from '../components/Loading';
+import Search from '../components/Search';
 
 const Services = () => {
-  const classes = useStyles();
+  const [services, loading] = useServices();
+  const [filters, setFilters] = useState([]);
+  const [searchText, setSearchText] = useState('');
 
-  const [fullSets, setFullSets] = useState([]);
-  const [fills, setFills] = useState([]);
-  const [manicures, setManicures] = useState([]);
-  const [pedicures, setPedicures] = useState([]);
+  const serviceCategoryLUT = {
+    'hair/cut': 'Hair Cuts',
+    'hair/dye': 'Hair Dyes',
+    'hair/treatment': 'Hair Treatment',
+    'hair/wash': 'Hair Wash/Dry',
+    'hair/styling': 'Hair Styling',
+    'hair/extension': 'Hair Extensions',
+    'nails/full set': 'Full Sets',
+    'nails/fills': 'Fills',
+    'nails/manicure': 'Manicures',
+    'nails/pedicure': 'Pedicures',
+    wax: 'Wax',
+  };
 
-  const [wax, setWax] = useState([]);
-
-  const [cuts, setCuts] = useState([]);
-  const [dyes, setDyes] = useState([]);
-  const [treatments, setTreatments] = useState([]);
-  const [washes, setWashes] = useState([]);
-  const [stylings, setStylings] = useState([]);
-  const [extensions, setExtensions] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    async function fetchData() {
-      setLoading(true);
-      setFullSets(await fetchServicesByType('nails', 'full set'));
-      setFills(await fetchServicesByType('nails', 'fills'));
-      setManicures(await fetchServicesByType('nails', 'manicure'));
-      setPedicures(await fetchServicesByType('nails', 'pedicure'));
-      setWax(await fetchServicesByType('wax', ''));
-      setCuts(await fetchServicesByType('hair', 'cut'));
-      setDyes(await fetchServicesByType('hair', 'dye'));
-      setTreatments(await fetchServicesByType('hair', 'treatment'));
-      setWashes(await fetchServicesByType('hair', 'wash'));
-      setStylings(await fetchServicesByType('hair', 'styling'));
-      setExtensions(await fetchServicesByType('hair', 'extension'));
-      setLoading(false);
+  const doDisplay = (service) => {
+    const {
+      name, type, subtype, price, time, description,
+    } = service;
+    if (name.toLowerCase().includes(searchText.toLowerCase())
+      || type.toLowerCase().includes(searchText.toLowerCase())
+      || (subtype && subtype.toLowerCase().includes(searchText.toLowerCase()))
+      || (price && price.toString().includes(searchText))
+      || (time && time.toString().includes(searchText))
+      || description.toLowerCase().includes(searchText.toLowerCase())) {
+      return true;
     }
-    fetchData();
-  }, []);
+    return false;
+  };
+
+  const serviceSection = (serviceTypes) => serviceTypes.map((key) => {
+    const categoryServices = services[key];
+    if (!filters.length || filters.find((f) => f === serviceCategoryLUT[key])) {
+      return (
+        !categoryServices || !categoryServices.length ? null
+          : (
+            <div key={key} style={{ marginBottom: 50 }}>
+              <Typography variant="h4">{serviceCategoryLUT[key]}</Typography>
+              <Grid container spacing={3}>
+                {categoryServices.map((service) => (doDisplay(service)
+                  ? (
+                    <Grid item xs={12} sm={6} md={4} key={service._id}>
+                      <ServiceCard service={service} />
+                    </Grid>
+                  )
+                  : null
+                ))}
+              </Grid>
+            </div>
+          )
+      );
+    }
+    return null;
+  });
+  const serviceSections = serviceSection(Object.keys(serviceCategoryLUT));
 
   return (
-    <Page>
+    <Page maxWidth="lg">
       {loading ? <Loading />
         : (
-          <div className={classes.root}>
-            {/* Hair */}
-            <Typography variant="h4" className={classes.header} style={{ marginTop: 0 }}>Hair Cuts</Typography>
-            <Grid container spacing={3} className={classes.container}>
-              {!cuts.length ? null
-                : cuts.map((service) => (
-                  <Grid item xs={12} sm={6} md={3}>
-                    <ServiceCard service={service} />
-                  </Grid>
-                ))}
+          <>
+            <Typography
+              align="center"
+              display="block"
+              variant="h3"
+              gutterBottom
+            >
+              Services
+            </Typography>
+            <Grid container spacing={6} style={{ width: '100%', margin: 0 }}>
+              <Grid item xs={12} sm={3}>
+                <Search
+                  filterOptions={Object.keys(serviceCategoryLUT).map(
+                    (key) => serviceCategoryLUT[key],
+                  )}
+                  filters={filters}
+                  setFilters={(filts) => setFilters(filts)}
+                  searchText={searchText}
+                  setSearchText={(text) => setSearchText(text)}
+                />
+              </Grid>
+              <Grid item xs={12} sm={9}>
+                {serviceSections}
+              </Grid>
             </Grid>
-            <Typography variant="h4" className={classes.header}>Hair Dyes</Typography>
-            <Grid container spacing={3} className={classes.container}>
-              {!dyes.length ? null
-                : dyes.map((service) => (
-                  <Grid item xs={12} sm={6} md={3}>
-                    <ServiceCard service={service} />
-                  </Grid>
-                ))}
-            </Grid>
-            <Typography variant="h4" className={classes.header}>Hair Treatment</Typography>
-            <Grid container spacing={3} className={classes.container}>
-              {!treatments.length ? null
-                : treatments.map((service) => (
-                  <Grid item xs={12} sm={6} md={3}>
-                    <ServiceCard service={service} />
-                  </Grid>
-                ))}
-            </Grid>
-            <Typography variant="h4" className={classes.header}>Hair Wash/Dry</Typography>
-            <Grid container spacing={3} className={classes.container}>
-              {!washes.length ? null
-                : washes.map((service) => (
-                  <Grid item xs={12} sm={6} md={3}>
-                    <ServiceCard service={service} />
-                  </Grid>
-                ))}
-            </Grid>
-            <Typography variant="h4" className={classes.header}>Hair Styling</Typography>
-            <Grid container spacing={3} className={classes.container}>
-              {!stylings.length ? null
-                : stylings.map((service) => (
-                  <Grid item xs={12} sm={6} md={3}>
-                    <ServiceCard service={service} />
-                  </Grid>
-                ))}
-            </Grid>
-            <Typography variant="h4" className={classes.header}>Hair Extensions</Typography>
-            <Grid container spacing={3} className={classes.container}>
-              {!extensions.length ? null
-                : extensions.map((service) => (
-                  <Grid item xs={12} sm={6} md={3}>
-                    <ServiceCard service={service} />
-                  </Grid>
-                ))}
-            </Grid>
-            {/* Wax */}
-            <Typography variant="h4" className={classes.header}>Full Sets</Typography>
-            <Grid container spacing={3} className={classes.container}>
-              {!fullSets.length ? null
-                : fullSets.map((service) => (
-                  <Grid item xs={12} sm={6} md={3} key={service._id}>
-                    <ServiceCard service={service} />
-                  </Grid>
-                ))}
-            </Grid>
-            {/* Nails */}
-            <Typography variant="h4" className={classes.header}>Fills</Typography>
-            <Grid container spacing={3} className={classes.container}>
-              {!fills.length ? null
-                : fills.map((service) => (
-                  <Grid item xs={12} sm={6} md={3} key={service._id}>
-                    <ServiceCard service={service} />
-                  </Grid>
-                ))}
-            </Grid>
-            <Typography variant="h4" className={classes.header}>Manicures</Typography>
-            <Grid container spacing={3} className={classes.container}>
-              {!manicures.length ? null
-                : manicures.map((service) => (
-                  <Grid item xs={12} sm={6} md={3} key={service._id}>
-                    <ServiceCard service={service} />
-                  </Grid>
-                ))}
-            </Grid>
-            <Typography variant="h4" className={classes.header}>Pedicures</Typography>
-            <Grid container spacing={3} className={classes.container}>
-              {!pedicures.length ? null
-                : pedicures.map((service) => (
-                  <Grid item xs={12} sm={6} md={3} key={service._id}>
-                    <ServiceCard service={service} />
-                  </Grid>
-                ))}
-            </Grid>
-            <Typography variant="h4" className={classes.header}>Wax</Typography>
-            <Grid container spacing={3} className={classes.container}>
-              {!wax.length ? null
-                : wax.map((service) => (
-                  <Grid item xs={12} sm={6} md={3}>
-                    <ServiceCard service={service} />
-                  </Grid>
-                ))}
-            </Grid>
-          </div>
+          </>
         )}
     </Page>
   );

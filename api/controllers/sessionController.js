@@ -1,5 +1,9 @@
 import argon2 from 'argon2';
 import User from '../model/user';
+import GetLogger from '../config/logger';
+
+const stripe = require('stripe')(process.env.STRIPE_API_KEY);
+const logger = GetLogger('User Controller');
 
 export const create = async (req, res) => {
   try {
@@ -14,6 +18,13 @@ export const create = async (req, res) => {
       if (!req.session.userID) {
         // eslint-disable-next-line no-underscore-dangle
         req.session.userID = foundUser._id;
+
+        if (!foundUser.customer_id) {
+          logger.log('Customer_ID not found, creating one...');
+          const customer = await stripe.customers.create();
+          foundUser.customer_id = customer.id;
+          await foundUser.save();
+        }
       }
       res.status(200).type('json').send(foundUser);
     } else {

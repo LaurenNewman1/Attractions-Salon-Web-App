@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 
 const requestDelete = async (_id) => {
   const res = await fetch(`/api/users/${_id}`, {
@@ -14,7 +14,7 @@ const requestDelete = async (_id) => {
 };
 
 // eslint-disable-next-line camelcase
-const requestAdd = async (name, email, phone_number, password, role) => {
+const requestAdd = async (newUser) => {
   const res = await fetch('/api/users',
     {
       method: 'POST',
@@ -25,9 +25,7 @@ const requestAdd = async (name, email, phone_number, password, role) => {
       },
       redirect: 'follow', // manual, *follow, error
       referrerPolicy: 'no-referrer', // no-referrer, *client
-      body: JSON.stringify({
-        name, email, phone_number, password, role,
-      }),
+      body: JSON.stringify(newUser),
     });
 
   return [res.status === 200, await res.json()];
@@ -53,13 +51,16 @@ export default () => {
   const [users, setUsers] = useState([]);
   const [users1, setUsers1] = useState([]);
   const [users2, setUsers2] = useState([]);
+  const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [newUser, setNewUser] = useState({
     name: '',
     email: '',
     phone_number: '',
     password: '',
-    role: '',
+    role: -1,
+    title: '',
+    bio: '',
   });
 
   const updateNewUser = (...argus) => {
@@ -90,30 +91,41 @@ export default () => {
         setUsers2(allUsers);
       }
     }
-    updateNewUser(['name', ''], ['email', ''], ['phone_number', ''], ['password', ''], ['role', 0]);
+    updateNewUser(['name', ''], ['email', ''], ['phone_number', ''], ['password', ''], ['role', -1],
+      ['title', ''], ['bio', '']);
     setLoading(false);
     return success;
   };
 
   const addUser = async () => {
     setLoading(true);
-    const [success, rev] = await requestAdd(newUser.name, newUser.email, newUser.phone_number, newUser.password, newUser.role);
+    const { title, bio, ...restOfUser } = newUser;
+    const request = newUser.role > 0 ? newUser : restOfUser;
+    const [success, res] = await requestAdd(request);
     if (success) {
       if (newUser.role === 0) {
         const allUsers = [...users];
-        allUsers.push(rev);
+        allUsers.push(res);
         setUsers(allUsers);
+        updateNewUser(['name', ''], ['email', ''], ['phone_number', ''], ['password', ''],
+          ['role', -1], ['title', ''], ['bio', '']);
       } else if (newUser.role === 1) {
         const allUsers = [...users1];
-        allUsers.push(rev);
+        allUsers.push(res);
         setUsers1(allUsers);
+        updateNewUser(['name', ''], ['email', ''], ['phone_number', ''], ['password', ''],
+          ['role', -1], ['title', ''], ['bio', '']);
       } else if (newUser.role === 2) {
         const allUsers = [...users2];
-        allUsers.push(rev);
+        allUsers.push(res);
         setUsers2(allUsers);
+        updateNewUser(['name', ''], ['email', ''], ['phone_number', ''], ['password', ''],
+          ['role', -1], ['title', ''], ['bio', '']);
       }
+    } else {
+      updateNewUser(['name', newUser.name], ['email', newUser.email], ['phone_number', newUser.phone_number],
+        ['password', newUser.password], ['role', newUser.role], ['title', newUser.title], ['bio', newUser.bio]);
     }
-    updateNewUser(['name', ''], ['email', ''], ['phone_number', ''], ['password', ''], ['role', 0]);
     setLoading(false);
     return success;
   };
@@ -122,33 +134,45 @@ export default () => {
     setLoading(true);
     const user = users.find((u) => u._id === id)
       || users1.find((u) => u._id === id) || users2.find((u) => u._id === id);
+    if (user.role !== original.role && user.role === 0) {
+      user.title = '';
+      user.bio = '';
+      user.specialties = [];
+    }
     const { password, ...restOfUser } = user;
     const [success] = await requestUserUpdate(id, restOfUser);
     // Rearrange lists
     console.log(user.role, original.role);
+    console.log(user._id, original._id);
     if (success && user.role !== original.role) {
       switch (user.role) {
         case 0:
           users.push(user);
+          // setUsers(users);
           break;
         case 1:
           users1.push(user);
+          // setUsers1(users1);
           break;
         case 2:
           users2.push(user);
+          // setUsers2(users2);
           break;
         default:
           break;
       }
       switch (original.role) {
         case 0:
-          users.splice(users.find((u) => u._id === user._id), 1);
+          users.splice(users.findIndex((u) => u._id === user._id), 1);
+          // setUsers(users);
           break;
         case 1:
-          users1.splice(users1.find((u) => u._id === user._id), 1);
+          users1.splice(users1.findIndex((u) => u._id === user._id), 1);
+          // setUsers1(users1);
           break;
         case 2:
-          users2.splice(users2.find((u) => u._id === user._id), 1);
+          users2.splice(users2.findIndex((u) => u._id === user._id), 1);
+          // setUsers2(users2);
           break;
         default:
           break;
@@ -182,12 +206,18 @@ export default () => {
     }
   };
 
-  useEffect(() => {
+  useMemo(() => {
+    console.log('render through store');
     const callUsers = async () => {
       const usersRequestFetch = async (type) => fetch(`/api/users/roles/${type}`)
         .then((response) => response.json())
         .then((data) => data);
 
+      const servicesRequestFetch = async () => fetch('/api/services/types')
+        .then((response) => response.json())
+        .then((data) => data);
+
+      setServices(await servicesRequestFetch());
       setUsers2(await usersRequestFetch('2'));
       setUsers1(await usersRequestFetch('1'));
       setUsers(await usersRequestFetch('0'));
@@ -200,5 +230,5 @@ export default () => {
   }, []);
 
   return [users, users1, users2, newUser, loading, updateUsers,
-    updateNewUser, deleteUser, addUser, saveUser];
+    updateNewUser, deleteUser, addUser, saveUser, services];
 };

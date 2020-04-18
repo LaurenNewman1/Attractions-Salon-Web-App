@@ -4,10 +4,6 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
-  header: {
-    textAlign: 'center',
-    width: '100%',
-  },
   paper: {
     margin: '0',
     // padding: theme.spacing(1.5),
@@ -52,8 +48,9 @@ const useStyles = makeStyles((theme) => ({
   },
   buttons: {
     display: 'flex',
-    justifyContent: 'space-between',
-    marginTop: 5,
+    justifyContent: 'flex-end',
+    marginTop: 10,
+    marginBottom: 10,
   },
   review: {
     height: 80,

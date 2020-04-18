@@ -3,31 +3,35 @@
       "name": "Lea",
       "email": "placeholder@email.com",
       "phone_number": "placeholderPhone",
-      "password": "placeholderPass",
+      "password": "$argon2i$v=19$m=4096,t=3,p=1$QX54WvPgwUGjYrRtvBm4SQ$0yhjBcAcTHYcyvDXlrPGfQYyPffPqIv7hAELUbBH3iw",
       "role": 1,
+      "title": "Nail Technician",
       "specialties": [
         "manicure",
         "pedicure",
         "full set",
         "fills"
-      ]
+      ],
+      "bio": "Lea is a nail technician at Attractions Salon."
     },
     {
       "name": "Shamira",
       "email": "placeholder2@email.com",
       "phone_number": "placeholderPhone2",
-      "password": "placeholderPass2",
+      "password": "$argon2i$v=19$m=4096,t=3,p=1$QX54WvPgwUGjYrRtvBm4SQ$0yhjBcAcTHYcyvDXlrPGfQYyPffPqIv7hAELUbBH3iw",
       "role": 1,
+      "title": "Hair Stylist",
       "specialties": [
         "styling",
         "extension"
-      ]
+      ],
+      "bio": "Shamira is a hair stylist at Attractions Salon."
     },
     {
       "name": "Brandi",
       "email": "placeholder3@email.com",
       "phone_number": "placeholderPhone3",
-      "password": "placeholderPass3",
+      "password": "$argon2i$v=19$m=4096,t=3,p=1$QX54WvPgwUGjYrRtvBm4SQ$0yhjBcAcTHYcyvDXlrPGfQYyPffPqIv7hAELUbBH3iw",
       "role": 2,
       "specialties": [
         "cut",
@@ -41,56 +45,64 @@
       "name": "Emily",
       "email": "placeholder4@email.com",
       "phone_number": "placeholderPhone4",
-      "password": "placeholderPass4",
+      "password": "$argon2i$v=19$m=4096,t=3,p=1$QX54WvPgwUGjYrRtvBm4SQ$0yhjBcAcTHYcyvDXlrPGfQYyPffPqIv7hAELUbBH3iw",
       "role": 1,
+      "title": "Hair Stylist",
       "specialties": [
         "cut",
         "dye",
         "treatment",
         "wash",
         "wax"
-      ]
+      ],
+      "bio": "Emily is a hair stylist at Attractions Salon."
     },
     {
       "name": "Bonnie",
       "email": "placeholder5@email.com",
       "phone_number": "placeholderPhone5",
-      "password": "placeholderPass5",
+      "password": "$argon2i$v=19$m=4096,t=3,p=1$QX54WvPgwUGjYrRtvBm4SQ$0yhjBcAcTHYcyvDXlrPGfQYyPffPqIv7hAELUbBH3iw",
       "role": 1,
+      "title": "Hair Stylist",
       "specialties": [
         "cut",
         "dye",
         "treatment",
         "wash",
         "wax"
-      ]
+      ],
+      "bio": "Bonnie is a hair stylist at Attractions Salon."
     },
     {
       "name": "Connie",
       "email": "placeholder6@email.com",
       "phone_number": "placeholderPhone6",
-      "password": "placeholderPass6",
+      "password": "$argon2i$v=19$m=4096,t=3,p=1$QX54WvPgwUGjYrRtvBm4SQ$0yhjBcAcTHYcyvDXlrPGfQYyPffPqIv7hAELUbBH3iw",
       "role": 1,
+      "title": "Hair Stylist",
       "specialties": [
         "cut",
         "dye",
         "treatment",
         "wash",
         "wax"
-      ]
+      ],
+      "bio": "Connie is a hair stylist at Attractions Salon."
     },
     {
       "name": "Mary",
       "email": "placeholder7@email.com",
       "phone_number": "placeholderPhone7",
-      "password": "placeholderPass7",
+      "password": "$argon2i$v=19$m=4096,t=3,p=1$QX54WvPgwUGjYrRtvBm4SQ$0yhjBcAcTHYcyvDXlrPGfQYyPffPqIv7hAELUbBH3iw",
       "role": 1,
+      "title": "Hair Stylist",
       "specialties": [
         "cut",
         "dye",
         "treatment",
         "wash",
         "wax"
-      ]
+      ],
+      "bio": "Mary is a hair stylist at Attractions Salon."
     }
   ]

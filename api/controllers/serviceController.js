@@ -19,7 +19,13 @@ export const create = async (req, res) => {
 };
 
 export const update = async (req, res) => {
+  const ability = await currentUserAbilities(req);
+  if(ability.cannot('update', 'Service')) {
+    res.status(403).type('json').send({ error: 'Access Denied' });
+    return;
+  }
   try {
+
     const service = await Service.findByIdAndUpdate(req.params._id, req.body).exec();
 
     if (service) {
@@ -35,6 +41,11 @@ export const update = async (req, res) => {
 
 export const remove = async (req, res) => {
   // Find Appointment from Database and remove
+  const ability = await currentUserAbilities(req);
+  if(ability.cannot('remove', 'Service')) {
+    res.status(403).type('json').send({ error: 'Access Denied' });
+    return;
+  }
   try {
     let data = await Service.deleteOne({_id: req.params._id}).exec();
     if (data.n !== 1) {

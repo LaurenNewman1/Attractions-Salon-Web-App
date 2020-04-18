@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { memo } from 'react';
 import {
   ExpansionPanel, Select, FormControl,
   ExpansionPanelSummary, InputLabel,
   ExpansionPanelDetails, MenuItem, Grid,
   Typography, TextField, Button, DialogActions,
+  Chip, Input,
 } from '@material-ui/core';
 import {
   ExpandMore,
@@ -21,36 +22,34 @@ const MenuProps = {
     },
   },
 };
-
+// -typing lag
 const EditUser = ({
   index, user, deleteUser, saveUser, updateUser, userGroup, userGroupName, open,
-  expandChange, cancelChanges,
+  expandChange, cancelChanges, subtypes,
 }) => {
   const classes = useStyles();
-
   return (
     <ExpansionPanel
       expanded={open.i === index && open.list === userGroupName}
       onChange={expandChange(index, userGroupName)}
     >
       <ExpansionPanelSummary expandIcon={<ExpandMore />}>
-        {open.i === index && open.list === userGroupName
-          ? (
-            <TextField
-              onClick={(e) => e.stopPropagation()}
-              onChange={(e) => updateUser(userGroupName, index, ['name', e.target.value])}
-              value={user.name}
-              className={classes.heading}
-              style={{ border: '5px' }}
-            />
-          )
+        {open.i === index && open.list === userGroupName ? (
+          <TextField
+            onClick={(e) => e.stopPropagation()}
+            onChange={(e) => updateUser(userGroupName, index, ['name', e.target.value])}
+            value={user.name}
+            className={classes.heading}
+            style={{ border: '5px' }}
+          />
+        )
           : (
             <Typography>{user.name}</Typography>
           ) }
       </ExpansionPanelSummary>
       <ExpansionPanelDetails>
         <Grid container spacing={2} style={{ display: 'flex', alignItems: 'center' }}>
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid item sm={12} md={6}>
             <TextField
               label="Email"
               value={user.email}
@@ -58,7 +57,7 @@ const EditUser = ({
               style={{ width: '100% ' }}
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid item sm={12} md={6}>
             <TextField
               label="Phone"
               value={user.phone_number}
@@ -66,15 +65,17 @@ const EditUser = ({
               style={{ width: '100% ' }}
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <TextField
-              label="Password"
-              value={user.password}
-              onChange={(e) => updateUser(userGroupName, index, ['password', e.target.value])}
-              style={{ width: '100% ' }}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
+          {user.role > 0 ? (
+            <Grid item sm={12} md={6}>
+              <TextField
+                label="Title"
+                value={user.title}
+                onChange={(e) => updateUser(userGroupName, index, ['title', e.target.value])}
+                style={{ width: '100% ' }}
+              />
+            </Grid>
+          ) : null}
+          <Grid item sm={12} md={6}>
             <FormControl style={{ width: '100% ' }}>
               <InputLabel>Role</InputLabel>
               <Select
@@ -88,6 +89,44 @@ const EditUser = ({
               </Select>
             </FormControl>
           </Grid>
+          {subtypes && user.role > 0 ? (
+            <Grid item sm={12} md={6}>
+              <FormControl style={{ minWidth: '100%' }}>
+                <InputLabel>Specialties</InputLabel>
+                <Select
+                  multiple
+                  value={user.specialties}
+                  onChange={(event) => updateUser(userGroupName, index, ['specialties', event.target.value])}
+                  input={<Input />}
+                  renderValue={(selected) => (
+                    <div className={classes.chips}>
+                      {selected.map((value) => (
+                        <Chip key={value} label={value} className={classes.chip} size="small" color="secondary" />
+                      ))}
+                    </div>
+                  )}
+                  MenuProps={MenuProps}
+                >
+                  {subtypes.map((add) => (
+                    <MenuItem key={add} value={add}>
+                      {add}
+                      {' '}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+          ) : null}
+          {user.role > 0 ? (
+            <Grid item sm={12} md={6}>
+              <TextField
+                label="Bio"
+                value={user.bio}
+                onChange={(e) => updateUser(userGroupName, index, ['bio', e.target.value])}
+                style={{ width: '100% ' }}
+              />
+            </Grid>
+          ) : null}
         </Grid>
       </ExpansionPanelDetails>
       <DialogActions>
@@ -110,6 +149,9 @@ EditUser.propTypes = {
     phone_number: PropTypes.string.isRequired,
     password: PropTypes.string.isRequired,
     role: PropTypes.number.isRequired,
+    specialties: PropTypes.array.isRequired,
+    title: PropTypes.string,
+    bio: PropTypes.string,
   }).isRequired,
   deleteUser: PropTypes.func.isRequired,
   saveUser: PropTypes.func.isRequired,
@@ -124,7 +166,13 @@ EditUser.propTypes = {
   }).isRequired,
   expandChange: PropTypes.func.isRequired,
   cancelChanges: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  subtypes: PropTypes.array,
+};
+
+EditUser.defaultProps = {
+  subtypes: [],
 };
 
 
-export default EditUser;
+export default memo(EditUser);

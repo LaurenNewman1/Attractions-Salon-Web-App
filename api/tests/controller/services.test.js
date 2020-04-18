@@ -95,4 +95,38 @@ describe('Service Controller', () => {
       await agent.get(`/api/services`).set('Accept', 'application/json').expect(200);
     });
   });
+  
+  describe('REMOVE /api/services/:_id', () => {
+    let service;
+    beforeEach(async (done) => {
+      await CleanUp();
+      service = await MakeService();
+      refreshAgent();
+      done();
+    });
+
+    describe('as Owner', () => {
+      beforeEach(async (done) => {
+        await MakeOwner();
+        await SignIn(agent, ownerParams);
+        done();
+      });
+
+      it ('should return 200 (OK) if user is owner', async () => {
+        await agent.delete('/api/services/' + service._id).set('Accept', 'application/json').expect(200);
+      });
+    });
+
+    describe('not as Owner', () => {
+      beforeEach(async (done) => {
+        await MakeWorker();
+        await SignIn(agent, workerParams);
+        done();
+      });
+
+      it ('should return 403 (Forbidden) when trying to remove a service', async () => {
+        await agent.delete('/api/services/' + service._id).set('Accept', 'application/json').expect(403);
+      });
+    });
+  });
 });

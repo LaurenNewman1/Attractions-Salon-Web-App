@@ -44,12 +44,23 @@ const Login = ({ login, fromBookPage, resetPassword }) => {
   );
 
   const attemptLogin = async () => {
-    const [successful, error] = await login(email, password);
+    const [successful, res] = await login(email, password);
     setHasError(!successful);
     if (successful) {
-      history.push('/profile');
+      console.log(res);
+      switch (res.role) {
+        case 2:
+          history.push('/admin/dashboard');
+          break;
+        case 1:
+          history.push('/staff/dashboard');
+          break;
+        default:
+          history.push('/profile');
+          break;
+      }
     } else {
-      setErrorBody(error);
+      setErrorBody(res);
     }
   };
 
@@ -163,6 +174,5 @@ Login.propTypes = {
   fromBookPage: PropTypes.bool.isRequired,
   resetPassword: PropTypes.func.isRequired,
 };
-
 
 export default Login;

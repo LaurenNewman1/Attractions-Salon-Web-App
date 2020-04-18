@@ -22,7 +22,7 @@ const MenuProps = {
 };
 
 const Details = ({
-  booking, updateBooking, loading, specialists, services,
+  booking, updateBooking, loading, specialists, services, compact, setNoPrice,
 }) => {
   const classes = useStyles();
   const theme = useTheme();
@@ -30,6 +30,8 @@ const Details = ({
   const [addOnOptions, setAddOnOptions] = useState([]);
   const [type, setType] = useState(services.find((s) => s._id === booking.service)
     ? services.find((s) => s._id === booking.service).type : '');
+
+  const getServiceDetails = () => serviceOptions.find((s) => s._id === booking.service) || '';
 
   useEffect(() => {
     // If user is going back
@@ -40,24 +42,39 @@ const Details = ({
     }
   }, []);
 
+  useEffect(() => {
+    const serviceDetails = services.find((s) => s._id === booking.service);
+    async function fetchData(typ) {
+      setType(typ);
+      setServiceOptions(services.filter((s) => s.type === typ));
+      setAddOnOptions(serviceDetails.addons);
+    }
+    if (serviceDetails) {
+      fetchData(serviceDetails.type);
+    }
+  }, [services]);
+
   const changeType = async (newType) => {
     setType(newType);
     updateBooking(['service', ''], ['addons', []], ['specialist', '']);
-    setServiceOptions(services.filter((s) => s.type === newType));
+    await setServiceOptions(services.filter((s) => s.type === newType));
     setAddOnOptions([]);
   };
 
-  const changeService = (newService) => {
-    updateBooking(['service', newService], ['addons', []], ['specialist', '']);
+  const changeService = async (newService) => {
+    await updateBooking(['service', newService], ['addons', []], ['specialist', '']);
     setAddOnOptions(serviceOptions.find((s) => s._id === newService).addons);
+    if (!(serviceOptions.find((s) => s._id === newService).price)) {
+      setNoPrice(true);
+    } else {
+      setNoPrice(false);
+    }
   };
-
-  const getServiceDetails = () => serviceOptions.find((s) => s._id === booking.service) || '';
 
   return (
     <>
       {loading ? <Loading /> : null}
-      <h2 className={classes.header}>How can we help you today?</h2>
+      {!compact ? <h2 className={classes.header}>How can we help you today?</h2> : null}
       <Grid container spacing={3} className={classes.grid}>
         <Grid item xs={4}>
           <Card
@@ -107,7 +124,7 @@ const Details = ({
                   {serv.name}
                   {' '}
                   ($
-                  {serv.price}
+                  {serv.price === 0 ? '' : serv.price}
                   )
                 </MenuItem>
               ))}
@@ -125,13 +142,19 @@ const Details = ({
               renderValue={(selected) => (
                 <div className={classes.chips}>
                   {selected.map((value) => (
-                    <Chip key={value.name} label={value.name} className={classes.chip} color="secondary" />
+                    <Chip
+                      key={value.name}
+                      label={value.name}
+                      className={classes.chip}
+                      size="small"
+                      color="secondary"
+                    />
                   ))}
                 </div>
               )}
               MenuProps={MenuProps}
             >
-              {addOnOptions.map((add) => (
+              {addOnOptions ? addOnOptions.map((add) => (
                 <MenuItem key={add.name} value={add}>
                   {add.name}
                   {' '}
@@ -139,7 +162,7 @@ const Details = ({
                   {add.price}
                   )
                 </MenuItem>
-              ))}
+              )) : null}
             </Select>
           </FormControl>
         </Grid>
@@ -190,8 +213,10 @@ Details.propTypes = {
     addons: PropTypes.array,
     specialist: PropTypes.string,
     notes: PropTypes.string,
+    payInStore: PropTypes.bool,
   }).isRequired,
   updateBooking: PropTypes.func.isRequired,
+  setNoPrice: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   specialists: PropTypes.shape([{
     name: PropTypes.string,
@@ -207,6 +232,11 @@ Details.propTypes = {
     subtype: PropTypes.string,
     addons: PropTypes.array,
   }]).isRequired,
+  compact: PropTypes.bool,
+};
+
+Details.defaultProps = {
+  compact: false,
 };
 
 export default Details;

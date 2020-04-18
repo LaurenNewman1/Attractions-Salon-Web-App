@@ -16,7 +16,7 @@ const requestLogin = async (email, password) => {
   return [res.status === 200, await res.json()];
 };
 
-const requestRegister = async (name, email, number, password) => {
+const requestRegister = async (name, email, number, password, captchaRes) => {
   const res = await fetch('/api/users',
     {
       method: 'POST',
@@ -28,7 +28,7 @@ const requestRegister = async (name, email, number, password) => {
       redirect: 'follow', // manual, *follow, error
       referrerPolicy: 'no-referrer', // no-referrer, *client
       body: JSON.stringify({
-        name, email, phone_number: number, password,
+        name, email, phone_number: number, password, captchaResponse: captchaRes,
       }),
     });
 
@@ -100,6 +100,7 @@ const requestProfileChange = async (userId, params) => {
 
 export default () => {
   const [loggedIn, isLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState({});
 
   // Call to login
@@ -116,7 +117,7 @@ export default () => {
   // Call to register
   // const register = requestRegister;
   // eslint-disable-next-line max-len
-  const register = async (name, email, number, password) => requestRegister(name, email, number, password);
+  const register = async (name, email, number, password, captchaRes) => requestRegister(name, email, number, password, captchaRes);
 
   const changeProfile = async (userId, params) => {
     const result = await requestProfileChange(userId, params);
@@ -137,7 +138,10 @@ export default () => {
   };
 
   useEffect(() => {
-    if (loggedIn) { return; }
+    if (loggedIn) {
+      setLoading(false);
+      return;
+    }
 
     fetch('/api/users').then((res) => {
       if (res.status === 200) {
@@ -152,9 +156,10 @@ export default () => {
         isLoggedIn(false);
         setUserData({});
       }
+      setLoading(false);
     });
   }, [loggedIn]);
 
   return [userData, loggedIn, login, register, logout,
-    changeProfile, requestResetPassword, requestPasswordUpdate];
+    changeProfile, requestResetPassword, requestPasswordUpdate, loading];
 };

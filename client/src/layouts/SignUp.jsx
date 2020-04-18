@@ -7,11 +7,12 @@ import {
 } from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import Recaptcha from 'react-google-recaptcha';
 import useStyles from '../css/LoginStyles';
 import Page from '../components/Page';
 import signUpImg from '../images/signUpImg.jpg';
 
-const SignUp = ({ register }) => {
+const SignUp = ({ register, login }) => {
   const classes = useStyles();
   const history = useHistory();
   const [email, setEmail] = useState('');
@@ -20,6 +21,9 @@ const SignUp = ({ register }) => {
   const [number, setNumber] = useState('');
   const [errorBody, setErrorBody] = useState({});
   const [hasError, setHasError] = useState(false);
+
+  const captchaRef = React.createRef();
+
 
   const validationTable = {
     email: {
@@ -39,12 +43,21 @@ const SignUp = ({ register }) => {
   };
 
   const attemptRegister = async () => {
-    const [successful, errors] = await register(name, email, number, password);
+    const [successful, errors] = await register(name, email, number, password, captchaRef.current.getValue());
     setErrorBody({});
     setHasError(!successful);
     if (successful) {
-      history.push('/login');
+      // This is the attempted login
+      const [succ, error] = await login(email, password);
+      setHasError(!succ);
+      if (succ) {
+        history.push('/profile');
+      } else {
+        // Error in the attempted login
+        setErrorBody(error);
+      }
     } else {
+      // Error in the attempted register
       setErrorBody(errors);
     }
   };
@@ -58,7 +71,7 @@ const SignUp = ({ register }) => {
           </Grid>
         </Hidden>
         <Grid item xs={12} sm={6} className={classes.form}>
-          <h1 className={classes.login}>Sign Up</h1>
+          <h1 className={classes.login}>Create Account</h1>
           <div>
             <TextField
               fullWidth
@@ -122,6 +135,14 @@ const SignUp = ({ register }) => {
                 ),
               }}
             />
+            <div style={{ textAlign: 'center' }}>
+              <Recaptcha
+                sitekey="6Lde1ukUAAAAAJkNP90HjfZwFcYrtNk0CGAWb34R"
+                onChange={(e) => console.log(e)}
+                ref={captchaRef}
+                className={classes.gRecaptcha}
+              />
+            </div>
             <div className={classes.buttons}>
               <Button
                 variant="contained"
@@ -140,6 +161,8 @@ const SignUp = ({ register }) => {
 
 SignUp.propTypes = {
   register: PropTypes.func.isRequired,
+  login: PropTypes.func.isRequired,
 };
+
 
 export default SignUp;

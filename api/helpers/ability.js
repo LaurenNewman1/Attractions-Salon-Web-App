@@ -9,6 +9,7 @@ export const userAbilities = (user) => {
   allow('read', 'Review');
   allow('create', 'Appointment');
   allow('create', 'User');
+  allow('read', 'User', ['_id', 'email', 'name', 'phone_number', 'role', 'title', 'banner', 'specialties', 'bio']);
 
   // Logged In
   if (user) {
