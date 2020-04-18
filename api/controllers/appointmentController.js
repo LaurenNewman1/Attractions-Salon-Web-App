@@ -1,8 +1,9 @@
 import format from 'date-fns/format';
 import Appointment from '../model/appointment';
+import Service from '../model/service';
 import User from '../model/user';
+import { SendTextEmail, SendRequestEmail, SendConfirmationEmail } from '../lib/mail';
 import currentUserAbilities, { userAbilities } from '../helpers/ability';
-import { SendTextEmail } from '../lib/mail';
 const Recaptcha = require('recaptcha-v2').Recaptcha;
 
 const stripe = require('stripe')(process.env.STRIPE_API_KEY);
@@ -66,7 +67,7 @@ export const remove = async (req, res) => {
 
 export const update = async (req, res) => {
   const ability = await currentUserAbilities(req);
-  if(ability.cannot('update', 'Appointment')) {
+  if (ability.cannot('update', 'Appointment')) {
     res.status(403).type('json').send({ error: 'Access Denied' });
     return;
   }
@@ -76,6 +77,7 @@ export const update = async (req, res) => {
     const dateTime = new Date(params.time);
     const updateParams = { ...params, time: dateTime };
     const appointment = await Appointment.findByIdAndUpdate(req.params.someId, updateParams).exec();
+    const serviceData = await Service.find(appointment.service);
 
     if (appointment) {
       if (updateParams.confirmed) {
@@ -88,7 +90,8 @@ export const update = async (req, res) => {
             return;
           }
         }
-        await SendTextEmail(appointment.email, 'Your Booking has been Confirmed', `Hi ${appointment.name}, your booking with Attractions Salon has been comfirmed for ${format(appointment.time, 'MM/dd/yyyy K:mm aa')}`);
+        await SendConfirmationEmail(appointment.email, 'attractions-salon@attractionssalon.com', appointment.name, appointment.notes,
+          appointment.timeOrdered, appointment.addons, appointment.phone_number, serviceData[0].name, serviceData[0].price, serviceData[0].description);
       }
         res.status(200).type('json').send(appointment);
     } else {
@@ -99,6 +102,7 @@ export const update = async (req, res) => {
     res.status(500).type('json').send(err);
   }
 };
+
 
 export const create = async (req, res) => {
   try {
@@ -120,12 +124,14 @@ export const create = async (req, res) => {
         const dateTime = new Date(params.time);
         const finalParams = { ...params, time: dateTime };
         const appointment = await Appointment.create(finalParams);
-        await SendTextEmail(appointment.email, 'Your Booking has been Submitted', `Hi ${appointment.name}, your booking has been submitted. You will get an email soon when Attractions Salon has confirmed your appointment time.`);
+        const serviceData = await Service.find(appointment.service);
+        await SendTextEmail(appointment.email, 'attractions-salon@attractionssalon.com', appointment.name, appointment.notes, appointment.timeOrdered, appointment.addons, appointment.phone_number, serviceData[0].name, serviceData[0].description, serviceData[0].price);
         const owner = await User.findOne({ role: 2 }).exec();
         if (owner) {
-          await SendTextEmail(owner.email, 'A Booking has been Submitted', `Hi ${owner.name}, ${appointment.name} has submitted a booking request for review.`);
+          await SendRequestEmail(owner.email, 'attractions-salon@attractionssalon.com', appointment.name, appointment.notes,
+            appointment.timeOrdered, appointment.addons, appointment.phone_number, serviceData[0].name, serviceData[0].price, serviceData[0].description);
+          // await SendRequestEmail(owner.email, 'A Booking has been Submitted', `Hi ${owner.name}, ${appointment.name} has submitted a booking request for review.`);
         }
-
         if (!params.payInStore) {
           const user = await User.findOne({email: params.email}).exec();
           const intent = await stripe.paymentIntents.create(
