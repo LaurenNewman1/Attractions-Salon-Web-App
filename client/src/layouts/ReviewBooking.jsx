@@ -149,25 +149,29 @@ const ReviewBooking = ({
           <Typography variant="subtitle1" color="textSecondary">Notes: {booking.notes}</Typography>
         </Grid>
       </Grid>
-      {price && (
-        <>
-          <Divider variant="middle" className={classes.divider} />
-          <div style={{ marginTop: 10 }}>
-            <div className={classes.spacing}>
-              <Typography variant="subtitle1" color="textSecondary">Subtotal:</Typography>
-              <Typography variant="subtitle1">${price || 'TBD'}</Typography>
-            </div>
-            <div className={classes.spacing}>
-              <Typography variant="subtitle1" color="textSecondary">Tax:</Typography>
-              <Typography variant="subtitle1">${(tax * price).toFixed(2)}</Typography>
-            </div>
-            <div className={classes.spacing}>
-              <Typography variant="h5" color="textSecondary">Total:</Typography>
-              <Typography variant="h5">${(total / 100).toFixed(2) || 'TBD'}</Typography>
-            </div>
-          </div>
-        </>
-      )}
+      <Divider variant="middle" className={classes.divider} />
+      <div style={{ marginTop: 10 }}>
+        <div className={classes.spacing}>
+          <Typography variant="subtitle1" color="textSecondary">Subtotal:</Typography>
+          <Typography variant="subtitle1">${price || 'TBD'}</Typography>
+        </div>
+        <div className={classes.spacing}>
+          <Typography variant="subtitle1" color="textSecondary">Tax:</Typography>
+          <Typography variant="subtitle1">${(tax * price).toFixed(2)}</Typography>
+        </div>
+        <div className={classes.spacing}>
+          <Typography variant="h5" color="textSecondary">Total:</Typography>
+          <Typography variant="h5">${(total / 100).toFixed(2) || 'TBD'}</Typography>
+        </div>
+      </div>
+      <div style={{ textAlign: 'center' }}>
+        <Recaptcha
+          sitekey="6Lde1ukUAAAAAJkNP90HjfZwFcYrtNk0CGAWb34R"
+          onChange={(e) => console.log(e)}
+          ref={captchaRef}
+          className={classes.gRecaptcha}
+        />
+      </div>
       <div className={classes.buttons}>
         <Button
           variant="contained"
