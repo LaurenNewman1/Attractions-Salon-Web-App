@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Grid, Button, TextField, IconButton, Icon, useTheme, useMediaQuery,
 } from '@material-ui/core';
@@ -11,7 +11,7 @@ import Page from '../components/Page';
 import useStyles from '../css/ProfileStyles';
 
 // eslint-disable-next-line object-curly-newline
-const Profile = ({ userData, logout, changeProfile }) => {
+const Profile = ({ userData, logout, changeProfile, getCards, deleteCard }) => {
   const { name, email, phone_number } = userData;
   const [textBoxValues, setTextBoxValues] = React.useState({});
   const history = useHistory();
@@ -19,11 +19,41 @@ const Profile = ({ userData, logout, changeProfile }) => {
   const theme = useTheme();
   const isSmall = useMediaQuery(theme.breakpoints.down('sm'));
   const [editMode, setEditMode] = useState(false);
+  const [cardId, setCardId] = useState('');
+  const [showCreditCard, setShowCreditCard] = useState(false);
+  const [last4, setLast4] = useState('');
 
-  React.useEffect(() => {
+
+  const checkCC = async () => {
+    if (userData._id) {
+      const [success, response] = await getCards(userData._id);
+      const savedUserCards = response.data;
+      if (success) {
+        console.log('getCards CALL WORKED', response);
+        if (savedUserCards.length === 0) {
+          setShowCreditCard(false);
+        } else {
+          setShowCreditCard(true);
+          setCardId(savedUserCards[0].id);
+          setLast4(savedUserCards[0].card.last4);
+        }
+      } else {
+        console.log('BOOK PAGE BAD GET REQUEST', response);
+      }
+    }
+  };
+
+  useEffect(() => {
+    checkCC();
+  }, []);
+
+  useEffect(() => {
     setTextBoxValues(userData);
   }, [userData]);
 
+  // useEffect(() => {
+  //   console.log('The credit Card var: ', showCreditCard);
+  // }, [showCreditCard]);
 
   const updateTextBoxValue = (key, val) => {
     setTextBoxValues({
@@ -39,6 +69,7 @@ const Profile = ({ userData, logout, changeProfile }) => {
       phone_number: textBoxValues.phone_number,
       name: textBoxValues.name,
     });
+    checkCC();
     // This is where you will be updating all the stuff on the backend
   };
 
@@ -70,6 +101,16 @@ const Profile = ({ userData, logout, changeProfile }) => {
     return null;
   };
 
+  const deleteMyCard = async () => {
+    console.log('Card ID before DELETE', cardId);
+    const [success, response] = await deleteCard(cardId);
+    if (success) {
+      console.log('Delete Card Works!', response);
+    } else {
+      console.log('Delete Card FAILED', response);
+    }
+  };
+
   const renderTextFields = () => {
     if (!editMode) {
       return (
@@ -84,9 +125,23 @@ const Profile = ({ userData, logout, changeProfile }) => {
             {' '}
             {phone_number}
           </Typography>
-          <Typography variant="h6" gutterBottom>
-            Card: .... .... .... 1234
-          </Typography>
+          {console.log('CREDIT CARD: ', showCreditCard)}
+          {showCreditCard ? (
+            <>
+              <Typography variant="h6" gutterBottom>
+                You have a credit card ending in {last4} assigned to your account.
+                <br />
+                Would you like to delete it?
+              </Typography>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => deleteMyCard()}
+              >
+                Delete Card
+              </Button>
+            </>
+          ) : null}
         </div>
       );
     }
@@ -97,8 +152,6 @@ const Profile = ({ userData, logout, changeProfile }) => {
         <TextField style={{ paddingBottom: 10 }} defaultValue={email} label="Email" value={textBoxValues.email} onChange={(e) => updateTextBoxValue('email', e.target.value)} />
         <br />
         <TextField style={{ paddingBottom: 10 }} defaultValue={phone_number} label="Phone Number" value={textBoxValues.phone_number} onChange={(e) => updateTextBoxValue('phone_number', e.target.value)} />
-        <br />
-        <TextField defaultValue=".... .... .... 1234" label="Credit Card" />
       </div>
     );
   };
@@ -159,6 +212,8 @@ Profile.propTypes = {
   }).isRequired,
   logout: PropTypes.func.isRequired,
   changeProfile: PropTypes.func.isRequired,
+  getCards: PropTypes.func.isRequired,
+  deleteCard: PropTypes.func.isRequired,
 };
 
 export default Profile;

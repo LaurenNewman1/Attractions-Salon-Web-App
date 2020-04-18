@@ -91,7 +91,7 @@ const Book = ({
     argus.forEach((argu) => {
       const [fieldName, val] = argu;
       newFields[fieldName] = val;
-      console.log('Credit Card Update', newFields);
+      // console.log('Credit Card Update', newFields);
     });
     setCreditCard(newFields);
   };
@@ -101,7 +101,7 @@ const Book = ({
     argus.forEach((argu) => {
       const [fieldName, val] = argu;
       newFields[fieldName] = val;
-      console.log('FINAL card update: ', newFields);
+      // console.log('FINAL card update: ', newFields);
     });
     setFinalCreditCard(newFields);
   };
@@ -175,7 +175,7 @@ const Book = ({
           ['name', creditCard.name],
         );
         // This is jsut reasserting the cardId and last4
-        console.log('MY FINAL CARD POST', finalCreditCard);
+        // console.log('MY FINAL CARD POST', finalCreditCard);
       } else {
         console.log('BAD POST REQUEST', res);
         // Checks validity of card
@@ -296,13 +296,15 @@ const Book = ({
             // postOrPutCardToUser();
           } else {
             setCCFlag(true);
-            updateFinalCreditCard(
-              ['last4', creditCard.last4],
-              ['cardId', creditCard.cardId],
-              ['expMonth', creditCard.expMonth],
-              ['expYear', creditCard.expYear],
-              ['name', creditCard.name],
-            );
+            if (!checked) {
+              updateFinalCreditCard(
+                ['last4', creditCard.last4],
+                ['cardId', creditCard.cardId],
+                ['expMonth', creditCard.expMonth],
+                ['expYear', creditCard.expYear],
+                ['name', creditCard.name],
+              );
+            }
           }
           setPage((prev) => prev + 1);
         } else {
@@ -433,13 +435,13 @@ const Book = ({
             className={classes.stepper}
             activeStep={page}
             nextButton={(
-              <Button size="small" onClick={() => validateNext()} disabled={page === 3}>
+              <Button size="large" onClick={() => validateNext()} disabled={page === 3}>
                 Next
                 <KeyboardArrowRight />
               </Button>
           )}
             backButton={(
-              <Button size="small" onClick={() => setPage((prev) => prev - 1)} disabled={page === 0}>
+              <Button size="large" onClick={() => setPage((prev) => prev - 1)} disabled={page === 0}>
                 <KeyboardArrowLeft />
                 Back
               </Button>

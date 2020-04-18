@@ -21,22 +21,27 @@ const ConfirmPayment = ({
 
   // console.log('Credit Card Array: ', creditCards);
   // console.log('Credit Card Array LENGTH: ', creditCards.length);
-  console.log('Credit Card: ', creditCard);
+  // console.log('Credit Card: ', creditCard);
 
   // const payInStore = () => {
   //   updateBooking(['payInStore', !booking.payInStore]);
   //   nextPage();
   // };
 
+  // useEffect(() => {
+  //   if (!badRequest) {
+  //     setChangeCard(false);
+  //   }
+  // }, [badRequest]);
 
-  useEffect(() => {
-    if (!badRequest) {
-      setChangeCard(false);
-    }
-  }, [badRequest]);
   const savePressed = async () => {
     setSaveCard(true);
+    // console.log('Variable', badRequest);
     await postOrPutCardToUser();
+    // console.log('Variable', badRequest);
+    // if (!badRequest) {
+    //   setChangeCard(false);
+    // }
     // This is so that the pop up closes
   };
   return (
@@ -50,14 +55,10 @@ const ConfirmPayment = ({
         marginBottom: 18,
       }}
       >
-        {/* <Card
-          className={classes.card}
-          >
-          <CardActionArea onClick={() => setSelected(!selected)}> */}
         <ButtonBase
           className={classes.btnBase}
           onClick={() => setSelected(!selected)}
-          >
+        >
           <Paper
             style={{ borderColor: selected ? theme.palette.primary.main : 'transparent' }}
             className={classes.paper}
@@ -81,9 +82,6 @@ const ConfirmPayment = ({
             </div>
           </Paper>
         </ButtonBase>
-
-          {/* </CardActionArea>
-        </Card> */}
       </div>
       <div className={classes.link}>
         <Button
@@ -129,21 +127,6 @@ const ConfirmPayment = ({
           </DialogActions>
         </Dialog>
       </div>
-      {/* <div className={classes.divider}>
-        <Divider variant="middle" style={{ flexGrow: 1 }} />
-        <Typography variant="h5">
-          OR
-        </Typography>
-        <Divider variant="middle" style={{ flexGrow: 1 }} />
-      </div>
-      <Button
-        style={{ marginTop: 20 }}
-        variant="contained"
-        color="primary"
-        onClick={() => payInStore()}
-      >
-        Pay In Store
-      </Button> */}
     </div>
   );
 };
@@ -186,9 +169,9 @@ ConfirmPayment.propTypes = {
     name: PropTypes.string,
     last4: PropTypes.string,
     cardNumber: PropTypes.string,
-    expMonth: PropTypes.string,
-    expYear: PropTypes.string,
-    CVC: PropTypes.string,
+    expMonth: PropTypes.number,
+    expYear: PropTypes.number,
+    CVC: PropTypes.number,
     zipCode: PropTypes.string,
   }).isRequired,
   updateCreditCard: PropTypes.func.isRequired,

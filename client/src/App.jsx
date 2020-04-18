@@ -95,6 +95,8 @@ const App = () => {
               component={() => (
                 <Profile
                   userData={userData}
+                  getCards={getCards}
+                  deleteCard={deleteCard}
                   logout={() => logout()}
                   changeProfile={changeProfile}
                 />

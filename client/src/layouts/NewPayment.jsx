@@ -157,9 +157,9 @@ NewPayment.propTypes = {
   creditCard: PropTypes.shape({
     name: PropTypes.string,
     cardNumber: PropTypes.string,
-    expMonth: PropTypes.string,
-    expYear: PropTypes.string,
-    CVC: PropTypes.string,
+    expMonth: PropTypes.number,
+    expYear: PropTypes.number,
+    CVC: PropTypes.number,
     cardId: PropTypes.string,
     last4: PropTypes.string,
   }).isRequired,
