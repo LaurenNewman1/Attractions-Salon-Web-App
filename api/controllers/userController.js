@@ -72,7 +72,7 @@ export const readByRole = async (req, res) => {
       const permittedFields = User.accessibleFieldsBy(ability);
       logger.info(permittedFields);
 
-      data.forEach((part, index) => {
+      data.forEach(function(part, index){
         this[index] = _.pick(this[index], permittedFields);
       }, data);
       res.status(200).type('json').send(data);
