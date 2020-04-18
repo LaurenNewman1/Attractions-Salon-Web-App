@@ -115,7 +115,7 @@ const DashboardCalendar = ({
     {
       startDate: a.time,
       endDate: addHours(a.time, 1),
-      title: a.name,
+      title: a.name + (a.payInStore ? '\n[PAY IN STORE]' : ''),
       specialist: a.specialist,
       service: a.service,
       addons: a.addons,

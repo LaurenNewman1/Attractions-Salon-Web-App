@@ -4,6 +4,7 @@ import {
   DialogActions, DialogContent, DialogTitle, Dialog, Button, DialogContentText,
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
+import Recaptcha from 'react-google-recaptcha';
 import Page from '../../components/Page';
 import DashboardCalendar from '../../components/DashboardCalendar';
 import useRequests from '../../stores/RequestStores';
@@ -36,9 +37,10 @@ const Dashboard = ({ userData }) => {
   const [requestInfo, setRequstInfo] = useState(EMPTY_REQUEST);
   const [openCreateBooking, setOpenBooking] = useState(false);
   const [bookingEditCandidate, setEditCandidate] = useState(-1);
+  const captchaRef = React.createRef();
 
   const submitNewAppointment = async () => {
-    const fullAppointment = { ...clientInfo, ...requestInfo };
+    const fullAppointment = { ...clientInfo, ...requestInfo, captchaResponse: captchaRef.current.getValue() };
     const [success, res] = await sendRequest(fullAppointment);
     if (success) {
       setClientInfo(EMPTY_CLIENT_INFO);
@@ -134,6 +136,13 @@ const Dashboard = ({ userData }) => {
             services={bookingServices}
             compact
           />
+          <div style={{ textAlign: 'center', marginTop: '1em' }}>
+            <Recaptcha
+              sitekey="6Lde1ukUAAAAAJkNP90HjfZwFcYrtNk0CGAWb34R"
+              onChange={(e) => console.log(e)}
+              ref={captchaRef}
+            />
+          </div>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenBooking(false)}>Cancel</Button>

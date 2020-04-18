@@ -70,7 +70,6 @@ const Requests = () => {
 
   const requestCards = requests.length ? requests.map((request, index) => {
     const serviceDetails = services.find((s) => s._id === request.service);
-    console.log('specialist.specialties', specialists);
 
     return (
       <Card className={classes.card}>
