@@ -10,9 +10,9 @@ import Loading from '../components/Loading';
 import NewPayment from './NewPayment';
 
 const ConfirmPayment = ({
-  booking, loading, updateBooking, userData, getCard, deleteCard, getCards,
-  updateCreditCard, creditCard, finalCreditCard, changeCard, setChangeCard, checked, setChecked,
-  postOrPutCardToUser, loggedIn, cardSelected, setCardSelected, nextPage, setChangeClicked, setCancelPressed,
+  booking, loading, updateBooking, deleteCard, updateCreditCard, creditCard,
+  changeCard, setChangeCard, checked, setChecked, postOrPutCardToUser, loggedIn,
+  cardSelected, setCardSelected, nextPage, setChangeClicked, setCancelPressed,
 }) => {
   const classes = useStyles();
   const theme = useTheme();
@@ -64,7 +64,6 @@ const ConfirmPayment = ({
               ....&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               ....&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               ....&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              {/* {!noCC ? creditCard.last4 : finalCreditCard.last4} */}
               {creditCard.last4}
             </Typography>
             <div className={classes.middleSpace} />
@@ -104,15 +103,11 @@ const ConfirmPayment = ({
                   loading={loading}
                   booking={booking}
                   updateBooking={(...argus) => updateBooking(...argus)}
-                  getCards={getCards}
-                  getCard={getCard}
-                  userData={userData}
                   deleteCard={deleteCard}
                   creditCard={creditCard}
                   checked={checked}
                   setChecked={setChecked}
                   changeCard={changeCard}
-                  setChangeCard={setChangeCard}
                 />
               </DialogContent>
               <DialogActions>
@@ -163,14 +158,6 @@ ConfirmPayment.propTypes = {
   }).isRequired,
   updateBooking: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
-  userData: PropTypes.shape({
-    _id: PropTypes.string.isRequired,
-    email: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    phone_number: PropTypes.string.isRequired,
-  }).isRequired,
-  getCards: PropTypes.func.isRequired,
-  getCard: PropTypes.func.isRequired,
   deleteCard: PropTypes.func.isRequired,
   creditCard: PropTypes.shape({
     name: PropTypes.string,
@@ -193,9 +180,6 @@ ConfirmPayment.propTypes = {
   setChangeClicked: PropTypes.func.isRequired,
   setCancelPressed: PropTypes.func.isRequired,
   nextPage: PropTypes.func.isRequired,
-  finalCreditCard: PropTypes.shape({
-    last4: PropTypes.string,
-  }).isRequired,
 };
 
 export default ConfirmPayment;

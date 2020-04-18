@@ -14,8 +14,8 @@ import Loading from '../components/Loading';
 // You need to do payLater and take a look at the update functions as well as expiration date
 
 const NewPayment = ({
-  booking, updateBooking, updateCreditCard, loading, nextPage, userData,
-  creditCard, getCards, getCard, checked, setChecked, changeCard, setChangeCard,
+  booking, updateBooking, updateCreditCard, loading, nextPage,
+  creditCard, checked, setChecked, changeCard,
   loggedIn, services,
 }) => {
   const classes = useStyles();
@@ -160,18 +160,9 @@ NewPayment.propTypes = {
     payInStore: PropTypes.bool,
   }).isRequired,
   loading: PropTypes.bool.isRequired,
-  userData: PropTypes.shape({
-    _id: PropTypes.string,
-    email: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    phone_number: PropTypes.string.isRequired,
-  }).isRequired,
-  getCards: PropTypes.func.isRequired,
-  getCard: PropTypes.func.isRequired,
   setChecked: PropTypes.func.isRequired,
   checked: PropTypes.bool.isRequired,
   changeCard: PropTypes.bool.isRequired,
-  setChangeCard: PropTypes.func.isRequired,
   loggedIn: PropTypes.bool.isRequired,
   nextPage: PropTypes.func.isRequired,
   services: PropTypes.shape([{

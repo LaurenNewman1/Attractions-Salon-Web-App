@@ -367,13 +367,8 @@ const Book = ({
             <ConfirmPayment
               updateCreditCard={(...argus) => updateCreditCard(...argus)}
               booking={booking}
-              loading={loading}
               nextPage={() => validateNext()}
               updateBooking={(...argus) => updateBooking(...argus)}
-              creditCards={creditCards}
-              getCard={getCard}
-              userData={userData}
-              deleteCard={deleteCard}
               creditCard={creditCard}
               setCreditCards={setCreditCards}
               changeCard={changeCard}
@@ -382,9 +377,6 @@ const Book = ({
               checked={checked}
               setChecked={setChecked}
               postOrPutCardToUser={postOrPutCardToUser}
-              error={error}
-              finalCreditCard={finalCreditCard}
-              noCC={noCC}
               loggedIn={loggedIn}
               cardSelected={cardSelected}
               setCardSelected={setCardSelected}
@@ -399,17 +391,10 @@ const Book = ({
             nextPage={(setPayInStore = undefined) => validateNext(setPayInStore)}
             booking={booking}
             updateBooking={(...argus) => updateBooking(...argus)}
-            newCardToUser={newCardToUser}
-            getCards={getCards}
-            getCard={getCard}
-            userData={userData}
-            deleteCard={deleteCard}
             creditCard={creditCard}
             checked={checked}
             setChecked={setChecked}
             changeCard={changeCard}
-            setChangeCard={setChangeCard}
-            postOrPutCardToUser={postOrPutCardToUser}
             loggedIn={loggedIn}
             services={services}
           />
