@@ -11,8 +11,6 @@ import DateFnsUtils from '@date-io/date-fns';
 import useStyles from '../css/NewPaymentStyles';
 import Loading from '../components/Loading';
 
-// You need to do payLater and take a look at the update functions as well as expiration date
-
 const NewPayment = ({
   booking, updateBooking, updateCreditCard, loading, nextPage,
   creditCard, checked, setChecked, changeCard,

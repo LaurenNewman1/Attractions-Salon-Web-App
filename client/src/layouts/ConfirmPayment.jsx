@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Button, Typography, Divider, Paper,
-  DialogActions, DialogContent, DialogTitle, Dialog, Grid, useTheme, ButtonBase,
+  Button, Typography, Divider, Card, CardActionArea, CardContent,
+  DialogActions, DialogContent, DialogTitle, Dialog, Grid,
 } from '@material-ui/core';
 import useStyles from '../css/ConfirmPaymentStyles';
 import creditCardCircles from '../images/masterCardCircles.png';
@@ -15,7 +15,6 @@ const ConfirmPayment = ({
   cardSelected, setCardSelected, nextPage, setChangeClicked, setCancelPressed,
 }) => {
   const classes = useStyles();
-  const theme = useTheme();
 
   const goToNextPage = () => {
     setCardSelected(!cardSelected);
@@ -51,32 +50,35 @@ const ConfirmPayment = ({
         marginBottom: 18,
       }}
       >
-        <ButtonBase
-          className={classes.btnBase}
-          onClick={() => goToNextPage()}
+        <Card
+          className={classes.paper}
         >
-          <Paper
-            style={{ borderColor: cardSelected ? theme.palette.primary.main : 'transparent' }}
-            className={classes.paper}
+          <CardActionArea
+            onClick={() => { updateBooking(['payInStore', false]); goToNextPage(); }}
+            style={{ width: '100%', height: '100%' }}
           >
-            <img src={creditCardCircles} alt="Circles" className={classes.circles} />
-            <Typography variant="h5">
-              ....&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              ....&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              ....&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              {creditCard.last4}
-            </Typography>
-            <div className={classes.middleSpace} />
-            <div className={classes.spaceBetween}>
-              <Typography variant="subtitle1">Name</Typography>
-              <Typography variant="subtitle1">Exp</Typography>
-            </div>
-            <div className={classes.spaceBetween}>
-              <Typography variant="subtitle2">{creditCard.name}</Typography>
-              <Typography variant="subtitle2">{creditCard.expMonth}/{creditCard.expYear}</Typography>
-            </div>
-          </Paper>
-        </ButtonBase>
+            <CardContent>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <img src={creditCardCircles} alt="" className={classes.circles} />
+                <Typography variant="h5">
+                  ****&nbsp;&nbsp;&nbsp;
+                  ****&nbsp;&nbsp;&nbsp;
+                  ****&nbsp;&nbsp;&nbsp;
+                  {creditCard.last4}
+                </Typography>
+              </div>
+              <div className={classes.middleSpace} />
+              <div className={classes.spaceBetween}>
+                <Typography variant="subtitle1">Name</Typography>
+                <Typography variant="subtitle1">Exp</Typography>
+              </div>
+              <div className={classes.spaceBetween}>
+                <Typography variant="subtitle2">{creditCard.name}</Typography>
+                <Typography variant="subtitle2">{creditCard.expMonth}/{creditCard.expYear}</Typography>
+              </div>
+            </CardContent>
+          </CardActionArea>
+        </Card>
       </div>
       {loggedIn && (
         <>

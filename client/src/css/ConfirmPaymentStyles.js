@@ -22,18 +22,11 @@ const useStyles = makeStyles((theme) => ({
     overflow: 'hidden',
   },
   paper: {
-    padding: 20,
-    textAlign: 'center',
-    borderRadius: 20, // "20px"
-    display: 'flex',
-    flexFlow: 'column nowrap',
-    justifyContent: 'flex start',
-    alignItems: 'stretch',
-    height: 150,
-    width: 350,
-    border: '3px solid transparent',
+    borderRadius: 20,
+    height: 190,
+    width: 380,
     backgroundColor: theme.palette.secondary.main,
-
+    margin: 0,
   },
   card: {
     padding: 20,

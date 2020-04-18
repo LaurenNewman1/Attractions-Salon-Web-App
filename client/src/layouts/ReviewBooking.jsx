@@ -1,6 +1,6 @@
 import moment from 'moment';
 import {
-  Card, CardMedia, Grid, CardActionArea,
+  Card, CardMedia, Grid,
   Button, Typography, Divider,
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
@@ -11,7 +11,7 @@ import eye from '../images/eye.png';
 import hand from '../images/hand.png';
 import useStyles from '../css/ReviewStyles';
 import Loading from '../components/Loading';
-
+import Alert, { TYPE_ERROR } from '../components/Alert';
 
 const ReviewBooking = ({
   booking, specialists, services, loading, sendRequest, finalCreditCard, updateBooking,
@@ -24,10 +24,11 @@ const ReviewBooking = ({
   const amountBeforeTax = price * 100;
   const tax = 0.07;
   const total = Number(amountBeforeTax + (amountBeforeTax * tax));
-  // const [amountInPennies, setAmountInPennies] = useState(0);
-  // console.log(services);
-  // console.log(booking.service);
-  // console.log(booking.addons);
+  const [alert, setAlert] = useState({
+    open: false,
+    type: '',
+    text: '',
+  });
 
   useEffect(() => {
     let counter = currentService.price;
@@ -41,27 +42,25 @@ const ReviewBooking = ({
 
   useEffect(() => {
     updateBooking(['amount', total]);
-    console.log('AMOUNT IN PENNIES', total);
     setTempBool(false);
   }, [tempBool]);
 
   useEffect(() => {
     updateBooking(['method_id', finalCreditCard.cardId]);
-    console.log('FINAL CARD', finalCreditCard);
   }, []);
 
-  // I need to ask alen about this
-  console.log('The price is: ', price);
   const updateBookingRequest = async () => {
     const { specialist, ...restOfBooking } = booking;
     const requestBooking = !booking.specialist ? restOfBooking : booking;
-    console.log('The requested BOOKING', requestBooking);
     const [success, res] = await sendRequest(requestBooking);
     if (success) {
       history.push(`/confirmation/${res._id}`);
-      console.log('BOOKING WAS A SUCCESS', res);
     } else {
-      console.log('FAILED booking request', res);
+      setAlert({
+        open: true,
+        type: TYPE_ERROR,
+        text: 'Request failed to send. Please try again later.',
+      });
     }
   };
 
@@ -77,13 +76,10 @@ const ReviewBooking = ({
         </Typography>
       </div>
       <div className={classes.spacing}>
-        {price
-          && (
-          <>
-            <Typography variant="subtitle1" color="textSecondary">Card:</Typography>
-            <Typography variant="subtitle1">.... .... .... {price ? finalCreditCard.last4 : ''}</Typography>
-          </>
-          )}
+        <Typography variant="subtitle1" color="textSecondary">Card:</Typography>
+        <Typography variant="subtitle1">
+          {booking.payInStore ? 'Pay In Store' : `**** **** **** ${finalCreditCard.last4}`}
+        </Typography>
       </div>
     </div>
   );
@@ -101,28 +97,28 @@ const ReviewBooking = ({
             {
               currentService.type === 'hair'
               && (
-              <CardActionArea>
+              <>
                 <CardMedia component="image" image={hairIllustration} className={classes.media} />
                 <h5 className={classes.cardContent}>Hair</h5>
-              </CardActionArea>
+              </>
               )
             }
             {
               currentService.type === 'wax'
               && (
-              <CardActionArea>
+              <>
                 <CardMedia component="image" image={eye} className={classes.media} />
                 <h5 className={classes.cardContent}>Wax</h5>
-              </CardActionArea>
+              </>
               )
             }
             {
               currentService.type === 'nails'
               && (
-              <CardActionArea>
+              <>
                 <CardMedia component="image" image={hand} className={classes.media} />
                 <h5 className={classes.cardContent}>Nails</h5>
-              </CardActionArea>
+              </>
               )
             }
           </Card>
@@ -132,7 +128,6 @@ const ReviewBooking = ({
             <Typography variant="subtitle1" color="textSecondary">Service:&nbsp;</Typography>
             <Typography variant="subtitle1">
               {currentService.name}
-              {/* {currentService.type.split('').map((x, i) => (i === 0 ? x.toUpperCase() : x)).join('')} */}
             </Typography>
           </div>
           <div style={{ display: 'flex' }}>
@@ -176,6 +171,12 @@ const ReviewBooking = ({
           Request Appointment
         </Button>
       </div>
+      <Alert
+        open={alert.open}
+        type={alert.type}
+        text={alert.text}
+        onClose={() => setAlert({ open: false, type: '', text: '' })}
+      />
     </>
   );
 };
@@ -191,6 +192,7 @@ ReviewBooking.propTypes = {
     addons: PropTypes.array,
     specialist: PropTypes.string,
     notes: PropTypes.string,
+    payInStore: PropTypes.bool,
   }).isRequired,
   specialists: PropTypes.shape([{
     name: PropTypes.string,
