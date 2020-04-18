@@ -6,9 +6,7 @@ export default () => {
 
   useEffect(() => {
     const callUsers = async () => {
-      const usersRequestFetch = async (type) => fetch(`/api/users/roles/${type}`)
-        .then((response) => response.json())
-        .then((data) => data);
+      const usersRequestFetch = async (role) => (await fetch(`/api/users/roles/${role}`)).json();
 
       const workers = await usersRequestFetch(1);
       const admin = await usersRequestFetch(2);
