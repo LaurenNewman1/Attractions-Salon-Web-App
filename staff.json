@@ -33,13 +33,16 @@
       "phone_number": "placeholderPhone3",
       "password": "$argon2i$v=19$m=4096,t=3,p=1$QX54WvPgwUGjYrRtvBm4SQ$0yhjBcAcTHYcyvDXlrPGfQYyPffPqIv7hAELUbBH3iw",
       "role": 2,
+      "title": "Owner",
       "specialties": [
         "cut",
         "dye",
         "treatment",
         "wash",
         "wax"
-      ]
+      ],
+      "banner": "brandi.jpg",
+      "bio": "Brandi is the owner of Attractions Salon"
     },
     {
       "name": "Emily",
