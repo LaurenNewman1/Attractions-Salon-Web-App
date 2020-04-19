@@ -191,7 +191,7 @@ export const SendConfirmationEmail = async (to, from, name, notes, time, addons,
         + '<p style="text-align:center">Notes: ' 
         + notes + '</p>' 
         + '<br><p style="text-align:center">Check out our other services!</p><br>'
-        + '<form style="text-align:center" action="https://www.google.com"><input style="background:pink; border:0 none; padding:5px 15px; cursor:pointer; border-radius:5px" type="submit" value="Services" /></form></div></html>'
+        + '<form style="text-align:center" action="https://attractions-salon.herokuapp.com/services"><input style="background:pink; border:0 none; padding:5px 15px; cursor:pointer; border-radius:5px" type="submit" value="Services" /></form></div></html>'
       },
     );
     return true;
