@@ -45,6 +45,7 @@ export const updatePassword = async (req, res) => {
 
 export const read = async (req, res) => {
   // Find User from Database and return
+  logger.info(req.session.userID);
   if (req.session.userID) {
     const ability = await currentUserAbilities(req);
     if (ability.can('read', 'Self')) {

@@ -21,6 +21,7 @@ export const create = async (req, res) => {
       if (!req.session.userID) {
         // eslint-disable-next-line no-underscore-dangle
         req.session.userID = foundUser._id;
+        req.session.save();
 
         logger.info('test');
         logger.info(foundUser.customer_id);

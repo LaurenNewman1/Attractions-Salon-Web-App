@@ -1,9 +1,8 @@
 import morgan from 'morgan';
 import mongoose from 'mongoose';
 import session from 'express-session';
-import connectMongo from 'connect-mongo';
 
-const MongoStore = connectMongo(session);
+const MongoStore = require('connect-mongo')(session);
 
 const production = async (app) => {
   app.use(morgan('dev'));
@@ -14,11 +13,10 @@ const production = async (app) => {
       useFindAndModify: false,
     });
   app.use(session({
-    store: new MongoStore({ mongooseConnection: connection.connection }),
+    store: new MongoStore({ url: process.env.DB_URL }),
     secret: process.env.STORE_KEY,
     resave: false,
-    saveUninitialized: true,
-    cookie: { secure: true },
+    saveUninitialized: false,
   }));
   return connection;
 };
