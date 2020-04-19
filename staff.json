@@ -41,7 +41,7 @@
         "wash",
         "wax"
       ],
-      "banner": "brandi.jpg",
+      "banner": "brandi.JPG",
       "bio": "Brandi is the owner of Attractions Salon"
     },
     {
@@ -106,6 +106,7 @@
         "wash",
         "wax"
       ],
+      "banner": "mary.JPG",
       "bio": "Mary is a hair stylist at Attractions Salon."
     }
   ]

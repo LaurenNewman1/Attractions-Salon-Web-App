@@ -42,7 +42,7 @@
         "description": "Highlights covering every section of the head.",
         "price": 55.0,
         "time": 120.0,
-        "banner": "fullHighlights.jpeg",
+        "banner": "fullHighlights.jpg",
         "type": "hair",
         "subtype": "dye",
         "addons": [
@@ -164,7 +164,7 @@
         "description": "Trimming and shaping hair.",
         "price": 30.0,
         "time": 30.0,
-        "banner": "womenHaircut.jpg",
+        "banner": "womenshair.jpg",
         "type": "hair",
         "subtype": "cut",
         "addons": [
