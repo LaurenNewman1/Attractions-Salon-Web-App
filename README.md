@@ -25,6 +25,19 @@ Defined in `api/controllers/userController.js`
 - POST `/api/users` Creates a new user, requires *captcha token*
 - POST `/api/login/reset` Generates a forget password token for a provided email
 - POST `/api/users/password/:token` will update the password of the user tied to the token.
+#### Card Routes
+
+- POST `/api/users/card/:id` creates a new card object for user `:id` (requires authorization)
+- POST `/api/card` generates a new card (for use with guest customers)
+- GET `/api/card/:cardID` returns a card with id `:cardID` (requires authorization)
+- GET `/api/users/card/:userID` returns all cards on user `:userID` (requires authorization)
+- DELETE `/api/users/card/:userID` removes a card from user `:userID` (requires authorization)
+- PUT `/api/users/card/:userID/:cardID` updates the card `:cardID` on user `:userID` (requires authorization)
+
+#### Authentication
+- POST `/api/login` creates a new login session for a given user
+- DELETE `/api/logout` destroys the current login session
+
 ### Authorization
 Role-based Authorization Scheme defined in `api/helpers/ability.js`
 
@@ -46,18 +59,6 @@ Schema defined in `api/model/appointment.js`
 - DELETE `/api/appointments/:id` Deletes an appointment with id `:id` (requires authorization)
 - PUT `/api/appointments/:id` Updates a given appointment with id `:id`. If confirmed is set to `true`, this route will send confirmation emails. (requires authorization)
 - POST `/api/appointments` Creates a new appointment and sends request pending email.
-#### Card Routes
-
-- POST `/api/users/card/:id` creates a new card object for user `:id` (requires authorization)
-- POST `/api/card` generates a new card (for use with guest customers)
-- GET `/api/card/:cardID` returns a card with id `:cardID` (requires authorization)
-- GET `/api/users/card/:userID` returns all cards on user `:userID` (requires authorization)
-- DELETE `/api/users/card/:userID` removes a card from user `:userID` (requires authorization)
-- PUT `/api/users/card/:userID/:cardID` updates the card `:cardID` on user `:userID` (requires authorization)
-
-#### Authentication
-- POST `/api/login` creates a new login session for a given user
-- DELETE `/api/logout` destroys the current login session
 
 ## Services
 ### Model
